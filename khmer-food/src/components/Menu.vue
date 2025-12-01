@@ -2,8 +2,8 @@
   <div class="menu">
     <div class="left-side">
       <img src="" alt="Logo" />
-      <router-link to="/">Home</router-link>
-      <router-link to="/category">Category</router-link>
+      <router-link to="../views/HomeView.vue">Home</router-link>
+      <router-link to="../views/CategoryView.vue">Category</router-link>
       <router-link to="/blog">Blog</router-link>
       <router-link to="/contact">Contact</router-link>
       <router-link to="/about">About</router-link>
