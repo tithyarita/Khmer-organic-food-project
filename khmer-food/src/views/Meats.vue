@@ -23,52 +23,67 @@ export default {
     return {
       products: [
         { id: 1, 
-          name: 'Carrot', 
+          name: 'Chicken Chick', 
           price: 3, 
           inStock: true, 
           rating: 4, 
-          image: '/images/Carrot.png' },
+          image: '/images/chicken_chick.png' },
 
         { id: 2, 
-          name: 'Bananas', 
+          name: 'Beef', 
           price: 2, inStock: false, 
           rating: 3, 
-          image: '/images/bananas.jpg' },
+          image: '/images/beef.png' },
 
         { id: 3, 
-          name: 'Mangoes', 
+          name: 'Pork', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' },
+          image: '/images/pork.png' },
 
         { id: 4, 
-          name: 'Mangoes', 
+          name: 'Lamb', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' },
+          image: '/images/lamb.png' },
 
         { id: 5, 
-          name: 'Mangoes', 
+          name: 'Chicken Wings', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' },
+          image: '/images/chicken_wing.png' },
 
         { id: 6, 
-          name: 'Mangoes', 
+          name: 'Chicken Drumsticks', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' },
+          image: '/images/chicken_dumpstick.png' },
 
         { id: 7, 
-          name: 'Mangoes', 
+          name: 'Fish', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' }
+          image: '/images/fish.png' },
+
+        { id: 8, 
+          name: 'Salmon', 
+          price: 5, 
+          inStock: true, 
+          rating: 5, 
+          image: '/images/salmon.png' },
+
+        { id: 9, 
+          name: 'Eggs', 
+          price: 5, 
+          inStock: true, 
+          rating: 5, 
+          image: '/images/egg.png' }
+
       ]
     }
   }
@@ -82,6 +97,7 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 2rem;
+  margin-bottom: 10rem;
 }
 .Title {
   text-align: center;

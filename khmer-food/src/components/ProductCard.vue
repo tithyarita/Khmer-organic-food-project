@@ -31,7 +31,13 @@
       </div>
 
       <!-- Add to Cart -->
-      <button class="add-to-cart">Add to Cart</button>
+      <!-- <button class="add-to-cart">Add to Cart</button> -->
+      <router-link to="/cart">
+      <button class="add-to-cart">
+        <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+      </button>
+    </router-link>
+
     </div>
   </div>
 </template>
@@ -59,8 +65,8 @@ export default {
   border: 1px solid #ccc;
   border-radius: 0.5rem;
   padding: 1rem;
-  width: 350px;
-  height: 450px;
+  width: 390px;
+  height: 500px;
   box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
   font-family: 'Baloo Da', cursive;
   display: flex;
@@ -106,7 +112,7 @@ export default {
 }
 
 .card-image img {
-  max-width: 350px;
+  max-width: 270px;
   height: 240px;
   border-radius: 0.25rem;
   align-items: center;

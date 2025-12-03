@@ -24,7 +24,8 @@ const backgroundColor = route.meta.bg || '#f5f5f5'
   font-size: 2rem;            /* 32px */
   font-weight: 600;
   margin-bottom: 1rem;        /* 16px */
-  color: #2e7d32;
+  color: #548D0C;
+  font-family: 'Baloo Da', cursive;
 }
 
 .banner-img {
@@ -33,5 +34,6 @@ const backgroundColor = route.meta.bg || '#f5f5f5'
   margin-top: 0.9375rem;      /* 15px */
   border-radius: 0.5rem;      /* 8px */
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  /* margin-left: 30rem; */
 }
 </style>

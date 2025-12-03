@@ -82,6 +82,7 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 2rem;
+  margin-bottom: 10rem;
 }
 .Title {
   text-align: center;

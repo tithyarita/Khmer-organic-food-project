@@ -27,48 +27,62 @@ export default {
           price: 3, 
           inStock: true, 
           rating: 4, 
-          image: '/images/Carrot.png' },
+          image: '/images/carrot.png' },
 
         { id: 2, 
-          name: 'Bananas', 
+          name: 'Cucumber', 
           price: 2, inStock: false, 
           rating: 3, 
-          image: '/images/bananas.jpg' },
+          image: '/images/cucumber.png' },
 
         { id: 3, 
-          name: 'Mangoes', 
+          name: 'Broccoli', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' },
+          image: '/images/broccoli.png' },
 
         { id: 4, 
-          name: 'Mangoes', 
+          name: 'Cabbage', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' },
+          image: '/images/cabbage.png' },
 
         { id: 5, 
-          name: 'Mangoes', 
+          name: 'Potato', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' },
+          image: '/images/potato.png' },
 
         { id: 6, 
-          name: 'Mangoes', 
+          name: 'Bell Pepper', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' },
+          image: '/images/bell_pepper.png' },
 
         { id: 7, 
-          name: 'Mangoes', 
+          name: 'Onion', 
           price: 5, 
           inStock: true, 
           rating: 5, 
-          image: '/images/mangoes.jpg' }
+          image: '/images/onion.png' },
+
+        { id: 8, 
+          name: 'Lettuce', 
+          price: 5, 
+          inStock: true, 
+          rating: 5, 
+          image: '/images/lettuce.png' },
+
+        { id: 9, 
+          name: 'Cauliflower', 
+          price: 5, 
+          inStock: true, 
+          rating: 5, 
+          image: '/images/cauliflower.png' }
       ]
     }
   }
@@ -82,6 +96,7 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 2rem;
+  margin-bottom: 10rem;
 }
 .Title {
   text-align: center;

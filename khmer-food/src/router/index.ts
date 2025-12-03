@@ -20,8 +20,8 @@ const routes = [
     name: 'meats', 
     component: meats,
     meta: { 
-      title: 'Meats - Khmer Organic Food',
-      image: '',
+      title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
+      image: '/images/meatBanner.png',
       bg: ''
     }
   },
