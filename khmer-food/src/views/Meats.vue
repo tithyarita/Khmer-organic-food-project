@@ -7,16 +7,22 @@
         v-for="item in products"
         :key="item.id"
         :product="item"
+        @add-to-cart="addToCart"
       />
     </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0672c9599d6598e65b67537f4dc5576599d583df
   </div>
 </template>
 
-<script>
-import Banner from '../components/Banner.vue'
-import ProductCard from '../components/ProductCard.vue'
+<script setup lang="ts">
+import Banner from '../components/Banner.vue';
+import ProductCard from '../components/ProductCard.vue';
+import { useCartStore } from '../stores/cart';
 
+<<<<<<< HEAD
 export default {
   components: { Banner, ProductCard },
   data() {
@@ -87,13 +93,31 @@ export default {
       ]
     }
   }
+=======
+const cart = useCartStore();
+
+const products = [
+  { id: 1, name: 'Chicken Chick', price: 3, unit: 'kg', weight: 1, image: '/images/chicken_chick.png' },
+  { id: 2, name: 'Beef', price: 2, unit: 'kg', weight: 1, image: '/images/beef.png' },
+  { id: 3, name: 'Pork', price: 5, unit: 'kg', weight: 1, image: '/images/pork.png' },
+  { id: 4, name: 'Lamb', price: 5, unit: 'kg', weight: 1, image: '/images/lamb.png' },
+  { id: 5, name: 'Chicken Wings', price: 5, unit: 'kg', weight: 1, image: '/images/chicken_wing.png' },
+  { id: 6, name: 'Chicken Drumsticks', price: 5, unit: 'kg', weight: 1, image: '/images/chicken_dumpstick.png' },
+  { id: 7, name: 'Fish', price: 5, unit: 'kg', weight: 1, image: '/images/fish.png' },
+  { id: 8, name: 'Salmon', price: 5, unit: 'kg', weight: 1, image: '/images/salmon.png' },
+  { id: 9, name: 'Eggs', price: 5, unit: 'set', weight: 1, image: '/images/egg.png' }
+];
+
+function addToCart(product: any) {
+  cart.addItem(product);
+>>>>>>> 0672c9599d6598e65b67537f4dc5576599d583df
 }
 </script>
 
 <style scoped>
 .products {
   display: flex;
-  gap: 2rem; /* 20px converted to rem */
+  gap: 2rem;
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 2rem;

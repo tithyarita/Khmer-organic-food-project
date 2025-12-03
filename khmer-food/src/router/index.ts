@@ -3,10 +3,10 @@ import HomeView from '../views/HomeView.vue'
 import vegetables from '../views/vegetables.vue'
 import meats from '../views/meats.vue'
 import sets from '../views/sets.vue'
-
+import CartView from '../views/CartView.vue' 
 const routes = [
   { path: '/', component: HomeView },
-
+  
   { path: '/category/vegetables', 
     name: 'vegetables', 
     component: vegetables,
@@ -34,6 +34,12 @@ const routes = [
       bg: ''
     }
   },
+  {
+  path: '/cart',
+  name: 'Cart',
+  component: CartView
+}
+
 
 ]
 
