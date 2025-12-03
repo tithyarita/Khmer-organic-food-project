@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import { useCartStore } from '../stores/cart';
+import { useRouter } from 'vue-router';
+
+// props
+defineProps<{ product: any }>();
+
+// emits (optional if you want parent to listen)
+defineEmits(['add-to-cart']);
+
+const cart = useCartStore();
+const router = useRouter();
+
+function addToCart(product: any) {
+  cart.addItem(product);          // ✅ add to Pinia store
+  // emit if parent wants to listen
+  // $emit('add-to-cart', product);
+
+  // ✅ optional redirect to cart page
+  router.push('/cart');
+}
+</script>
+
 <template>
   <div class="card">
     <!-- Header -->
@@ -6,7 +29,7 @@
         <i :class="product.inStock ? 'fa-solid fa-check-circle' : 'fa-solid fa-times-circle'"></i>
         <span>{{ product.inStock ? 'In Stock' : 'Out of Stock' }}</span>
       </div>
-      <div class="favorite" @click="toggleFavorite">
+      <div class="favorite" @click="isFavorite = !isFavorite">
         <i :class="isFavorite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
       </div>
     </div>
@@ -31,30 +54,18 @@
       </div>
 
       <!-- Add to Cart -->
-      <!-- <button class="add-to-cart">Add to Cart</button> -->
-      <router-link to="/cart">
-      <button class="add-to-cart">
+      <button class="add-to-cart" @click="addToCart(product)">
         <i class="fa-solid fa-cart-shopping"></i> Add to Cart
       </button>
-    </router-link>
-
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
-  props: {
-    product: Object
-  },
   data() {
     return {
       isFavorite: false
-    }
-  },
-  methods: {
-    toggleFavorite() {
-      this.isFavorite = !this.isFavorite
     }
   }
 }
@@ -73,7 +84,6 @@ export default {
   flex-direction: column;
   justify-content: space-between;
 }
-
 /* Header */
 .card-header {
   display: flex;
@@ -81,7 +91,6 @@ export default {
   align-items: center;
   margin-bottom: 0.75rem;
 }
-
 .stock-status {
   display: flex;
   align-items: center;
@@ -89,55 +98,43 @@ export default {
   font-size: 0.9rem;
   color: #2e7d32;
 }
-
 .stock-status i {
   color: #2e7d32;
 }
-
 .favorite i {
   font-size: 1.2rem;
-  color: #e91e63; /* red heart */
+  color: #e91e63;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
-
 .favorite i:hover {
   transform: scale(1.2);
 }
-
 /* Image */
 .card-image {
   text-align: center;
-  /* margin: 0.1rem 0; */
 }
-
 .card-image img {
   max-width: 270px;
   height: 240px;
   border-radius: 0.25rem;
-  align-items: center;
 }
-
 /* Footer */
 .card-footer {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
 .rating {
-  color: #FFD700; /* gold stars */
+  color: #FFD700;
   font-size: 1rem;
 }
-
 .info-row {
   display: flex;
   justify-content: space-between;
   font-size: 1.2rem;
   font-weight: 600;
-  
 }
-
 .add-to-cart {
   background-color: #6EC007;
   color: white;
@@ -151,7 +148,6 @@ export default {
   height: 3rem;
   font-size: 1.2rem;
 }
-
 .add-to-cart:hover {
   background-color: #4CAF50;
 }
