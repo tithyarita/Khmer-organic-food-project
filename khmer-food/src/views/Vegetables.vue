@@ -50,7 +50,7 @@ const products= [
 
         { id: 4, 
           name: 'Cabbage', 
-          price: 5,
+          price: 4,
           unit: 'kg', 
           weight: 1,
           inStock: true, 
@@ -59,7 +59,7 @@ const products= [
 
         { id: 5, 
           name: 'Potato', 
-          price: 5, 
+          price: 3, 
           unit: 'kg', 
           weight: 1,
           inStock: true, 
@@ -68,7 +68,7 @@ const products= [
 
         { id: 6, 
           name: 'Bell Pepper', 
-          price: 5, 
+          price: 2.5, 
           unit: 'kg', 
           weight: 1,
           inStock: true, 
@@ -77,28 +77,28 @@ const products= [
 
         { id: 7, 
           name: 'Onion', 
-          price: 5,
+          price: 3,
           unit: 'kg', 
           weight: 1, 
           inStock: true, 
-          rating: 5, 
+          rating: 2, 
           image: '/images/onion.png' },
 
         { id: 8, 
           name: 'Lettuce', 
-          price: 5, 
+          price: 4, 
           unit: 'kg', 
           weight: 1,
           inStock: true, 
-          rating: 5, 
+          rating: 4, 
           image: '/images/lettuce.png' },
 
         { id: 9, 
           name: 'Cauliflower', 
-          price: 5,
+          price: 3,
           unit: 'kg', 
           weight: 1, 
-          inStock: true, 
+          inStock: false, 
           rating: 5, 
           image: '/images/cauliflower.png' }
       ]
@@ -115,7 +115,7 @@ function addToCart(product: any) {
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 2rem;
-  margin-bottom: 10rem;
+  margin-bottom: 3rem;
 }
 .Title {
   text-align: center;

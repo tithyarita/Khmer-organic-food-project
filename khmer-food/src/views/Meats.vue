@@ -10,10 +10,6 @@
         @add-to-cart="addToCart"
       />
     </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 0672c9599d6598e65b67537f4dc5576599d583df
   </div>
 </template>
 
@@ -25,15 +21,15 @@ import { useCartStore } from '../stores/cart';
 const cart = useCartStore();
 
 const products = [
-  { id: 1, name: 'Chicken Chick', price: 3, unit: 'kg', weight: 1, image: '/images/chicken_chick.png' },
-  { id: 2, name: 'Beef', price: 2, unit: 'kg', weight: 1, image: '/images/beef.png' },
-  { id: 3, name: 'Pork', price: 5, unit: 'kg', weight: 1, image: '/images/pork.png' },
-  { id: 4, name: 'Lamb', price: 5, unit: 'kg', weight: 1, image: '/images/lamb.png' },
-  { id: 5, name: 'Chicken Wings', price: 5, unit: 'kg', weight: 1, image: '/images/chicken_wing.png' },
-  { id: 6, name: 'Chicken Drumsticks', price: 5, unit: 'kg', weight: 1, image: '/images/chicken_dumpstick.png' },
-  { id: 7, name: 'Fish', price: 5, unit: 'kg', weight: 1, image: '/images/fish.png' },
-  { id: 8, name: 'Salmon', price: 5, unit: 'kg', weight: 1, image: '/images/salmon.png' },
-  { id: 9, name: 'Eggs', price: 5, unit: 'set', weight: 1, image: '/images/egg.png' }
+  { id: 1, name: 'Chicken Chick', price: 3, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/chicken_chick.png' },
+  { id: 2, name: 'Beef', price: 10, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/beef.png' },
+  { id: 3, name: 'Pork', price: 5, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/pork.png' },
+  { id: 4, name: 'Lamb', price: 9, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/lamb.png' },
+  { id: 5, name: 'Chicken Wings', price: 5, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/chicken_wing.png' },
+  { id: 6, name: 'Chicken Drumsticks', price: 5, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/chicken_dumpstick.png' },
+  { id: 7, name: 'Fish', price: 3, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/fish.png' },
+  { id: 8, name: 'Salmon', price: 15, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/salmon.png' },
+  { id: 9, name: 'Eggs', price: 2, unit: 'set', weight: 1,inStock:false, rating:4, image: '/images/egg.png' }
 ];
 
 function addToCart(product: any) {
@@ -48,7 +44,7 @@ function addToCart(product: any) {
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 2rem;
-  margin-bottom: 10rem;
+  margin-bottom: 3rem;
 }
 .Title {
   text-align: center;

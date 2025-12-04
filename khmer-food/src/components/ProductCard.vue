@@ -76,13 +76,14 @@ export default {
   border: 1px solid #ccc;
   border-radius: 0.5rem;
   padding: 1rem;
-  width: 390px;
-  height: 500px;
-  box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+  width: 350px;
+  height: 470px;
+  box-shadow: 0 0.25rem 0.5rem rgba(133, 237, 121, 0.1);
   font-family: 'Baloo Da', cursive;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 3rem;
 }
 /* Header */
 .card-header {
@@ -115,8 +116,8 @@ export default {
   text-align: center;
 }
 .card-image img {
-  max-width: 270px;
-  height: 240px;
+  max-width: 250px;
+  height: 180px;
   border-radius: 0.25rem;
 }
 /* Footer */

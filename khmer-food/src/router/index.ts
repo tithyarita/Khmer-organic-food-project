@@ -29,8 +29,8 @@ const routes = [
     name: 'sets', 
     component: sets,
     meta: { 
-      title: 'Sets - Khmer Organic Food',
-      image: '',
+      title: 'CAMBODIA’S SIGNATURE DISH SEASON’S BEST ON YOUR PLATE',
+      image: '/images/setBanner.png',
       bg: ''
     }
   },
