@@ -1,6 +1,6 @@
 <template>
   <div class="menu">
-    <img src="" alt="">
+    <img src="" alt="" />
     <router-link to="/">Home</router-link>
     <router-link to="/category">Category</router-link>
     <router-link to="/blog">Blog</router-link>
@@ -11,19 +11,19 @@
 
 <script>
 export default {
-  name: "Menu"
+  name: 'Menu',
 }
 </script>
 
 <style>
-.menu{
+.menu {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   padding: 20px;
-  gap: 1rem;
+  gap: 4rem;
   height: 10vh;
-  background-color: #6EC007;
+  background-color: #6ec007;
 }
 .menu a {
   color: white;
@@ -34,5 +34,4 @@ export default {
   border-bottom: 2px solid white;
   padding-bottom: 4px;
 }
-
 </style>

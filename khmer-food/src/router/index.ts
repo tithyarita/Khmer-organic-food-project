@@ -1,44 +1,54 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import vegetables from '../views/vegetables.vue'
-import meats from '../views/meats.vue'
+import vegetables from '../views/Vegetables.vue'
+import meats from '../views/Meats.vue'
 import sets from '../views/sets.vue'
 import CartView from '../views/CartView.vue'
+
 import FavoritePage from '../views/FavoritePage.vue'
-import ProductDetailView from '../views/ProductDetailView.vue'
+// import ProductDetailView from '../views/ProductDetailView.vue'
+
 import ProductDetail from '../views/ProductDetail.vue'
 
 const routes = [
   { path: '/', component: HomeView },
 
-  { path: '/category/vegetables',
+  {
+    path: '/category/vegetables',
     name: 'vegetables',
     component: vegetables,
     meta: {
       title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES',
       image: '/images/vegBanner.jpeg',
       bg: '#F5F5F5',
-      source: 'vegetables'
-    }
+
+    },
   },
-  { path: '/category/meats',
+  {
+    path: '/admin',
+    name: '/admin',
+    component: () => import('../components/Admindasbroad.vue'),
+  },
+
+  {
+    path: '/category/meats',
     name: 'meats',
     component: meats,
     meta: {
       title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
       image: '/images/meatBanner.jpg',
       bg: '',
-      source: 'meats'
-    }
+
+    },
   },
-  { path: '/category/sets',
+  {
+    path: '/category/sets',
     name: 'sets',
     component: sets,
     meta: {
       title: 'CAMBODIA’S SIGNATURE DISH SEASON’S BEST ON YOUR PLATE',
       image: '/images/setBanner.png',
       bg: '',
-      source: 'sets'
     }
   },
   {
@@ -51,11 +61,6 @@ const routes = [
   name: 'FavoritePage',
   component: FavoritePage
   },
-  {
-  path: '/product/:id',
-  name: 'ProductDetail',
-  component: ProductDetailView
-},
 
   {
     path: '/product/:id',
@@ -67,28 +72,35 @@ const routes = [
   {
     path: '/cart',
     name: 'Cart',
-    component: CartView
+    component: CartView,
   },
   {
-    path: '/blog',
-    name: 'Blog',
-    component: () => import('../views/BlogView.vue')
+    path: '/favorite',
+    name: 'FavoritePage',
+    component: FavoritePage,
   },
+  // {
+  //   path: '/product/:id',
+  //   name: 'ProductDetail',
+  //   component: ProductDetailView,
+  // },
+
   {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/AboutView.vue')
-  },
-  {
-    path: '/contact',
-    name: 'Contact',
-    component: () => import('../views/ContactView.vue')
+    path: '/product/:id',
+    name: 'ProductDetail',
+    component: ProductDetail,
+    props: true,
   },
 
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: CartView,
+  },
 ]
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
 
 export default router

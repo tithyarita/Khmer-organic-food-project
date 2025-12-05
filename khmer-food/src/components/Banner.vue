@@ -1,7 +1,7 @@
 <template>
   <div class="banner">
     <!-- Background Image -->
-    <img :src="bannerImage" alt="Category Banner" class="banner-img" />
+    <img :src="bannerImage" alt=" " class="banner-img" />
 
     <!-- Text Content -->
     <div class="banner-content">
