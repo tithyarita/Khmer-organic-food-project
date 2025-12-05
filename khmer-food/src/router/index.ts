@@ -17,7 +17,8 @@ const routes = [
     meta: {
       title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES',
       image: '/images/vegBanner.jpeg',
-      bg: '#F5F5F5'
+      bg: '#F5F5F5',
+      source: 'vegetables'
     }
   },
   { path: '/category/meats',
@@ -26,7 +27,8 @@ const routes = [
     meta: {
       title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
       image: '/images/meatBanner.jpg',
-      bg: ''
+      bg: '',
+      source: 'meats'
     }
   },
   { path: '/category/sets',
@@ -35,7 +37,8 @@ const routes = [
     meta: {
       title: 'CAMBODIA’S SIGNATURE DISH SEASON’S BEST ON YOUR PLATE',
       image: '/images/setBanner.png',
-      bg: ''
+      bg: '',
+      source: 'sets'
     }
   },
   {

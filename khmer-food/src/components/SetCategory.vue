@@ -47,6 +47,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 defineProps({
+  product: Object,
   title: String,
   items: Array     // [{ id, name, price, image }]
 });

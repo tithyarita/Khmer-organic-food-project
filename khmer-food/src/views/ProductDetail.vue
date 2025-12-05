@@ -21,7 +21,7 @@
       <p class="price">PRICE: {{ product.price }}</p>
       <div class="actions">
         <input type="number" v-model="quantity" min="1" />
-        <button @click="addToFavorite">Add to Favorite</button>
+        <button @click="addToFavorite(product, 'detail')">Add to Favorite</button>
         <button @click="addToCart">Add to Cart</button>
       </div>
     </section>
@@ -32,6 +32,8 @@
 </template>
 
 <script lang="ts">
+import { useCartStore } from '../stores/cart';
+import { useFavoriteStore } from '../stores/favorite';
 export default {
   name: 'ProductDetail',
   props: ['id'],
@@ -78,16 +80,39 @@ export default {
     }
   },
   methods: {
-    loadProduct() {
-      this.product = this.mockProducts.find(p => p.id === this.id);
-    },
-    addToFavorite() {
-      alert(`Added ${this.product.name} to favorites!`);
-    },
-    addToCart() {
-      alert(`Added ${this.quantity} x ${this.product.name} to cart!`);
-    }
+  loadProduct() {
+    this.product = this.mockProducts.find(p => p.id === this.id);
+  },
+
+  addToFavorite() {
+  const favorite = useFavoriteStore();
+
+  favorite.addFavorite({
+    id: this.product.id,
+    name: this.product.name,
+    image: this.product.images[0],
+    price: Number(this.product.price.replace('$', '')) // convert string "$8.10"
+    
+  });
+
+  this.$router.push('/favorite');   // redirect to Favorite page
+},
+
+  addToCart() {
+    const cart = useCartStore();
+    cart.addItem({
+      id: this.product.id,
+      name: this.product.name,
+      image: this.product.images[0],
+      price: Number(this.product.price.replace("$", "")),
+      qty: this.quantity,
+      unit: "set"
+    });
+
+    this.$router.push("/cart");
   }
+}
+
 };
 </script>
 

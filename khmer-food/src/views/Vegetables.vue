@@ -110,6 +110,9 @@ function addToCart(product: any) {
   const cart = useCartStore();
   cart.addItem(product);
 }
+function addToFavorite(product: any) {
+  // Implement favorite functionality if needed
+}
 </script>
 
 <style scoped>

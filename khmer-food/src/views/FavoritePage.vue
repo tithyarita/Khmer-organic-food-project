@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProductCard from '../components/ProductCard.vue';
+import SetCategory from '../components/SetCategory.vue';
 import { useFavoriteStore } from '../stores/favorite';
 
 const favorite = useFavoriteStore();
