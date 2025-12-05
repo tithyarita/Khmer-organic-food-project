@@ -6,28 +6,43 @@
     </main>
     <Footer class="footer" />
   </div>
-
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Menu from './components/Menu.vue'
-import Footer from './components/Footer.vue';
+import Footer from './components/Footer.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
     Menu,
-    Footer
-  } 
+    Footer,
+  },
 })
 </script>
 
 <style>
+html,
 body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; /* ⛔ NO LEFT/RIGHT SCROLL */
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit; /* keeps all elements inside screen */
+}
+
+body {
   font-family: Arial, sans-serif;
 }
+
 .header {
   position: fixed;
   top: 0;
@@ -37,7 +52,6 @@ body {
 }
 
 .footer {
-  /* position: fixed; */
   bottom: 0;
   left: 0;
   width: 100%;
@@ -45,7 +59,7 @@ body {
 }
 
 main {
-  padding-top: 80px;    /* adjust to header height */
+  padding-top: 80px; /* adjust to header height */
   padding-bottom: 60px; /* adjust to footer height */
 }
 </style>

@@ -18,17 +18,25 @@
 </template>
 
 <script>
-import BannerHomePage from "@/components/Homepage-banner.vue";
+import BannerHomePage from '@/components/Homepage-banner.vue'
 
 export default {
-  name: "HomePage",
+  name: 'HomePage',
   components: {
-    BannerHomePage
-  }
-};
+    BannerHomePage,
+  },
+}
 </script>
 
 <style scoped>
+/* Apply background + font to the main container instead of body */
+.homepage-container {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Baloo Da', cursive;
+}
+
 .content-section {
   text-align: center;
   margin-top: 60px;
@@ -37,14 +45,14 @@ export default {
 .content-section h1 {
   font-size: 64px;
   font-family: 'Baloo Tamma 2', cursive;
-  color: #6EC007;
+  color: #6ec007;
   margin-bottom: 20px;
 }
 
 .categories-section {
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 40px 20px;
   margin-top: 60px;
 }
