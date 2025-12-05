@@ -38,7 +38,7 @@ const products= [
           price: 2, 
           unit: 'kg', 
           weight: 1,
-          inStock: false, 
+          inStock: true, 
           rating: 3, 
           
           image: '/images/cucumber.png' },
