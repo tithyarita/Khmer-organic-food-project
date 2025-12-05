@@ -3,7 +3,7 @@
     <!-- Left Side -->
     <div class="footer-left">
       <p><strong>Contact Us:</strong></p>
-      <p><strong>Phone:</strong> +855 12 345 678</p>
+      <p><strong>Phone:</strong> +85517213327</p>
       <p><strong>Location:</strong> Phnom Penh, Cambodia</p>
     </div>
 

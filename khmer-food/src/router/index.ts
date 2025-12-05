@@ -6,7 +6,7 @@ import sets from '../views/sets.vue'
 import CartView from '../views/CartView.vue'
 
 import FavoritePage from '../views/FavoritePage.vue'
-import ProductDetailView from '../views/ProductDetailView.vue'
+// import ProductDetailView from '../views/ProductDetailView.vue'
 
 import ProductDetail from '../views/ProductDetail.vue'
 
@@ -59,11 +59,11 @@ const routes = [
     name: 'FavoritePage',
     component: FavoritePage,
   },
-  {
-    path: '/product/:id',
-    name: 'ProductDetail',
-    component: ProductDetailView,
-  },
+  // {
+  //   path: '/product/:id',
+  //   name: 'ProductDetail',
+  //   component: ProductDetailView,
+  // },
 
   {
     path: '/product/:id',
