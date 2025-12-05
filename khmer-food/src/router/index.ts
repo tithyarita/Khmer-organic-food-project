@@ -5,8 +5,9 @@ import meats from '../views/meats.vue'
 import sets from '../views/sets.vue'
 import CartView from '../views/CartView.vue'
 import FavoritePage from '../views/FavoritePage.vue'
-import ProductDetailView from '../views/ProductDetailView.vue'
 import ProductDetail from '../views/ProductDetail.vue'
+
+
 
 const routes = [
   { path: '/', component: HomeView },
@@ -46,18 +47,18 @@ const routes = [
   {
   path: '/favorite',
   name: 'FavoritePage',
-  component: FavoritePage
+  component: FavoritePage,
   },
-  {
-  path: '/product/:id',
-  name: 'ProductDetail',
-  component: ProductDetailView
-},
 
   {
     path: '/product/:id',
     name: 'ProductDetail',
     component: ProductDetail,
+    meta:{
+    title: 'KHMER DETAIL FOOD',
+    image: '/images/mint-isLeft.png',
+    bg: ''
+  },
     props : true
   },
 
