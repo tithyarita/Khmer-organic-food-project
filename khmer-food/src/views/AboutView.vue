@@ -141,7 +141,7 @@ export default {};
   background: #e0ecd1;
   flex: 1;
   min-width: 250px;
-  border-radius: 1.25rem 0 1.25rem 1.25rem;
+  border-radius: 1.25rem 0 0rem 1.25rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -165,7 +165,7 @@ export default {};
 
 .purpose-box {
   background: #6ec007;
-  border-radius: 1.25rem 1.25rem 0 0;
+  border-radius: 0rem 1.25rem 0 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
