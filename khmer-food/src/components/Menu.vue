@@ -22,8 +22,11 @@
 
     <div class="right-side">
       <router-link to="#"><i class="fa-solid fa-magnifying-glass"></i></router-link>
-      <router-link to="#"><i class="fa-regular fa-heart"></i></router-link>
-      <router-link to="#"><i class="fa-solid fa-cart-shopping"></i></router-link>
+      <router-link to="/favorites">
+  <i class="fa-regular fa-heart"></i>
+</router-link>
+
+      <router-link to="/cart"><i class="fa-solid fa-cart-shopping"></i></router-link>
       <router-link to="#"><i class="fa-regular fa-user"></i></router-link>
     </div>
   </div>

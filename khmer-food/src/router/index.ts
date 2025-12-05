@@ -4,6 +4,8 @@ import vegetables from '../views/vegetables.vue'
 import meats from '../views/meats.vue'
 import sets from '../views/sets.vue'
 import CartView from '../views/CartView.vue' 
+import FavoritePage from '../views/FavoritePage.vue'
+import ProductDetailView from '../views/ProductDetailView.vue'
 const routes = [
   { path: '/', component: HomeView },
   
@@ -38,7 +40,17 @@ const routes = [
   path: '/cart',
   name: 'Cart',
   component: CartView
-}
+},
+  {
+  path: '/favorite',
+  name: 'FavoritePage',
+  component: FavoritePage
+  },
+  {
+  path: '/product/:id',
+  name: 'ProductDetail',
+  component: ProductDetailView
+},
 
 
 ]

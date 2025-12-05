@@ -2,12 +2,17 @@
   <div>
     <Banner />
     <h1 class="Title">Feature Products</h1>
+
     <div class="products">
       <ProductCard
         v-for="item in products"
         :key="item.id"
         :product="item"
+        :showCart="true"
+        :showStock="true"
+        :showFavorite="true"
         @add-to-cart="addToCart"
+        @add-to-favorite="addToFavorite"
       />
     </div>
   </div>
@@ -17,23 +22,31 @@
 import Banner from '../components/Banner.vue';
 import ProductCard from '../components/ProductCard.vue';
 import { useCartStore } from '../stores/cart';
+import { useFavoriteStore } from '../stores/favorite';
 
 const cart = useCartStore();
+const favorite = useFavoriteStore();
 
 const products = [
-  { id: 1, name: 'Chicken Chick', price: 3, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/chicken_chick.png' },
-  { id: 2, name: 'Beef', price: 10, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/beef.png' },
-  { id: 3, name: 'Pork', price: 5, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/pork.png' },
-  { id: 4, name: 'Lamb', price: 9, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/lamb.png' },
-  { id: 5, name: 'Chicken Wings', price: 5, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/chicken_wing.png' },
-  { id: 6, name: 'Chicken Drumsticks', price: 5, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/chicken_dumpstick.png' },
-  { id: 7, name: 'Fish', price: 3, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/fish.png' },
-  { id: 8, name: 'Salmon', price: 15, unit: 'kg', weight: 1, inStock:true, rating:5, image: '/images/salmon.png' },
-  { id: 9, name: 'Eggs', price: 2, unit: 'set', weight: 1,inStock:false, rating:4, image: '/images/egg.png' }
+  { id: 1, name: 'Chicken Chick', price: 3, unit: 'kg', weight: 1, inStock: true, rating: 5, image: '/images/chicken_chick.png' },
+  { id: 2, name: 'Beef', price: 10, unit: 'kg', weight: 1, inStock: true, rating: 5, image: '/images/beef.png' },
+  { id: 3, name: 'Pork', price: 5, unit: 'kg', weight: 1, inStock: true, rating: 5, image: '/images/pork.png' },
+  { id: 4, name: 'Lamb', price: 9, unit: 'kg', weight: 1, inStock: true, rating: 5, image: '/images/lamb.png' },
+  { id: 5, name: 'Chicken Wings', price: 5, unit: 'kg', weight: 1, inStock: true, rating: 5, image: '/images/chicken_wing.png' },
+  { id: 6, name: 'Chicken Drumsticks', price: 5, unit: 'kg', weight: 1, inStock: true, rating: 5, image: '/images/chicken_dumpstick.png' },
+  { id: 7, name: 'Fish', price: 3, unit: 'kg', weight: 1, inStock: true, rating: 5, image: '/images/fish.png' },
+  { id: 8, name: 'Salmon', price: 15, unit: 'kg', weight: 1, inStock: true, rating: 5, image: '/images/salmon.png' },
+  { id: 9, name: 'Eggs', price: 2, unit: 'set', weight: 1, inStock: false, rating: 4, image: '/images/egg.png' }
 ];
 
 function addToCart(product: any) {
   cart.addItem(product);
+}
+
+function addToFavorite(product: any) {
+  if (!favorite.items.find(p => p.id === product.id)) {
+    favorite.addFavorite(product);
+  }
 }
 </script>
 

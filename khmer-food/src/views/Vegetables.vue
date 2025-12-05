@@ -7,7 +7,11 @@
         v-for="item in products"
         :key="item.id"
         :product="item"
+        :showCart="true"
+        :showStock="true"
+        :showFavorite="true"
         @add-to-cart="addToCart"
+        @add-to-favorite="addToFavorite"
       />
     </div>
     

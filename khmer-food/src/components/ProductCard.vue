@@ -1,23 +1,37 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useCartStore } from '../stores/cart';
+import { useFavoriteStore } from '../stores/favorite';
 import { useRouter } from 'vue-router';
 
-// props
-defineProps<{ product: any }>();
+const props = defineProps<{
+  product: any;
+  showCart?: boolean;   // ✅ control Add to Cart
+  showStock?: boolean;  // ✅ control In Stock text
+  showFavorite?: boolean; // ✅ control heart icon
+}>();
 
-// emits (optional if you want parent to listen)
-defineEmits(['add-to-cart']);
+const emit = defineEmits(['add-to-cart', 'add-to-favorite']);
 
 const cart = useCartStore();
+const favorite = useFavoriteStore();
 const router = useRouter();
 
-function addToCart(product: any) {
-  cart.addItem(product);          // ✅ add to Pinia store
-  // emit if parent wants to listen
-  // $emit('add-to-cart', product);
+const isFavorite = ref(false);
 
-  // ✅ optional redirect to cart page
+function addToCart(product: any) {
+  cart.addItem(product);
+  emit('add-to-cart', product);
   router.push('/cart');
+}
+
+function addToFavorite(product: any) {
+  if (!favorite.items.find(p => p.id === product.id)) {
+    favorite.addFavorite(product);
+  }
+  isFavorite.value = true;
+  emit('add-to-favorite', product);
+  router.push('/favorite');
 }
 </script>
 
@@ -25,51 +39,43 @@ function addToCart(product: any) {
   <div class="card">
     <!-- Header -->
     <div class="card-header">
-      <div class="stock-status">
+      <!-- ✅ Only show stock if enabled -->
+      <div v-if="showStock" class="stock-status">
         <i :class="product.inStock ? 'fa-solid fa-check-circle' : 'fa-solid fa-times-circle'"></i>
         <span>{{ product.inStock ? 'In Stock' : 'Out of Stock' }}</span>
       </div>
-      <div class="favorite" @click="isFavorite = !isFavorite">
+
+      <!-- ✅ Only show heart if enabled -->
+      <button v-if="showFavorite" class="favorite-btn" type="button" @click="addToFavorite(product)">
         <i :class="isFavorite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
-      </div>
+      </button>
     </div>
 
-    <!-- Center Image -->
+    <!-- Image -->
     <div class="card-image">
       <img :src="product.image || '/default-product.jpg'" :alt="product.name" />
     </div>
 
     <!-- Footer -->
     <div class="card-footer">
-      <!-- Rating -->
       <div class="rating">
         <i v-for="n in 5" :key="n"
            :class="n <= product.rating ? 'fa-solid fa-star' : 'fa-regular fa-star'"></i>
       </div>
 
-      <!-- Name + Price -->
       <div class="info-row">
         <span class="product-name">{{ product.name }}</span>
-        <span class="product-price">${{ product.price }}/Kg</span>
+        <span class="product-price">${{ product.price }}/{{ product.unit }}</span>
       </div>
 
-      <!-- Add to Cart -->
-      <button class="add-to-cart" @click="addToCart(product)">
+      <!-- ✅ Only show Add to Cart if enabled -->
+      <button v-if="showCart" class="add-to-cart" @click="addToCart(product)">
         <i class="fa-solid fa-cart-shopping"></i> Add to Cart
       </button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  data() {
-    return {
-      isFavorite: false
-    }
-  }
-}
-</script>
 
 <style scoped>
 .card {
@@ -85,7 +91,6 @@ export default {
   justify-content: space-between;
   gap: 3rem;
 }
-/* Header */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -102,17 +107,22 @@ export default {
 .stock-status i {
   color: #2e7d32;
 }
-.favorite i {
+.favorite-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.favorite-btn i {
   font-size: 1.2rem;
   color: #e91e63;
-  cursor: pointer;
   transition: transform 0.2s ease;
 }
-.favorite i:hover {
+.favorite-btn i:hover {
   transform: scale(1.2);
 }
-/* Image */
 .card-image {
+  position: relative;
   text-align: center;
 }
 .card-image img {
@@ -120,7 +130,19 @@ export default {
   height: 180px;
   border-radius: 0.25rem;
 }
-/* Footer */
+.arrow-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: #6EC007;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
 .card-footer {
   display: flex;
   flex-direction: column;

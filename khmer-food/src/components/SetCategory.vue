@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CategorySection from './CategorySection.vue'
 
 const categories = [

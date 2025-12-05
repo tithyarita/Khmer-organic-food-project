@@ -85,7 +85,7 @@ const total = computed(() => subtotal.value + delivery.value - discount.value);
   width: 100%;
   margin: auto;
   max-width: 600px;
-  font-family: Arial;
+  font-family: 'Baloo Da', cursive;
 }
 .title {
   text-align: center;
