@@ -3,18 +3,16 @@ import HomeView from '../views/HomeView.vue'
 import vegetables from '../views/vegetables.vue'
 import meats from '../views/meats.vue'
 import sets from '../views/sets.vue'
-import CartView from '../views/CartView.vue' 
-
+import CartView from '../views/CartView.vue'
 import FavoritePage from '../views/FavoritePage.vue'
 import ProductDetailView from '../views/ProductDetailView.vue'
-
 import ProductDetail from '../views/ProductDetail.vue'
 
 const routes = [
   { path: '/', component: HomeView },
-  
-  { path: '/category/vegetables', 
-    name: 'vegetables', 
+
+  { path: '/category/vegetables',
+    name: 'vegetables',
     component: vegetables,
     meta: {
       title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES',
@@ -23,29 +21,28 @@ const routes = [
     }
   },
   { path: '/category/meats',
-    name: 'meats', 
+    name: 'meats',
     component: meats,
-    meta: { 
+    meta: {
       title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
       image: '/images/meatBanner.jpg',
       bg: ''
     }
   },
-  { path: '/category/sets', 
-    name: 'sets', 
+  { path: '/category/sets',
+    name: 'sets',
     component: sets,
-    meta: { 
+    meta: {
       title: 'CAMBODIA’S SIGNATURE DISH SEASON’S BEST ON YOUR PLATE',
       image: '/images/setBanner.png',
       bg: ''
     }
   },
-
   {
   path: '/cart',
   name: 'Cart',
   component: CartView
-},
+  },
   {
   path: '/favorite',
   name: 'FavoritePage',
@@ -56,7 +53,6 @@ const routes = [
   name: 'ProductDetail',
   component: ProductDetailView
 },
-
 
   {
     path: '/product/:id',
@@ -69,7 +65,22 @@ const routes = [
     path: '/cart',
     name: 'Cart',
     component: CartView
-  }
+  },
+  {
+    path: '/blog',
+    name: 'Blog',
+    component: () => import('../views/BlogView.vue')
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('../views/AboutView.vue')
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: () => import('../views/ContactView.vue')
+  },
 
 ]
 const router = createRouter({
