@@ -54,7 +54,7 @@ export default {
           ]
         },
         {
-          id: '2',
+          id: '9',
           name: 'Amok',
           price: '$11.10',
           images: ['amok1.jpg', 'amok2.jpg'],

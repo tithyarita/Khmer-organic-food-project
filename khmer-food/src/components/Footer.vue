@@ -31,12 +31,14 @@ export default {
 <style scoped>
 .footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  gap: 55rem;
   align-items: center;
   background-color: #6EC007; /* same as header */
-  padding: 1.25rem 1.875rem; /* 20px 30px converted to rem */
+  padding: 1rem 0.5rem;
   font-family: 'Baloo Da', cursive;
   color: #fff;
+
 }
 
 .footer-left{

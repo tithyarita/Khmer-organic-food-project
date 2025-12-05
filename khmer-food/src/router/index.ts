@@ -4,6 +4,7 @@ import vegetables from '../views/vegetables.vue'
 import meats from '../views/meats.vue'
 import sets from '../views/sets.vue'
 import CartView from '../views/CartView.vue' 
+import ProductDetail from '../views/ProductDetail.vue'
 const routes = [
   { path: '/', component: HomeView },
   
@@ -12,7 +13,7 @@ const routes = [
     component: vegetables,
     meta: {
       title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES',
-      image: '/images/vegBanner.png',
+      image: '/images/vegBanner.jpeg',
       bg: '#F5F5F5'
     }
   },
@@ -21,7 +22,7 @@ const routes = [
     component: meats,
     meta: { 
       title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
-      image: '/images/meatBanner.png',
+      image: '/images/meatBanner.jpg',
       bg: ''
     }
   },
@@ -34,15 +35,21 @@ const routes = [
       bg: ''
     }
   },
-  {
-  path: '/cart',
-  name: 'Cart',
-  component: CartView
-}
 
+  {
+    path: '/product/:id',
+    name: 'ProductDetail',
+    component: ProductDetail,
+    props : true
+  },
+
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: CartView
+  }
 
 ]
-
 const router = createRouter({
   history: createWebHistory(),
   routes

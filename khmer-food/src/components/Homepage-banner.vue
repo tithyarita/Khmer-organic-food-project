@@ -6,19 +6,31 @@
     </div>
 
     <!-- Grid banners -->
-    <div v-if="showGridOnly" class="gridbanner">
-      <div class="grid-item large">
-        <img src="/images/banner2-home.png" alt="Banner 2" />
+     <div v-if="showGridOnly" class="gridbanner">
+    <!-- Banner 2 → Soup set -->
+    <div class="grid-item large">
+      <router-link :to="{ name: 'sets', params: { category: 'soup' } }">
+        <img src="/images/banner2-home.png" alt="Soup Banner" />
+      </router-link>
+    </div>
+
+    <div class="grid-column">
+      <!-- Banner 3 → Vegetables set -->
+      <div class="grid-item">
+        <router-link :to="{ name: 'vegetables', params: { category: 'vegetables' } }">
+          <img src="/images/banner3-home.png" alt="Vegetables Banner" />
+        </router-link>
       </div>
-      <div class="grid-column">
-        <div class="grid-item">
-          <img src="/images/banner3-home.png" alt="Banner 3" />
-        </div>
-        <div class="grid-item">
-          <img src="/images/banner4-home.png" alt="Banner 4" />
-        </div>
+
+      <!-- Banner 4 → Meat set -->
+      <div class="grid-item">
+        <router-link :to="{ name: 'meats', params: { category: 'meat' } }">
+          <img src="/images/banner4-home.png" alt="Meat Banner" />
+        </router-link>
       </div>
     </div>
+  </div>
+
 
     <!-- Column banners -->
     <div v-if="showColumnOnly" class="columnbanner">
