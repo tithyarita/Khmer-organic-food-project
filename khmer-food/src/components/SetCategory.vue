@@ -39,11 +39,9 @@
   </div>
 </template>
 
-<<<<<<< HEAD
+
 <script setup lang="ts">
 import CategorySection from './CategorySection.vue'
-=======
-<script setup>
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -58,9 +56,6 @@ function goToDetail(id) {
     params: { id }
   });
 }
-
-
->>>>>>> d9813e448e3f2c385031f90fee3f68f781ec76ac
 
 </script>
 

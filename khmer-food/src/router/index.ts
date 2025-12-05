@@ -4,12 +4,12 @@ import vegetables from '../views/vegetables.vue'
 import meats from '../views/meats.vue'
 import sets from '../views/sets.vue'
 import CartView from '../views/CartView.vue' 
-<<<<<<< HEAD
+
 import FavoritePage from '../views/FavoritePage.vue'
 import ProductDetailView from '../views/ProductDetailView.vue'
-=======
+
 import ProductDetail from '../views/ProductDetail.vue'
->>>>>>> d9813e448e3f2c385031f90fee3f68f781ec76ac
+
 const routes = [
   { path: '/', component: HomeView },
   
@@ -40,7 +40,7 @@ const routes = [
       bg: ''
     }
   },
-<<<<<<< HEAD
+
   {
   path: '/cart',
   name: 'Cart',
@@ -56,8 +56,7 @@ const routes = [
   name: 'ProductDetail',
   component: ProductDetailView
 },
-=======
->>>>>>> d9813e448e3f2c385031f90fee3f68f781ec76ac
+
 
   {
     path: '/product/:id',
