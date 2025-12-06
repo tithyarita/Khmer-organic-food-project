@@ -39,14 +39,14 @@ export default {
 
 .content-section {
   text-align: center;
-  margin-top: 60px;
+  margin-top: 0px;
 }
 
 .content-section h1 {
   font-size: 64px;
   font-family: 'Baloo Tamma 2', cursive;
   color: #6ec007;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .categories-section {

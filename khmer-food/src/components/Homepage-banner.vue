@@ -6,31 +6,30 @@
     </div>
 
     <!-- Grid banners -->
-     <div v-if="showGridOnly" class="gridbanner">
-    <!-- Banner 2 → Soup set -->
-    <div class="grid-item large">
-      <router-link :to="{ name: 'sets', params: { category: 'soup' } }">
-        <img src="/images/banner2-home.png" alt="Soup Banner" />
-      </router-link>
-    </div>
-
-    <div class="grid-column">
-      <!-- Banner 3 → Vegetables set -->
-      <div class="grid-item">
-        <router-link :to="{ name: 'vegetables', params: { category: 'vegetables' } }">
-          <img src="/images/banner3-home.png" alt="Vegetables Banner" />
+    <div v-if="showGridOnly" class="gridbanner">
+      <!-- Banner 2 → Soup set -->
+      <div class="grid-item large">
+        <router-link :to="{ name: 'sets', params: { category: 'soup' } }">
+          <img src="/images/banner2-home.png" alt="Soup Banner" />
         </router-link>
       </div>
 
-      <!-- Banner 4 → Meat set -->
-      <div class="grid-item">
-        <router-link :to="{ name: 'meats', params: { category: 'meat' } }">
-          <img src="/images/banner4-home.png" alt="Meat Banner" />
-        </router-link>
+      <div class="grid-column">
+        <!-- Banner 3 → Vegetables set -->
+        <div class="grid-item">
+          <router-link :to="{ name: 'vegetables', params: { category: 'vegetables' } }">
+            <img src="/images/banner3-home.png" alt="Vegetables Banner" />
+          </router-link>
+        </div>
+
+        <!-- Banner 4 → Meat set -->
+        <div class="grid-item">
+          <router-link :to="{ name: 'meats', params: { category: 'meat' } }">
+            <img src="/images/banner4-home.png" alt="Meat Banner" />
+          </router-link>
+        </div>
       </div>
     </div>
-  </div>
-
 
     <!-- Column banners -->
     <div v-if="showColumnOnly" class="columnbanner">
@@ -48,18 +47,18 @@
 
 <script>
 export default {
-  name: "BannerHomePage",
+  name: 'BannerHomePage',
   props: {
     showGridOnly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showColumnOnly: {
       type: Boolean,
-      default: false
-    }
-  }
-};
+      default: false,
+    },
+  },
+}
 </script>
 
 <style scoped>
@@ -69,7 +68,6 @@ export default {
   flex-direction: column;
   align-items: center;
   padding-top: 30px;
-  /* padding-bottom: 90px; */
   border-radius: 20px;
 }
 
@@ -106,7 +104,7 @@ export default {
   display: block;
   border-radius: 30px;
 }
-.grid-column1{
+.grid-column1 {
   display: flex;
   justify-content: center;
   align-items: center;

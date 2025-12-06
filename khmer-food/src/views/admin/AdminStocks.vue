@@ -1,10 +1,5 @@
 <template>
   <div class="admin-stocks">
-    <div class="header">
-      <h2>Stocks Management</h2>
-      <p>Monitor and manage product stock levels</p>
-    </div>
-
     <div class="actions">
       <div class="action-box">
         <span>Add Stock</span>
