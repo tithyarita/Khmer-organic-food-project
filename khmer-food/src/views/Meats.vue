@@ -54,7 +54,8 @@ function addToFavorite(product: any) {
 
 <style scoped>
 .products {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 350px);
   gap: 2rem;
   flex-wrap: wrap;
   justify-content: center;

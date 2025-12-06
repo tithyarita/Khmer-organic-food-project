@@ -88,6 +88,8 @@ function addToFavorite(product: any) {
       </button>
     </div>
   </div>
+
+  
 </template>
 
 <style scoped>
@@ -208,4 +210,6 @@ function addToFavorite(product: any) {
 .product-price {
   color: #6EC007;
 }
+
+
 </style>
