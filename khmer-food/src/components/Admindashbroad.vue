@@ -13,84 +13,89 @@
           class="menu-item"
           :class="{ active: isActive('/admin/products') }"
         >
-          📦 Products
+          <span class="icon">📦</span>
+          <div class="items-name">Products</div>
         </router-link>
+
         <router-link
           to="/admin/stocks"
           class="menu-item"
           :class="{ active: isActive('/admin/stocks') }"
         >
-          📊 Stocks
+          <span class="icon">📊</span>
+          <div class="items-name">Stocks</div>
         </router-link>
+
         <router-link
           to="/admin/orders"
           class="menu-item"
           :class="{ active: isActive('/admin/orders') }"
         >
-          📋 Orders
+          <span class="icon">📋</span>
+          <div class="items-name">Orders</div>
         </router-link>
+
         <router-link
           to="/admin/sales"
           class="menu-item"
           :class="{ active: isActive('/admin/sales') }"
         >
-          💰 Sales
+          <span class="icon">💰</span>
+          <div class="items-name">Sales</div>
         </router-link>
+
         <router-link
           to="/admin/users"
           class="menu-item"
           :class="{ active: isActive('/admin/users') }"
         >
-          👥 Users
+          <span class="icon">👥</span>
+          <div class="items-name">Info User</div>
         </router-link>
       </nav>
     </aside>
 
     <!-- RIGHT CONTENT -->
     <section class="content">
-      <!-- Optional top bar -->
       <div class="top-bar">
-        <h1>{{ currentTitle }}</h1>
+        <h1>Dashboard</h1>
+        <div class="search-bar">
+          <input type="text" placeholder="Search" />
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
       </div>
 
-      <!-- Render child admin pages here -->
-      <router-view></router-view>
+      <!-- Child routes render here -->
+      <router-view />
     </section>
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed } from 'vue'
+<script lang="ts" setup>
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-
-const currentTitle = computed(() => {
-  if (route.path.includes('products')) return 'Products'
-  if (route.path.includes('stocks')) return 'Stocks'
-  if (route.path.includes('orders')) return 'Orders'
-  if (route.path.includes('sales')) return 'Sales'
-  if (route.path.includes('users')) return 'Users'
-  return 'Dashboard'
-})
-
 const isActive = (path: string) => route.path.startsWith(path)
 </script>
 
 <style scoped>
 .dashboard-container {
   display: flex;
-  height: 100vh;
-  background-color: #f5f5f5;
+  min-height: 100vh;
+  width: 100%;
+  background: #e6e6e6;
+  overflow-x: hidden;
+
+  font-family: 'Baloo Tamma 2', sans-serif;
 }
 
+/* Sidebar */
 .sidebar {
-  width: 250px;
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  width: 25%;
+  background: #53b400;
+  padding: 40px 20px;
   color: white;
-  padding: 30px 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
 }
 
 .welcome-box {
@@ -100,59 +105,75 @@ const isActive = (path: string) => route.path.startsWith(path)
 }
 
 .welcome-title {
-  font-size: 14px;
+  font-size: 32px;
+  margin: 0;
   font-weight: 300;
-  margin: 0 0 5px 0;
-  color: rgba(255, 255, 255, 0.7);
 }
 
 .welcome-subtitle {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 36px;
   margin: 0;
-  color: white;
+  font-weight: bold;
 }
 
 .menu {
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 15px;
 }
 
 .menu-item {
-  display: block;
-  padding: 12px 16px;
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.8);
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  font-weight: 500;
+  padding: 18px 15px;
+  text-align: center;
+  font-size: 18px;
   cursor: pointer;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 .menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(5px);
 }
 
 .menu-item.active {
-  background-color: #3498db;
-  color: white;
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  background: white;
+  color: #53b400;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+.menu-item .icon {
+  font-size: 28px;
+}
+
+.items-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Content */
 .content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  width: 100%;
+  padding: 40px;
+  overflow-y: auto;
 }
 
 .top-bar {
-  background: white;
-  padding: 20px 30px;
-  border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #b6db7b;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .top-bar h1 {
@@ -161,9 +182,22 @@ const isActive = (path: string) => route.path.startsWith(path)
   font-size: 28px;
 }
 
-router-view {
-  flex: 1;
-  overflow-y: auto;
-  padding: 30px;
+.search-bar {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-bar input {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  width: 200px;
+}
+
+.search-bar i {
+  color: #2c3e50;
+  cursor: pointer;
 }
 </style>

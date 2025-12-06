@@ -1,125 +1,83 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import vegetables from '../views/Vegetables.vue'
-import meats from '../views/Meats.vue'
-import sets from '../views/sets.vue'
+import Vegetables from '../views/Vegetables.vue'
+import Meats from '../views/Meats.vue'
+import Sets from '../views/sets.vue'
 import CartView from '../views/CartView.vue'
-
 import FavoritePage from '../views/FavoritePage.vue'
-// import ProductDetailView from '../views/ProductDetailView.vue'
-
 import ProductDetail from '../views/ProductDetail.vue'
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
-
   {
     path: '/category/vegetables',
     name: 'vegetables',
-    component: vegetables,
-    meta: {
-      title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES',
-      image: '/images/vegBanner.jpeg',
-      bg: '#F5F5F5',
-
-    },
+    component: Vegetables,
+    meta: { title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES' },
   },
-  {
-    path: '/admin',
-    name: '/admin',
-    component: () => import('../components/Admindasbroad.vue'),
-  },
-
   {
     path: '/category/meats',
     name: 'meats',
-    component: meats,
-    meta: {
-      title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
-      image: '/images/meatBanner.jpg',
-      bg: '',
-
-    },
+    component: Meats,
+    meta: { title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.' },
   },
   {
     path: '/category/sets',
     name: 'sets',
-    component: sets,
-    meta: {
-      title: 'CAMBODIA’S SIGNATURE DISH SEASON’S BEST ON YOUR PLATE',
-      image: '/images/setBanner.png',
-      bg: '',
-    }
+    component: Sets,
+    meta: { title: "CAMBODIA'S SIGNATURE DISH SEASON'S BEST ON YOUR PLATE" },
   },
-  {
-  path: '/cart',
-  name: 'Cart',
-  component: CartView
-  },
-  {
-  path: '/favorite',
-  name: 'FavoritePage',
-  component: FavoritePage
-  },
+  { path: '/cart', name: 'Cart', component: CartView },
+  { path: '/favorite', name: 'FavoritePage', component: FavoritePage },
+  { path: '/product/:id', name: 'ProductDetail', component: ProductDetail, props: true },
+  { path: '/blog', name: 'BlogView', component: () => import('../views/BlogView.vue') },
+  { path: '/about', name: 'AboutView', component: () => import('../views/AboutView.vue') },
+  { path: '/contact', name: 'ContactView', component: () => import('../views/ContactView.vue') },
 
+  // Admin Layout with nested routes
   {
-    path: '/product/:id',
-    name: 'ProductDetail',
-    component: ProductDetail,
-    props : true
-  },
-
-  {
-    path: '/cart',
-    name: 'Cart',
-    component: CartView,
-  },
-  {
-    path: '/favorite',
-    name: 'FavoritePage',
-    component: FavoritePage,
-  },
-  // {
-  //   path: '/product/:id',
-  //   name: 'ProductDetail',
-  //   component: ProductDetailView,
-  // },
-
-  {
-    path: '/product/:id',
-    name: 'ProductDetail',
-    component: ProductDetail,
-    meta: {
-      title: 'KHMER DETAIL FOOD',
-      image: '/images/mint-isLeft.png',
-    },
-    props: true,
-  },
-
-  {
-    path: '/cart',
-    name: 'Cart',
-    component: CartView,
-  },
-  {
-    path: '/blog',
-    name: 'BlogView',
-    component: () => import('../views/BlogView.vue'),
-  },
-  {
-    path: '/about',
-    name: 'AboutView',
-    component: () => import('../views/AboutView.vue'),
-  },
-  {
-    path: '/contact',
-    name: 'ContactView',
-    component: () => import('../views/ContactView.vue'),
+    path: '/admin',
+    component: () => import('../components/Admindashbroad.vue'),
+    children: [
+      { path: '', redirect: '/admin/products' },
+      {
+        path: 'products',
+        name: 'AdminProducts',
+        component: () => import('../views/admin/AdminProducts.vue'),
+      },
+      {
+        path: 'stocks',
+        name: 'AdminStocks',
+        component: () => import('../views/admin/AdminStocks.vue'),
+      },
+      {
+        path: 'orders',
+        name: 'AdminOrders',
+        component: () => import('../views/admin/AdminOrders.vue'),
+      },
+      {
+        path: 'sales',
+        name: 'AdminSales',
+        component: () => import('../views/admin/AdminSales.vue'),
+      },
+      {
+        path: 'users',
+        name: 'AdminUsers',
+        component: () => import('../views/admin/AdminUsers.vue'),
+      },
+    ],
   },
 ]
+
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+  const defaultTitle = 'Khmer Organic Food'
+  document.title = (to.meta?.title as string) || defaultTitle
+  next()
 })
 
 export default router
