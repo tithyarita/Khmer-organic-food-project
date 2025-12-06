@@ -101,6 +101,21 @@ const routes = [
     name: 'Cart',
     component: CartView,
   },
+  {
+    path: '/blog',
+    name: 'BlogView',
+    component: () => import('../views/BlogView.vue'),
+  },
+  {
+    path: '/about',
+    name: 'AboutView',
+    component: () => import('../views/AboutView.vue'),
+  },
+  {
+    path: '/contact',
+    name: 'ContactView',
+    component: () => import('../views/ContactView.vue'),
+  },
 ]
 const router = createRouter({
   history: createWebHistory(),

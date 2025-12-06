@@ -31,7 +31,7 @@ const products= [
           weight: 1,
           inStock: true,
           rating: 4,
-          image: '/images/carrot.png' },
+          image: '/images/Carrot.png' },
 
         { id: 2,
           name: 'Cucumber',
