@@ -27,7 +27,7 @@ function addToCart(product: any) {
 
 function addToFavorite(product: any) {
   if (!favorite.items.find(p => p.id === product.id)) {
-    favorite.addFavorite(product);
+    favorite.addFavorite({ ...product });
   }
   isFavorite.value = true;
   emit('add-to-favorite', product);
@@ -36,7 +36,7 @@ function addToFavorite(product: any) {
 </script>
 
 <template>
-  <div class="card" :class="{ 'out-of-stock': !product.inStock }">
+  <div class="card" :class="{ 'out-of-stock': product.inStock === false }">
     <!-- Header -->
     <div class="card-header">
       <!-- Stock status -->
@@ -62,7 +62,7 @@ function addToFavorite(product: any) {
     </div>
 
     <!-- Footer -->
-    <div class="card-footer">
+    <div class="card-footer"> 
       <div class="rating">
         <i
           v-for="n in 5"
@@ -70,6 +70,7 @@ function addToFavorite(product: any) {
           :class="n <= product.rating ? 'fa-solid fa-star' : 'fa-regular fa-star'"
         ></i>
       </div>
+      
 
       <div class="info-row">
         <span class="product-name">{{ product.name }}</span>
@@ -93,6 +94,7 @@ function addToFavorite(product: any) {
 </template>
 
 <style scoped>
+
 .card {
   border: 1px solid #ccc;
   border-radius: 0.5rem;

@@ -21,8 +21,11 @@
     </div>
 
     <div class="right-side">
-      <router-link to="#"><i class="fa-solid fa-magnifying-glass"></i></router-link>
-      <router-link to="/favorites">
+      <router-link to="#">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </router-link>
+      <!-- <router-link to="#"><i class="fa-solid fa-magnifying-glass"></i></router-link> -->
+      <router-link to="/favorite">
         <i class="fa-regular fa-heart"></i>
       </router-link>
 

@@ -13,7 +13,7 @@ function removeFromFavorite(product: any) {
 <template>
   <div class="favorite-page">
     <h1 class="title">Our Favorite Products</h1>
-
+    <!-- Render favorite items here -->
     <div v-if="favorite.items.length === 0" class="empty">
       <p>No favorite products yet. Click the heart icon to add some!</p>
     </div>

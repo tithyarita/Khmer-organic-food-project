@@ -89,6 +89,10 @@ const routes = [
     path: '/product/:id',
     name: 'ProductDetail',
     component: ProductDetail,
+    meta: {
+      title: 'KHMER DETAIL FOOD',
+      image: '/images/mint-isLeft.png',
+    },
     props: true,
   },
 

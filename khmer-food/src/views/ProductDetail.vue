@@ -80,7 +80,7 @@ export default {
         {
           id: '1',
           name: 'Brher Soup',
-          price: '$8.10',
+          price: '8.10',
           images: ['/images/brher1.png', '/images/brher2.png', '/images/brher3.png'],
           ingredients: [
             'Fish: 1 kg (Cut into pieces)',
@@ -93,7 +93,7 @@ export default {
         {
           id: '2',
           name: 'Korko Soup',
-          price: '$9.60',
+          price: '9.60',
           images: ['/images/korko1.png', '/images/korko2.png', '/images/korko3.png'],
           ingredients: [
             'Fish or Pork: 1 kg (Cut into pieces)',
@@ -107,12 +107,12 @@ export default {
         {
           id: '3',
           name: 'Mju Soup',
-          price: '$7.10',
+          price: '7.10',
           images: ['/images/mju1.png', '/images/mju2.png', '/images/mju3.png'],
           ingredients: [
             'Beef: 0.5 kg ',
             'Scallions: 300g',
-            'Pepers:0.05g',
+            'Peppers:0.05g',
             'Lemongrass: 100g',
             'Garlic: 50g',
             'Fennel: 50g',
@@ -122,7 +122,7 @@ export default {
         {
           id: '4',
           name: 'Sour Soup',
-          price: '$8.70',
+          price: '8.70',
           images: ['/images/sour1.png', '/images/sour2.png', '/images/sour3.png'],
           ingredients: [
             'Chicken: 0.5 kg',
@@ -135,7 +135,7 @@ export default {
         {
           id: '5',
           name: 'Chha Trakuon',
-          price: '$5.10',
+          price: '5.10',
           images: ['/images/trakuon1.png', '/images/trakuon2.png', '/images/trakuon3.png'],
           ingredients: [
             'Chicken: 0.4 kg',
@@ -146,7 +146,7 @@ export default {
         {
           id: '6',
           name: 'Chha Vegetables',
-          price: '$4.70',
+          price: '4.70',
           images: ['/images/vegetables1.png', '/images/vegetables2.png', '/images/vegetables3.png'],
           ingredients: [
             'Pork: 0.5 kg',
@@ -161,7 +161,7 @@ export default {
         {
           id: '7',
           name: 'Spicy Chicken',
-          price: '$7.20',
+          price: '7.20',
           images: ['/images/chicken1.png', '/images/chicken2.png', '/images/chicken3.png'],
           ingredients: [
             'Chicken: 1 kg (Cut into pieces)',
@@ -175,7 +175,7 @@ export default {
         {
           id: '8',
           name: 'Chha Khgey',
-          price: '$4.50',
+          price: '4.50',
           images: ['/images/khgey1.png', '/images/khgey2.png', '/images/khgey3.png'],
           ingredients: [
             'Chicken: 1 kg',
@@ -188,7 +188,7 @@ export default {
         {
           id: '10',
           name: 'Brhok',
-          price: '$9.30',
+          price: '9.30',
           images: ['/images/brhok1.png', '/images/brhok2.png', '/images/brhok3.png'],
           ingredients: [
             'Brhok: 200g',
@@ -201,7 +201,7 @@ export default {
         {
           id: '11',
           name: 'Brhok Ktis',
-          price: '$9.70',
+          price: '9.70',
           images: ['/images/brhokktis1.png', '/images/brhokktis2.png', '/images/brhokktis3.png'],
           ingredients: [
             'Pork: 0.5 kg',
@@ -215,7 +215,7 @@ export default {
         {
           id: '12',
           name: 'Stream Fish',
-          price: '$6.80',
+          price: '6.80',
           images: ['/images/streamfish1.png', '/images/streamfish2.png', '/images/streamfish3.png'],
           ingredients: [
             'Fish: 1 kg',
@@ -223,11 +223,12 @@ export default {
             'Garlic leaves:10g',
             'Carrot: 200g',
           ]
+          
         },
         {
           id: '9',
           name: 'Amok',
-          price: '$11.10',
+          price: '11.10',
           images: ['/images/ahmok1.png', '/images/ahmok2.png', '/images/ahmok3.png'],
           ingredients: [
             'Fish: 500 g',
@@ -250,25 +251,22 @@ export default {
       this.loadProduct();
     }
   },
-
   methods: {
   loadProduct() {
     this.product = this.mockProducts.find(p => p.id === this.id);
   },
 
   addToFavorite() {
-  const favorite = useFavoriteStore();
+    const favorite = useFavoriteStore(); 
+    favorite.addFavorite({
+      id: this.product.id,
+      name: this.product.name,
+      image: this.product.images[0],
+      price: this.product.price
+    });
 
-  favorite.addFavorite({
-    id: this.product.id,
-    name: this.product.name,
-    image: this.product.images[0],
-    price: Number(this.product.price.replace('$', '')) // convert string "$8.10"
-    
-  });
-
-  this.$router.push('/favorite');   // redirect to Favorite page
-},
+    this.$router.push("/favorite");
+  },
 
   addToCart() {
     const cart = useCartStore();
@@ -280,7 +278,6 @@ export default {
       qty: this.quantity,
       unit: "set"
     });
-
     this.$router.push("/cart");
   }
 }
