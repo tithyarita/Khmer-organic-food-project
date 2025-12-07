@@ -1,15 +1,17 @@
-<template>
+ <template>
   <div>
-    <Menu class="header" />
+    <Menu v-if="showLayout" class="header" />
+
     <main>
       <router-view />
     </main>
-    <Footer class="footer" />
+    <Footer v-if="showLayout" class="footer" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import Menu from './components/Menu.vue'
 import Footer from './components/Footer.vue'
 
@@ -19,6 +21,15 @@ export default defineComponent({
     Menu,
     Footer,
   },
+  setup() {
+    const route = useRoute()
+
+    const showLayout = computed(() => !route.meta.hideLayout)
+
+    return {
+      showLayout
+    }
+  }
 })
 </script>
 

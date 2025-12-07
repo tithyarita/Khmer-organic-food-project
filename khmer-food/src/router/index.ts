@@ -6,6 +6,10 @@ import Sets from '../views/sets.vue'
 import CartView from '../views/CartView.vue'
 import FavoritePage from '../views/FavoritePage.vue'
 import ProductDetail from '../views/ProductDetail.vue'
+import LoginSignUpView from '../views/LoginSignUpView.vue'
+import LoginView from '../views/LoginView.vue'
+import SignUpView from '../views/SignUpView.vue'
+import ProfileView from '../views/ProfileView.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
@@ -68,6 +72,33 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+
+  {
+    path: '/loginSignup',
+    name: 'Login/SignUp',
+    component: LoginSignUpView,
+    meta: { hideLayout: true }
+  },
+
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginView,
+    meta: { hideLayout: true }
+  },
+
+  {
+    path: '/signup',
+    name: 'SignUp',
+    component: SignUpView,
+    meta: { hideLayout: true }
+  },
+
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('../views/ProfileView.vue'),
+  }
 ]
 
 const router = createRouter({
