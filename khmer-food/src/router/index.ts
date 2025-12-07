@@ -41,11 +41,6 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', redirect: '/admin/products' },
       {
-        path: 'products',
-        name: 'AdminProducts',
-        component: () => import('../views/admin/AdminProducts.vue'),
-      },
-      {
         path: 'stocks',
         name: 'AdminStocks',
         component: () => import('../views/admin/AdminStocks.vue'),
