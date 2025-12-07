@@ -35,11 +35,17 @@ const routes: RouteRecordRaw[] = [
   { path: '/contact', name: 'ContactView', component: () => import('../views/ContactView.vue') },
 
   // Admin Layout with nested routes
+
   {
     path: '/admin',
     component: () => import('../components/Admindashbroad.vue'),
     children: [
       { path: '', redirect: '/admin/products' },
+      {
+        path: 'products',
+        name: 'AdminProducts',
+        component: () => import('../views/admin/AdminProducts.vue'),
+      },
       {
         path: 'stocks',
         name: 'AdminStocks',
