@@ -50,7 +50,7 @@ const router = useRouter()
 
 const submitForm = () => {
   console.log('Logging in:', { email: email.value, password: password.value })
-  alert('Logged in!')
+  // alert('Logged in!')
   router.push('/')
 }
 </script>

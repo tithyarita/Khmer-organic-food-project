@@ -59,7 +59,7 @@ const router = useRouter()
 
 const submitForm = () => {
   console.log('Signing up:', { name: name.value, phone: phone.value, email: email.value, password: password.value })
-  alert('Account created!')
+  // alert('Account created!')
   router.push('/')
 }
 </script>

@@ -83,16 +83,14 @@ const toggleEdit = () => {
 const saveChanges = () => {
   editing.value = false
   _backup = null
-  alert('Changes saved!')
+  // alert('Changes saved!')
 }
 
 const signOut = () => {
-  // In a real app: clear auth tokens, localStorage, etc.
-  // localStorage.removeItem('token')
-  
-  // Navigate to main screen (LoginSignUpView.vue)
-  router.push('/')
+  router.push('/loginSignup')
 }
+
+
 </script>
 
 <style scoped>

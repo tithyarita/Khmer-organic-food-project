@@ -30,7 +30,7 @@
       </router-link>
 
       <router-link to="/cart"><i class="fa-solid fa-cart-shopping"></i></router-link>
-      <router-link to="#"><i class="fa-regular fa-user"></i></router-link>
+      <router-link to="/profile"><i class="fa-regular fa-user"></i></router-link>
     </div>
   </div>
 </template>
