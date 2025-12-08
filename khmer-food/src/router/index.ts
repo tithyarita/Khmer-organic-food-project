@@ -17,21 +17,31 @@ const routes: RouteRecordRaw[] = [
     path: '/category/vegetables',
     name: 'vegetables',
     component: Vegetables,
-    meta: { title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES' },
+    meta: { title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES',
+            image: '/images/vegBanner.jpeg',
+            bg: '#F5F5F5',
+    },
   },
   {
     path: '/category/meats',
     name: 'meats',
     component: Meats,
-    meta: { title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.' },
+    meta: { title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
+            image: '/images/meatBanner.jpg',
+            bg: '#FFF5E5',
+     },
   },
   
   {
     path: '/category/sets',
     name: 'sets',
     component: Sets,
-    meta: { title: "CAMBODIA'S SIGNATURE DISH SEASON'S BEST ON YOUR PLATE" },
+    meta: { title: "CAMBODIA'S SIGNATURE DISH SEASON'S BEST ON YOUR PLATE",
+            image: '/images/setBanner.png',
+            bg: '#F0F8FF',
+     },
   },
+
   { path: '/cart', name: 'Cart', component: CartView },
   { path: '/favorite', name: 'FavoritePage', component: FavoritePage },
   { path: '/product/:id', name: 'ProductDetail', component: ProductDetail, props: true },
@@ -99,7 +109,17 @@ const routes: RouteRecordRaw[] = [
     path: '/profile',
     name: 'Profile',
     component: () => import('../views/ProfileView.vue'),
-  }
+  },
+
+  {
+    path: '/ProudctDetail',
+    name: 'ProudctDetail',
+    component: ProductDetail,
+    meta: { title: 'KHMER DETAIL FOOD',
+    image: '/images/mint-isLeftt.png',
+    bg: '#F5F5F5'},
+  },
+
 ]
 
 const router = createRouter({
