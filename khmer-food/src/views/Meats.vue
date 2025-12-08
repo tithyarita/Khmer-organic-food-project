@@ -47,7 +47,7 @@ function addToCart(product: any) {
 
 function addToFavorite(product: any) {
   if (!favorite.items.find(p => p.id === product.id)) {
-    favorite.addFavorite(product);
+    favorite.addToFavorite(product);
   }
 }
 </script>

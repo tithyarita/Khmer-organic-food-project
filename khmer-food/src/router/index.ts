@@ -25,6 +25,7 @@ const routes: RouteRecordRaw[] = [
     component: Meats,
     meta: { title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.' },
   },
+  
   {
     path: '/category/sets',
     name: 'sets',

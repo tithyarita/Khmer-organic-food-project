@@ -52,6 +52,8 @@ body {
 
 body {
   font-family: Arial, sans-serif;
+  padding: 0;
+  margin: 0;
 }
 
 .header {
