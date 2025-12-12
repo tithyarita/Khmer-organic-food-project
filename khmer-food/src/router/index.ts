@@ -31,6 +31,7 @@ const routes: RouteRecordRaw[] = [
             bg: '#FFF5E5',
      },
   },
+  
   {
     path: '/category/sets',
     name: 'sets',
@@ -40,6 +41,7 @@ const routes: RouteRecordRaw[] = [
             bg: '#F0F8FF',
      },
   },
+
   { path: '/cart', name: 'Cart', component: CartView },
   { path: '/favorite', name: 'FavoritePage', component: FavoritePage },
   { path: '/product/:id', name: 'ProductDetail', component: ProductDetail, props: true },
@@ -107,7 +109,17 @@ const routes: RouteRecordRaw[] = [
     path: '/profile',
     name: 'Profile',
     component: () => import('../views/ProfileView.vue'),
-  }
+  },
+
+  {
+    path: '/ProudctDetail',
+    name: 'ProudctDetail',
+    component: ProductDetail,
+    meta: { title: 'KHMER DETAIL FOOD',
+    image: '/images/mint-isLeftt.png',
+    bg: '#F5F5F5'},
+  },
+
 ]
 
 const router = createRouter({
