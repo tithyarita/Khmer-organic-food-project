@@ -1,12 +1,13 @@
 <template>
   <div class="menu">
     <div class="left-side">
-      <router-link to="/admin"><img src="\images\Logo.png" alt="Logo" /> </router-link>
+      <router-link to="/admin" class="logo-link">
+        <img src="/images/Logo.png" alt="Logo" />
+      </router-link>
       <router-link to="/">Home</router-link>
 
       <!-- Category with dropdown -->
       <div class="dropdown">
-        <!-- <router-link to="/category">Category</router-link> -->
         <a href="#">Category</a>
         <div class="dropdown-content">
           <router-link to="/category/vegetables">Vegetables</router-link>
@@ -24,7 +25,6 @@
       <router-link to="#">
         <i class="fa-solid fa-magnifying-glass"></i>
       </router-link>
-      <!-- <router-link to="#"><i class="fa-solid fa-magnifying-glass"></i></router-link> -->
       <router-link to="/favorite">
         <i class="fa-regular fa-heart"></i>
       </router-link>
@@ -49,34 +49,40 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   background-color: #6ec007;
-  padding: 1.25rem 1.875rem; /* 20px 30px */
+  padding: 1.25rem 1.875rem;
   font-family: 'Baloo Da', cursive;
 }
-.left-side img {
-  width: 3rem; /* 100px */
-  height: 3rem; /* 100px */
+
+.logo-link {
+  display: flex;
+  align-items: center;
+}
+
+.logo-link img {
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
 }
 
 .left-side,
 .right-side {
   display: flex;
   align-items: center;
-  gap: 2rem; /* already rem */
+  gap: 2rem;
   font-family: 'Baloo Da', cursive;
 }
 
 .menu a {
   color: white;
   text-decoration: none;
-  font-size: 1.3rem; /* already rem */
+  font-size: 1.3rem;
 }
 
 .router-link-active {
-  border-bottom: 0.125rem solid white; /* 2px */
-  padding-bottom: 0.25rem; /* 4px */
+  border-bottom: 0.125rem solid white;
+  padding-bottom: 0.25rem;
 }
 
-/* Dropdown styles */
 .dropdown {
   position: relative;
 }
@@ -85,17 +91,18 @@ export default defineComponent({
   display: none;
   position: absolute;
   background-color: #6ec007;
-  min-width: 5rem; /* 150px */
+  min-width: 5rem;
   top: 100%;
   left: 0;
   flex-direction: column;
-  padding: 0.625rem 0; /* 10px */
+  padding: 0.625rem 0;
+  z-index: 10;
 }
 
 .dropdown-content a {
-  padding: 0.5rem 1rem; /* 8px 16px */
+  padding: 0.5rem 1rem;
   display: block;
-  font-size: 1.1rem; /* already rem */
+  font-size: 1.1rem;
 }
 
 .dropdown:hover .dropdown-content {
