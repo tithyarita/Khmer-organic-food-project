@@ -1,7 +1,9 @@
 <template>
   <div>
     <Banner />
+
     <h1 class="Title">Feature Products</h1>
+
     <div class="products">
       <ProductCard
         v-for="item in products"
@@ -14,104 +16,38 @@
         @add-to-favorite="addToFavorite"
       />
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import Banner from '../components/Banner.vue'
 import ProductCard from '../components/ProductCard.vue'
-import { useCartStore } from '../stores/cart';
+import { useCartStore } from '../stores/cart'
+import { useFavoriteStore } from '../stores/favorite'
+import { getProducts } from '../services/vegService'
 
-const products= [
-        { id: 1,
-          name: 'Carrot',
-          price: 3,
-          unit: 'kg',
-          weight: 1,
-          inStock: true,
-          rating: 4,
-          image: '/images/Carrot.png' },
+const products = ref<any[]>([])
 
-        { id: 2,
-          name: 'Cucumber',
-          price: 2,
-          unit: 'kg',
-          weight: 1,
-          inStock: true,
-          rating: 3,
+const cart = useCartStore()
+const favorite = useFavoriteStore()
 
-          image: '/images/cucumber.png' },
+// ✅ load products from backend
+onMounted(async () => {
+  try {
+    const res = await getProducts()
+    products.value = res.data
+  } catch (error) {
+    console.error('Failed to load products', error)
+  }
+})
 
-        { id: 3,
-          name: 'Broccoli',
-          price: 5,
-          unit: 'kg',
-          weight: 1,
-          inStock: true,
-          rating: 5,
-          image: '/images/broccoli.png' },
-
-        { id: 4,
-          name: 'Cabbage',
-          price: 4,
-          unit: 'kg',
-          weight: 1,
-          inStock: true,
-          rating: 5,
-          image: '/images/cabbage.png' },
-
-        { id: 5,
-          name: 'Potato',
-          price: 3,
-          unit: 'kg',
-          weight: 1,
-          inStock: true,
-          rating: 5,
-          image: '/images/potato.png' },
-
-        { id: 6,
-          name: 'Bell Pepper',
-          price: 2.5,
-          unit: 'kg',
-          weight: 1,
-          inStock: true,
-          rating: 5,
-          image: '/images/bell_pepper.png' },
-
-        { id: 7,
-          name: 'Onion',
-          price: 3,
-          unit: 'kg',
-          weight: 1,
-          inStock: true,
-          rating: 2,
-          image: '/images/onion.png' },
-
-        { id: 8,
-          name: 'Lettuce',
-          price: 4,
-          unit: 'kg',
-          weight: 1,
-          inStock: true,
-          rating: 4,
-          image: '/images/lettuce.png' },
-
-        { id: 9,
-          name: 'Cauliflower',
-          price: 3,
-          unit: 'kg',
-          weight: 1,
-          inStock: false,
-          rating: 5,
-          image: '/images/cauliflower.png' }
-      ]
 function addToCart(product: any) {
-  const cart = useCartStore();
-  cart.addItem(product);
+  cart.addItem(product)
 }
+
 function addToFavorite(product: any) {
-  // Implement favorite functionality if needed
+  favorite.addFavorite(product)
 }
 </script>
 
@@ -119,12 +55,12 @@ function addToFavorite(product: any) {
 .products {
   display: grid;
   grid-template-columns: repeat(3, 350px);
-  gap: 2rem; /* 20px converted to rem */
-  flex-wrap: wrap;
+  gap: 2rem;
   justify-content: center;
   margin-top: 2rem;
   margin-bottom: 3rem;
 }
+
 .Title {
   text-align: center;
   font-family: 'Baloo Da', cursive;
