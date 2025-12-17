@@ -263,7 +263,7 @@ export default {
       name: this.product.name,
       image: this.product.images[0],
       price: this.product.price
-    });
+    }, 'detail');
 
     this.$router.push("/favorite");
   },

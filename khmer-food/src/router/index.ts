@@ -22,6 +22,8 @@ const routes: RouteRecordRaw[] = [
             bg: '#F5F5F5',
     },
   },
+
+  
   {
     path: '/category/meats',
     name: 'meats',
@@ -115,8 +117,9 @@ const routes: RouteRecordRaw[] = [
     path: '/ProudctDetail',
     name: 'ProudctDetail',
     component: ProductDetail,
+    props: true,
     meta: { title: 'KHMER DETAIL FOOD',
-    image: '/images/mint-isLeftt.png',
+    image: '/images/detailbanner.jpg',
     bg: '#F5F5F5'},
   },
 
