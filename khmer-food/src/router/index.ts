@@ -115,9 +115,9 @@ const routes: RouteRecordRaw[] = [
     path: '/ProudctDetail',
     name: 'ProudctDetail',
     component: ProductDetail,
-    meta: { title: 'KHMER DETAIL FOOD',
-    image: '/images/mint-isLeftt.png',
-    bg: '#F5F5F5'},
+    meta: { title: "KHMER DETAIL FOOD",
+            image: '\images\mint-isLeft.png',
+            bg: '#F5F5F5'},
   },
 
 ]
