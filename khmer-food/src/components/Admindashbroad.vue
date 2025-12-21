@@ -9,21 +9,20 @@
 
       <nav class="menu">
         <router-link
+          to="/admin/sales"
+          class="menu-item"
+          :class="{ active: isActive('/admin/sales') }"
+        >
+          <span class="icon">💰</span>
+          <div class="items-name">Sales</div>
+        </router-link>
+        <router-link
           to="/admin/products"
           class="menu-item"
           :class="{ active: isActive('/admin/products') }"
         >
-          <span class="icon">📦</span>
-          <div class="items-name">Products</div>
-        </router-link>
-
-        <router-link
-          to="/admin/stocks"
-          class="menu-item"
-          :class="{ active: isActive('/admin/stocks') }"
-        >
           <span class="icon">📊</span>
-          <div class="items-name">Stocks</div>
+          <div class="items-name">Products</div>
         </router-link>
 
         <router-link
@@ -33,15 +32,6 @@
         >
           <span class="icon">📋</span>
           <div class="items-name">Orders</div>
-        </router-link>
-
-        <router-link
-          to="/admin/sales"
-          class="menu-item"
-          :class="{ active: isActive('/admin/sales') }"
-        >
-          <span class="icon">💰</span>
-          <div class="items-name">Sales</div>
         </router-link>
 
         <router-link

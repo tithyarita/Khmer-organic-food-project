@@ -23,7 +23,7 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  
+
   {
     path: '/category/meats',
     name: 'meats',
@@ -33,7 +33,7 @@ const routes: RouteRecordRaw[] = [
             bg: '#FFF5E5',
      },
   },
-  
+
   {
     path: '/category/sets',
     name: 'sets',
@@ -57,7 +57,12 @@ const routes: RouteRecordRaw[] = [
     path: '/admin',
     component: () => import('../components/Admindashbroad.vue'),
     children: [
-      { path: '', redirect: '/admin/products' },
+      { path: '', redirect: '/admin/sales' },
+            {
+        path: 'sales',
+        name: 'AdminSales',
+        component: () => import('../views/admin/AdminSales.vue'),
+      },
       {
         path: 'products',
         name: 'AdminProducts',
@@ -72,11 +77,6 @@ const routes: RouteRecordRaw[] = [
         path: 'orders',
         name: 'AdminOrders',
         component: () => import('../views/admin/AdminOrders.vue'),
-      },
-      {
-        path: 'sales',
-        name: 'AdminSales',
-        component: () => import('../views/admin/AdminSales.vue'),
       },
       {
         path: 'users',
