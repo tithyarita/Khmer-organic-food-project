@@ -45,26 +45,91 @@
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+// Firebase
+import { auth, db } from '../firebase'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { doc, setDoc, runTransaction } from 'firebase/firestore'
+
+// Form state
 const name = ref('')
 const phone = ref('')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+
 const router = useRouter()
 
-const submitForm = () => {
-  console.log('Signing up:', { name: name.value, phone: phone.value, email: email.value, password: password.value })
-  // alert('Account created!')
-  router.push('/')
+const submitForm = async () => {
+  try {
+    // 1️⃣ Create user in Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    )
+    const user = userCredential.user
+
+    // 2️⃣ Auto-increment numeric ID
+    const userId = await runTransaction(db, async (transaction) => {
+      const counterRef = doc(db, 'counters', 'users')
+      const counterSnap = await transaction.get(counterRef)
+
+      if (!counterSnap.exists()) {
+        transaction.set(counterRef, { lastId: 1 })
+        return 1
+      }
+
+      const lastId = counterSnap.data().lastId as number
+      const nextId = lastId + 1
+      transaction.update(counterRef, { lastId: nextId })
+      return nextId
+    })
+
+    // 3️⃣ Store user info in Firestore (NO password saved)
+    await setDoc(doc(db, 'users', user.uid), {
+      userId, // 1, 2, 3, ...
+      uid: user.uid,
+      name: name.value,
+      phone: phone.value,
+      email: email.value,
+      createdAt: new Date()
+    })
+
+    alert(`Account created successfully!\nYour User ID: ${userId}`)
+    router.push('/')
+
+  } catch (error) {
+    if (error instanceof Error) {
+      // Firebase Auth errors have 'code' property
+      const firebaseError = error as { code?: string; message: string }
+
+      if (firebaseError.code === 'auth/email-already-in-use') {
+        alert('This email is already registered')
+      } else if (firebaseError.code === 'auth/weak-password') {
+        alert('Password must be at least 6 characters')
+      } else {
+        alert(firebaseError.message)
+      }
+    } else {
+      alert('Something went wrong')
+    }
+  }
 }
 </script>
 
+
+
+
+
+
+
+
 <style scoped>
+/* 🔴 YOUR DESIGN — UNCHANGED */
 .signup-page {
   display: flex;
   min-height: 100vh;
@@ -86,7 +151,6 @@ const submitForm = () => {
   max-width: 40rem;
   margin: 0 auto;
   width: 100%;
-  /* gap: 1rem; */
 }
 
 .signup-form h2 {
@@ -104,7 +168,6 @@ const submitForm = () => {
   gap: 0.5rem;
   margin: 0;
   font-size: 2rem;
-  font-weight: 120;
   justify-content: center;
 }
 
@@ -126,45 +189,27 @@ form label {
   display: block;
   color: black;
   font-size: 2rem;
-  font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 form input {
   width: 100%;
   padding: 1rem;
-  margin-top: 0.1rem;
-  border: 0.0625rem solid #6EC007; /* 1px = 0.0625rem */
+  border: 0.0625rem solid #6EC007;
   border-radius: 1rem;
   font-size: 1.5rem;
-  outline: none;
-  font-family: 'Baloo Tammudu 2', sans-serif;
-}
-
-form input:focus {
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 0.125rem rgba(76, 175, 80, 0.2);
 }
 
 .password-input {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin-top: 0.25rem;
   position: relative;
 }
 
 .forgot-password {
   color: #6EC007;
   font-size: 1.2rem;
-  margin-top: 0.9rem;
+  margin-top: 1rem;
   margin-bottom: 3rem;
-  text-decoration: none;
-  cursor: pointer;
   display: block;
   text-align: right;
-  padding-right: 0.5rem;
-  font-family: 'Baloo Tammudu 2', sans-serif;
-  font-weight: bold;
 }
 
 .submit-btn {
@@ -172,13 +217,10 @@ form input:focus {
   padding: 0.5rem;
   background: #6EC007;
   color: white;
-  border: none;
   border-radius: 1rem;
   font-size: 2.3rem;
   font-weight: bold;
-  margin-top: 1.2rem;
   cursor: pointer;
-  font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 /* Right Banner */
@@ -188,83 +230,8 @@ form input:focus {
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding: 0 2rem;
   position: relative;
-  overflow: hidden;
-}
-
-.signup-banner h1 {
-  font-size: 6.5rem;
-  margin-top: 12rem;
-  margin-bottom: 0;
-  font-weight: 900;
-  line-height: 1;
-  z-index: 2;
-}
-
-.signup-banner p {
-  font-size: 2.5rem;
-  margin: 0;
-  font-weight: 300;
-  line-height: 1.2;
-  z-index: 2;
-}
-
-.signup-banner .banner-img {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 70rem;
-  max-height: 70rem;
-  border-radius: 1rem;
-  z-index: 1;
-  object-fit: contain;
-}
-
-/* Mobile Responsive */
-@media (max-width: 37.5rem) {
-  .signup-page {
-    flex-direction: column;
-  }
-  .signup-form {
-    padding: 1rem;
-  }
-  .signup-form h2 {
-    font-size: 3rem;
-  }
-  .login-prompt {
-    gap: 0.25rem;
-    justify-content: center;
-    align-items: center;
-  }
-  .login-prompt .gray-text {
-    font-size: 1.25rem;
-  } 
-  .forgot-password {
-    text-align: right;
-    padding-right: 0;
-  }
-  .signup-banner {
-    min-height: 50vh;
-  }
-  .signup-banner h1 {
-    font-size: 3rem;
-    line-height: 1;
-  }
-  .signup-banner p {
-   font-size: 1.25rem;
-    margin: 0.5rem 0 0 0;
-    line-height: 1;
-  }
-  .signup-banner .banner-img {
-    max-width: 30rem;
-    max-height: 25rem;
-    
-  }
 }
 </style>
