@@ -1,10 +1,13 @@
- <template>
+<template>
   <div>
+    <!-- Header only if showLayout is true -->
     <Menu v-if="showLayout" class="header" />
 
     <main :class="{ 'with-layout': showLayout }">
       <router-view />
     </main>
+
+    <!-- Footer only if showLayout is true -->
     <Footer v-if="showLayout" class="footer" />
   </div>
 </template>
@@ -24,12 +27,16 @@ export default defineComponent({
   setup() {
     const route = useRoute()
 
-    const showLayout = computed(() => !route.meta.hideLayout)
+    // Hide header/footer for admin routes and login/signup pages
+    const showLayout = computed(() => {
+      return !(
+        route.meta.hideLayout ||
+        route.path.startsWith('/admin')
+      )
+    })
 
-    return {
-      showLayout
-    }
-  }
+    return { showLayout }
+  },
 })
 </script>
 
@@ -38,7 +45,7 @@ html,
 body {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden; /* ⛔ NO LEFT/RIGHT SCROLL */
+  overflow-x: hidden;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -47,7 +54,7 @@ body {
 *,
 *::before,
 *::after {
-  box-sizing: inherit; /* keeps all elements inside screen */
+  box-sizing: inherit;
 }
 
 body {
@@ -65,6 +72,7 @@ body {
 }
 
 .footer {
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;

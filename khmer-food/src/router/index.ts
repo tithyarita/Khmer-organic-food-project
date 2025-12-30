@@ -12,6 +12,8 @@ import SignUpView from '../views/SignUpView.vue'
 import ProfileUserView from '../views/ProfileUserView.vue'
 import ProfileAdminView from '../views/admin/ProfileAdminView.vue'
 
+
+
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
   {
@@ -109,28 +111,17 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/profileuser',
-    name: 'ProfileUser',
-    component: () => import('../views/ProfileUserView.vue'),
-  },
+  path: '/profileuser',
+  name: 'ProfileUser',
+  component: () => import('../views/ProfileUserView.vue'),
+},
+
 
   {
-<<<<<<< HEAD
     path: '/ProudctDetail',
     name: 'ProudctDetail',
     component: ProductDetail,
     props: true,
-=======
-    path: '/profileadmin',
-    name: 'ProfileAdmin',
-    component: () => import('../views/admin/ProfileAdminView.vue'),
-  },
-
-  {
-    path: '/ProductDetail',
-    name: 'ProductDetail',
-    component: ProductDetail,
->>>>>>> bc234e89305dddb79dc962020df391992593b17c
     meta: { title: 'KHMER DETAIL FOOD',
     image: '/images/detailbanner.jpg',
     bg: '#F5F5F5'},

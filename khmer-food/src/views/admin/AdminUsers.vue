@@ -1,5 +1,13 @@
 <template>
   <div class="admin-users">
+    <!-- USER COUNTS -->
+    <div class="user-counts">
+      <span>Total Users: {{ users.length }}</span>
+      <span>Admin: {{ roleCounts.manager }}</span>
+      <span>Managers: {{ roleCounts.admin }}</span>
+      <span>Customers: {{ roleCounts.customer }}</span>
+    </div>
+
     <!-- ACTIONS -->
     <div class="actions">
       <div class="action-box" @click="showAddModal = true">
@@ -10,6 +18,16 @@
       <div class="action-box" @click="toggleActiveUsers">
         <span>Active Users</span>
         <span class="icon">✅</span>
+      </div>
+
+      <div class="action-box">
+        <span>Filter Role:</span>
+        <select v-model="selectedRole">
+          <option value="">All</option>
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="customer">Customer</option>
+        </select>
       </div>
 
       <div class="action-box" @click="exportUsers">
@@ -33,28 +51,30 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="user in filteredUsers" :key="user.id">
-            <td>#{{ user.userId }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.phone }}</td>
-            <td><span class="role" :class="user.role">{{ user.role }}</span></td>
-            <td>
-              <span class="badge" :class="user.status === 'active' ? 'badge-active' : 'badge-inactive'">
-                {{ user.status }}
-              </span>
-            </td>
-            <td>{{ formatDate(user.createdAt) }}</td>
-            <td>
-              <button class="btn-view" @click="viewUser(user)">View</button>
-              <button class="btn-edit" @click="editUser(user)">Edit</button>
-            </td>
-          </tr>
-          <tr v-if="filteredUsers.length === 0">
-            <td colspan="8" style="text-align: center">No users found</td>
-          </tr>
-        </tbody>
+<tbody>
+  <tr v-for="user in filteredUsers" :key="user.id">
+    <td>#{{ user.userId }}</td>
+    <td>{{ user.name }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.phone }}</td>
+    <!-- Show role as a badge/text only -->
+    <td><span class="role" :class="user.role">{{ user.role }}</span></td>
+    <td>
+      <span class="badge" :class="user.status === 'active' ? 'badge-active' : 'badge-inactive'">
+        {{ user.status }}
+      </span>
+    </td>
+    <td>{{ formatDate(user.createdAt) }}</td>
+    <td>
+      <button class="btn-view" @click="viewUser(user)">View</button>
+      <button class="btn-edit" @click="editUser(user)">Edit</button>
+    </td>
+  </tr>
+  <tr v-if="filteredUsers.length === 0">
+    <td colspan="8" style="text-align: center">No users found</td>
+  </tr>
+</tbody>
+
       </table>
     </div>
 
@@ -101,29 +121,23 @@
         <h3>Add User</h3>
         <label>Name:</label>
         <input v-model="newUser.name" />
-
         <label>Email:</label>
         <input v-model="newUser.email" type="email" />
-
         <label>Phone:</label>
         <input v-model="newUser.phone" />
-
         <label>Password:</label>
         <input v-model="newUser.password" type="password" placeholder="Enter initial password" />
-
         <label>Role:</label>
         <select v-model="newUser.role">
           <option>admin</option>
           <option>manager</option>
           <option>customer</option>
         </select>
-
         <label>Status:</label>
         <select v-model="newUser.status">
           <option>active</option>
           <option>inactive</option>
         </select>
-
         <button @click="addUser">Add</button>
         <button @click="showAddModal = false">Cancel</button>
       </div>
@@ -133,17 +147,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import {
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  doc,
-  addDoc,
-  updateDoc,
-  runTransaction,
-  Timestamp
-} from 'firebase/firestore'
+import { collection, onSnapshot, query, orderBy, doc, addDoc, updateDoc, runTransaction, Timestamp } from 'firebase/firestore'
 import { db, auth } from '@/firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 
@@ -160,70 +164,61 @@ interface User {
   lastLogin?: Timestamp
 }
 
-/* ================= STATE ================= */
 const users = ref<User[]>([])
 const showActiveOnly = ref(false)
+const selectedRole = ref('')
 const selectedUser = ref<User | null>(null)
 const showViewModal = ref(false)
 const showEditModal = ref(false)
 const showAddModal = ref(false)
-const newUser = ref<{
-  name: string
-  email: string
-  phone: string
-  password: string
-  role: 'admin' | 'manager' | 'customer'
-  status: 'active' | 'inactive'
-}>({
+const newUser = ref({
   name: '',
   email: '',
   phone: '',
   password: '',
-  role: 'customer',
-  status: 'active'
+  role: 'customer' as 'admin' | 'manager' | 'customer',
+  status: 'active' as 'active' | 'inactive'
 })
 
-/* ================= FETCH USERS ================= */
+// FETCH USERS
 onMounted(() => {
   const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
-  onSnapshot(q, async snapshot => {
-    const today = new Date()
-    users.value = await Promise.all(
-      snapshot.docs.map(async docSnap => {
-        const data = docSnap.data() as any
-        let status = data.status ?? 'active'
-        if (data.lastLogin) {
-          const lastLoginDate = data.lastLogin.toDate()
-          const diffMonths = (today.getFullYear() - lastLoginDate.getFullYear()) * 12 +
-                             (today.getMonth() - lastLoginDate.getMonth())
-          if (diffMonths >= 3) status = 'inactive'
-          if (status !== data.status) {
-            await updateDoc(doc(db, 'users', docSnap.id), { status })
-          }
-        }
-        return {
-          id: docSnap.id,
-          uid: data.uid,
-          userId: data.userId,
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          role: data.role ?? 'customer',
-          status,
-          createdAt: data.createdAt,
-          lastLogin: data.lastLogin
-        } as User
-      })
-    )
+  onSnapshot(q, snapshot => {
+    users.value = snapshot.docs.map(docSnap => {
+      const data = docSnap.data() as any
+      return {
+        id: docSnap.id,
+        uid: data.uid,
+        userId: data.userId,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        role: data.role ?? 'customer',
+        status: data.status ?? 'active',
+        createdAt: data.createdAt,
+        lastLogin: data.lastLogin
+      } as User
+    })
   })
 })
 
-/* ================= COMPUTED ================= */
-const filteredUsers = computed(() =>
-  showActiveOnly.value ? users.value.filter(u => u.status === 'active') : users.value
-)
+// FILTERED USERS
+const filteredUsers = computed(() => {
+  return users.value.filter(u => {
+    const statusMatch = showActiveOnly.value ? u.status === 'active' : true
+    const roleMatch = selectedRole.value ? u.role === selectedRole.value : true
+    return statusMatch && roleMatch
+  })
+})
 
-/* ================= ACTIONS ================= */
+// USER COUNTS
+const roleCounts = computed(() => ({
+  admin: users.value.filter(u => u.role === 'admin').length,
+  manager: users.value.filter(u => u.role === 'manager').length,
+  customer: users.value.filter(u => u.role === 'customer').length
+}))
+
+// ACTIONS
 const toggleActiveUsers = () => { showActiveOnly.value = !showActiveOnly.value }
 const viewUser = (user: User) => { selectedUser.value = user; showViewModal.value = true }
 const editUser = (user: User) => { selectedUser.value = { ...user }; showEditModal.value = true }
@@ -237,38 +232,27 @@ const saveUser = async () => {
   })
   showEditModal.value = false
 }
+const onRoleChange = async (user: User, event: Event) => {
+  const newRole = (event.target as HTMLSelectElement).value as 'admin' | 'manager' | 'customer'
+  user.role = newRole
+  await updateDoc(doc(db, 'users', user.id), { role: newRole })
+}
 
+// ADD USER
 const addUser = async () => {
   try {
-    if (!newUser.value.email || !newUser.value.password) {
-      alert('Email and password are required')
-      return
-    }
-
-    // 1️⃣ Create Auth user
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      newUser.value.email,
-      newUser.value.password
-    )
+    if (!newUser.value.email || !newUser.value.password) return alert('Email and password are required')
+    const userCredential = await createUserWithEmailAndPassword(auth, newUser.value.email, newUser.value.password)
     const uid = userCredential.user.uid
-
-    // 2️⃣ Generate userId
     let newUserId = 1
     await runTransaction(db, async transaction => {
       const counterRef = doc(db, 'counters', 'users')
       const counterSnap = await transaction.get(counterRef)
       if (!counterSnap.exists()) transaction.set(counterRef, { lastId: 1 })
-      else {
-        newUserId = counterSnap.data().lastId + 1
-        transaction.update(counterRef, { lastId: newUserId })
-      }
+      else { newUserId = counterSnap.data().lastId + 1; transaction.update(counterRef, { lastId: newUserId }) }
     })
-
-    // 3️⃣ Add user to Firestore
     await addDoc(collection(db, 'users'), {
-      userId: newUserId,
-      uid,
+      userId: newUserId, uid,
       name: newUser.value.name,
       email: newUser.value.email,
       phone: newUser.value.phone,
@@ -277,32 +261,28 @@ const addUser = async () => {
       createdAt: Timestamp.now(),
       lastLogin: Timestamp.now()
     })
-
     showAddModal.value = false
     newUser.value = { name: '', email: '', phone: '', password: '', role: 'customer', status: 'active' }
     alert('User added successfully!')
-  } catch (error) {
-    console.error('Error adding user:', error)
-    alert('Failed to add user. Check console for details.')
-  }
+  } catch (error) { console.error(error); alert('Failed to add user') }
 }
 
+// EXPORT USERS
 const exportUsers = () => {
   const csv = [
-    ['ID', 'Name', 'Email', 'Phone', 'Role', 'Status'],
-    ...users.value.map(u => [u.userId, u.name, u.email, u.phone, u.role, u.status])
-  ].map(row => row.join(',')).join('\n')
-
+    ['ID','Name','Email','Phone','Role','Status'],
+    ...users.value.map(u => [u.userId,u.name,u.email,u.phone,u.role,u.status])
+  ].map(r => r.join(',')).join('\n')
   const blob = new Blob([csv], { type: 'text/csv' })
-  const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
-  a.href = url
+  a.href = URL.createObjectURL(blob)
   a.download = 'users.csv'
   a.click()
 }
 
-const formatDate = (timestamp?: Timestamp) => !timestamp ? '-' : timestamp.toDate().toLocaleDateString()
+const formatDate = (ts?: Timestamp) => !ts ? '-' : ts.toDate().toLocaleDateString()
 </script>
+
 
 <style scoped>
 /* Styles remain mostly the same as before for modal, table, actions */
