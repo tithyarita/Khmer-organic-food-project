@@ -10,7 +10,12 @@
     </aside>
 
     <main class="right-panel">
-      <h1 class="title">My Profile</h1>
+      <div class="title-wrapper">
+        <h1 class="title">My Profile</h1>
+        <div class="admin-icon" @click="goToAdminProducts">
+          <i class="fas fa-user"></i>
+        </div>
+      </div>
 
       <form @submit.prevent="saveChanges" class="form">
         <label class="field">
@@ -37,7 +42,7 @@
               :disabled="!editing"
             />
             <button type="button" class="eye" @click="showPassword = !showPassword">
-              {{ showPassword ? '🙈' : '👁' }}
+              <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
             </button>
           </div>
         </label>
@@ -86,17 +91,19 @@ const saveChanges = () => {
   // alert('Changes saved!')
 }
 
+const goToAdminProducts = () => {
+  router.push('/admin/') // or your actual admin route
+}
+
 const signOut = () => {
   router.push('/loginSignup')
 }
-
-
 </script>
 
 <style scoped>
 .profile-page {
   display: flex;
-  min-height: 82vh;
+  min-height: 90vh;
   background: #ffffff;
   border-radius: 0.375rem;
   overflow: hidden;
@@ -108,7 +115,7 @@ const signOut = () => {
 .left-panel {
   width: 30%;
   background: #BBE18A;
-  padding: 2rem 1.25rem;
+  padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -117,8 +124,8 @@ const signOut = () => {
 
 .avatar {
   position: relative;
-  width: 8.75rem;
-  height: 8.75rem;
+  width: 15rem;
+  height: 15rem;
   border-radius: 50%;
   background: #ffd700;
   display: flex;
@@ -127,22 +134,23 @@ const signOut = () => {
 }
 
 .avatar img {
-  width: 7.5rem;
-  height: 7.5rem;
+  width: 14rem;
+  height: 14rem;
   border-radius: 50%;
   object-fit: cover;
   border: 0.375rem solid #fff;
 }
 
 .btn {
-  width: 80%;
-  padding: 0.75rem 0.625rem;
+  width: 60%;
+  padding: 0.75rem 0.62rem;
   border: none;
   border-radius: 0.5rem;
   background: #6ec007;
   color: white;
   font-weight: bold;
   cursor: pointer;
+  font-size: 1.2rem;
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
@@ -153,26 +161,47 @@ const signOut = () => {
 /* Right Panel */
 .right-panel {
   flex: 1;
-  padding: 2.25rem 3rem;
+  padding: 2.3rem 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1.25rem;
+}
+
 .title {
   color: #6ec007;
-  font-size: 2.125rem;
-  margin: 0 0 1.25rem 0;
+  font-size: 2.6rem;
+  margin: 0;
   text-align: center;
+}
+
+.admin-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: #6ec007;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .form {
   max-width: 40rem;
-  width: 100%;
+  width: 50%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .field {
@@ -182,8 +211,9 @@ const signOut = () => {
 
 .label-text {
   display: block;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
@@ -191,12 +221,13 @@ input[type='text'],
 input[type='email'],
 input[type='password'] {
   width: 100%;
-  padding: 0.75rem 0.875rem;
+  padding: 0.8rem 0.875rem;
   border-radius: 0.625rem;
   border: 0.0625rem solid #6ec007;
   outline: none;
   box-sizing: border-box;
   font-family: 'Baloo Tammudu 2', sans-serif;
+  font-size: 1.1rem;
 }
 
 input:focus {
@@ -218,12 +249,17 @@ input:focus {
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 1.125rem;
+  font-size: 1.4rem;
   color: #6ec007;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .actions {
-  margin-top: 1.625rem;
+  margin-top: 1.3rem;
   display: flex;
   justify-content: center;
 }
@@ -231,15 +267,13 @@ input:focus {
 .signout {
   background: #e53935;
   color: white;
-  padding: 1.5rem;
+  padding: 1.1rem;
   border: none;
   border-radius: 1rem;
   cursor: pointer;
   font-family: 'Baloo Tammudu 2', sans-serif;
-  font-weight: bold;
+  font-size: 1.2rem;
   width: 100%;
-  max-width: 50rem;
-  margin-top: 2rem;
 }
 
 /* Mobile Responsive */
@@ -266,9 +300,17 @@ input:focus {
     padding: 1.25rem;
     align-items: stretch;
   }
+  .title-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
   .title {
     text-align: left;
     font-size: 1.75rem;
+  }
+  .admin-icon {
+    align-self: flex-end;
   }
   .form {
     align-items: stretch;

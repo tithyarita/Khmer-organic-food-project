@@ -91,7 +91,7 @@ const submitForm = () => {
 
 .signup-form h2 {
   color: #6EC007;
-  font-size: 4rem;
+  font-size: 3.3rem;
   margin-bottom: 0;
   font-weight: 800;
   text-align: center;
@@ -103,39 +103,39 @@ const submitForm = () => {
   align-items: center;
   gap: 0.5rem;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.2rem;
   font-weight: 120;
   justify-content: center;
 }
 
 .login-prompt .gray-text {
   color: #979797;
-  font-size: 1.5rem;
+  font-size: 1.45rem;
 }
 
 .login-prompt .green-link {
   color: #6EC007;
   text-decoration: none;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.45rem;
 }
 
 form label {
   font-weight: bold;
-  margin-top: 2rem;
+  margin-top: 1rem;
   display: block;
   color: black;
-  font-size: 2rem;
+  font-size: 1.4rem;
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 form input {
   width: 100%;
-  padding: 1rem;
-  margin-top: 0.1rem;
+  padding: 0.5rem;
+  margin-top: 0.01rem;
   border: 0.0625rem solid #6EC007; /* 1px = 0.0625rem */
-  border-radius: 1rem;
-  font-size: 1.5rem;
+  border-radius: 0.7rem;
+  font-size: 1.2rem;
   outline: none;
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
@@ -157,7 +157,7 @@ form input:focus {
   color: #6EC007;
   font-size: 1.2rem;
   margin-top: 0.9rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   text-decoration: none;
   cursor: pointer;
   display: block;
@@ -174,9 +174,8 @@ form input:focus {
   color: white;
   border: none;
   border-radius: 1rem;
-  font-size: 2.3rem;
+  font-size: 1.7rem;
   font-weight: bold;
-  margin-top: 1.2rem;
   cursor: pointer;
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
@@ -191,14 +190,14 @@ form input:focus {
   justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding: 0 2rem;
+  padding: 1rem 2rem;
   position: relative;
   overflow: hidden;
 }
 
 .signup-banner h1 {
-  font-size: 6.5rem;
-  margin-top: 12rem;
+  font-size: 4.8rem;
+  margin-top: 7.5rem;
   margin-bottom: 0;
   font-weight: 900;
   line-height: 1;
@@ -206,7 +205,7 @@ form input:focus {
 }
 
 .signup-banner p {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin: 0;
   font-weight: 300;
   line-height: 1.2;
@@ -219,8 +218,7 @@ form input:focus {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 70rem;
-  max-height: 70rem;
+  max-width: 42rem;
   border-radius: 1rem;
   z-index: 1;
   object-fit: contain;

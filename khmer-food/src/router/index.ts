@@ -9,7 +9,8 @@ import ProductDetail from '../views/ProductDetail.vue'
 import LoginSignUpView from '../views/LoginSignUpView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
-import ProfileView from '../views/ProfileView.vue'
+import ProfileUserView from '../views/ProfileUserView.vue'
+import ProfileAdminView from '../views/admin/ProfileAdminView.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
@@ -105,14 +106,20 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/profile',
-    name: 'Profile',
-    component: () => import('../views/ProfileView.vue'),
+    path: '/profileuser',
+    name: 'ProfileUser',
+    component: () => import('../views/ProfileUserView.vue'),
   },
 
   {
-    path: '/ProudctDetail',
-    name: 'ProudctDetail',
+    path: '/profileadmin',
+    name: 'ProfileAdmin',
+    component: () => import('../views/admin/ProfileAdminView.vue'),
+  },
+
+  {
+    path: '/ProductDetail',
+    name: 'ProductDetail',
     component: ProductDetail,
     meta: { title: 'KHMER DETAIL FOOD',
     image: '/images/mint-isLeftt.png',

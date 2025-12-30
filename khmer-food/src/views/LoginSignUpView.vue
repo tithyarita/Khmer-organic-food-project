@@ -22,6 +22,7 @@ const goToSignUp = () => router.push('/signup')
 </script>
 
 <style scoped>
+
 .container {
   position: relative;
   min-height: 100vh;
@@ -39,13 +40,13 @@ const goToSignUp = () => router.push('/signup')
 
 .content {
   position: relative;
-  z-index: 3;
+  z-index: 2;
   text-align: center;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .content h1 {
-  font-size: 5.2rem;
+  font-size: 3.3rem;
   font-weight: 900;
   color: #6EC007;
   margin: 0;
@@ -53,7 +54,7 @@ const goToSignUp = () => router.push('/signup')
 }
 
 .content p {
-  font-size: 2rem;
+  font-size: 1.35rem;
   color: #6EC007;
   margin: 0.5rem 0 0 0; /* Only 0.5rem gap */
   font-weight: 500;
@@ -61,7 +62,7 @@ const goToSignUp = () => router.push('/signup')
 }
 
 .logo {
-  width: 30rem;
+  width: 16rem;
   height: auto;
   margin: 1.5rem auto;
 }
@@ -74,17 +75,17 @@ const goToSignUp = () => router.push('/signup')
 }
 
 .buttons button {
-  width: 35rem;
-  padding: 0.1rem;
-  border-radius: 1rem;
+  width: 25rem;
+  /* padding: 0.01rem; */
+  border-radius: 1.5rem;
   border: 0.0625rem solid #6EC007;
   background: #fff;
   color: #6EC007;
   font-weight: 900;
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   font-family: 'Baloo Tammudu 2', sans-serif;
   /* cursor: pointer; */
-  padding-top: 1.2rem;
+  padding-top: 1rem;
 }
 
 .buttons button:hover {
@@ -123,7 +124,7 @@ const goToSignUp = () => router.push('/signup')
     gap: 1rem;
   }
   .buttons button {
-    width: 12.5rem;
+    width: 12rem;
     padding: 1rem;
     font-size: 1.25rem;
   }
