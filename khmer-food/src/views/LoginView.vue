@@ -78,7 +78,7 @@ const submitForm = () => {
 }
 
 .login-banner h1 {
-  font-size: 4.5rem;
+  font-size: 4.2rem;
   margin-top: 7rem;
   margin-bottom: 0;
   font-weight: 900;
@@ -87,7 +87,7 @@ const submitForm = () => {
 }
 
 .login-banner p {
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin: 0;
   font-weight: 500;
   line-height: 1.2;
@@ -125,7 +125,7 @@ const submitForm = () => {
 
 .login-form h2 {
   color: #6EC007;
-  font-size: 3.3rem;
+  font-size: 3rem;
   margin-bottom: 0;
   font-weight: 800;
   text-align: center;
@@ -138,21 +138,21 @@ const submitForm = () => {
   align-items: center;
   gap: 0.5rem;
   margin: 0;
-  font-size: 1.2rem;
+  /* font-size: 1rem; */
   font-weight: 120;
   justify-content: center;
 }
 
 .signup-prompt .gray-text {
   color: #979797;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 .signup-prompt .green-link {
   color: #6EC007;
   text-decoration: none;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 form label {
@@ -205,7 +205,10 @@ form input:focus {
 }
 
 .submit-btn {
-  width: 100%;
+  width: 50%;
+  margin: 1.2rem auto 0; /* <-- ADD THIS LINE */
+  display: flex;
+  justify-content: center;
   padding: 0.5rem;
   background: #6EC007;
   color: white;
@@ -216,6 +219,10 @@ form input:focus {
   margin-top: 1.2rem;
   cursor: pointer;
   font-family: 'Baloo Tammudu 2', sans-serif;
+}
+
+.submit-btn:hover {
+  background: #57a600;
 }
 
 /* Mobile Responsive */

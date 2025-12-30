@@ -42,11 +42,11 @@ const goToSignUp = () => router.push('/signup')
   position: relative;
   z-index: 2;
   text-align: center;
-  margin-top: 0.5rem;
+  margin-top: 3rem;
 }
 
 .content h1 {
-  font-size: 3.3rem;
+  font-size: 3.5rem;
   font-weight: 900;
   color: #6EC007;
   margin: 0;
@@ -62,7 +62,7 @@ const goToSignUp = () => router.push('/signup')
 }
 
 .logo {
-  width: 16rem;
+  width: 18rem;
   height: auto;
   margin: 1.5rem auto;
 }
@@ -75,14 +75,14 @@ const goToSignUp = () => router.push('/signup')
 }
 
 .buttons button {
-  width: 25rem;
+  width: 22rem;
   /* padding: 0.01rem; */
   border-radius: 1.5rem;
   border: 0.0625rem solid #6EC007;
   background: #fff;
   color: #6EC007;
   font-weight: 900;
-  font-size: 2.2rem;
+  font-size: 1.6rem;
   font-family: 'Baloo Tammudu 2', sans-serif;
   /* cursor: pointer; */
   padding-top: 1rem;

@@ -87,7 +87,7 @@ const saveChanges = () => {
 }
 
 const signOut = () => {
-  router.push('/loginSignup')
+  router.push('/home')
 }
 
 
