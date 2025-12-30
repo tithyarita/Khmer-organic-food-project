@@ -10,6 +10,7 @@ import LoginSignUpView from '../views/LoginSignUpView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import ProfileView from '../views/ProfileView.vue'
+import Checkout from '../views/CheckoutView.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
@@ -123,6 +124,13 @@ const routes: RouteRecordRaw[] = [
     bg: '#F5F5F5'},
 
   },
+  {
+  path: '/checkout',
+  name: 'Checkout',
+  component: Checkout,
+  meta: { title: 'Checkout - Khmer Organic Food' }
+  },
+
 
 ]
 

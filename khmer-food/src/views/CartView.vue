@@ -60,7 +60,7 @@
           <span>Total</span>
           <span class="total">${{ total.toFixed(2) }}</span>
         </div>
-        <button class="checkout-btn">Checkout</button>
+        <button class="checkout-btn" @click="goToCheckout">Checkout</button>
       </div>
     </div>
 
@@ -72,29 +72,40 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useCartStore } from '../stores/cart';
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useCartStore } from '../stores/cart'
 
-const cart = useCartStore();
+const cart = useCartStore()
+const router = useRouter()
 
 // Selectable quantities
-const weights = [0.5, 1, 1.5, 2]; // for kg
-const sets = [1, 2, 3, 4];        // for set
+const weights = [0.5, 1.0, 1.5, 2.0] // for kg
+const sets = [1, 2, 3, 4]            // for set
 
 // Computed totals
 const subtotal = computed(() =>
   cart.items.reduce((sum, item) => sum + item.price * item.qty, 0)
-);
-const discount = computed(() => subtotal.value * 0.07);
-const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0));
-const total = computed(() => subtotal.value + delivery.value - discount.value);
+)
+const discount = computed(() => subtotal.value * 0.07)
+const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0))
+const total = computed(() => subtotal.value + delivery.value - discount.value)
 
 // Update quantity and ensure it's always a number
 const updateQty = (index: number, value: number) => {
-  const qty = Number(value);
-  const minQty = cart.items[index].unit === 'kg' ? 0.5 : 1;
-  cart.updateQty(index, qty < minQty ? minQty : qty);
-};
+  const qty = Number(value)
+  const minQty = cart.items[index].unit === 'kg' ? 0.5 : 1
+  cart.updateQty(index, qty < minQty ? minQty : qty)
+}
+
+// Navigate to Checkout page
+const goToCheckout = () => {
+  if (cart.items.length > 0) {
+    router.push({ name: 'Checkout' })
+  } else {
+    alert('Your cart is empty!')
+  }
+}
 </script>
 
 <style scoped>
@@ -224,7 +235,8 @@ const updateQty = (index: number, value: number) => {
 }
 
 .checkout-btn {
-  width: 100%;
+  display: block;             /* allow horizontal centering */
+  width: 200px;               /* fixed width, adjust as needed */
   padding: 12px;
   background: #4aa016;
   color: white;
@@ -232,7 +244,7 @@ const updateQty = (index: number, value: number) => {
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  margin-top: 20px;
+  margin: 20px auto 0 auto;  /* top margin 20px, horizontally centered */
   transition: background 0.3s;
 }
 
