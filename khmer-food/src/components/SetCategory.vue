@@ -10,11 +10,14 @@
         v-for="item in items" 
         :key="item.id" 
         class="product-card"
+        :class="{ 'out-of-stock': item.stock === 0 }"
+
       >
         <img 
           :src="item.image" 
           :alt="item.name" 
           class="product-img"
+          
         />
 
         <p class="product-name">{{ item.name }}</p>
@@ -22,9 +25,14 @@
         <div class="bottom-row">
           <p class="price">${{ item.price }}</p>
 
-          <button class="add-btn" @click="goToDetail(item.id)">
+          <button
+            class="add-btn"
+            :disabled="item.stock === 0"
+            @click="goToDetail(item.id)"
+          >
             <i class="fa-solid fa-arrow-right"></i>
           </button>
+
         </div>
       </div>
     </div>
@@ -61,6 +69,25 @@ function goToDetail(id) {
 </script>
 
 <style scoped>
+
+/* OUT OF STOCK EFFECT (FOLLOWING YOUR STYLE) */
+.product-card.out-of-stock {
+  position: relative;
+}
+
+.product-card.out-of-stock::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(225, 223, 223, 0.523);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 0.8rem;
+}
+
 .category-section {
   margin-bottom: 2rem;
 }

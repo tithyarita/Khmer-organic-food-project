@@ -110,14 +110,14 @@ const submitForm = async () => {
   justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding: 3rem 2rem;
+  padding: 1rem 2rem;
   position: relative;
   overflow: hidden;
 }
 
 .login-banner h1 {
-  font-size: 7rem;
-  margin-top: 10rem;
+  font-size: 4.2rem;
+  margin-top: 7rem;
   margin-bottom: 0;
   font-weight: 900;
   line-height: 1;
@@ -125,7 +125,7 @@ const submitForm = async () => {
 }
 
 .login-banner p {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   margin: 0;
   font-weight: 500;
   line-height: 1.2;
@@ -138,8 +138,7 @@ const submitForm = async () => {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 65rem;
-  max-height: 70em;
+  max-width: 40rem;
   border-radius: 1rem;
   z-index: 1;
   object-fit: contain;
@@ -164,7 +163,7 @@ const submitForm = async () => {
 
 .login-form h2 {
   color: #6EC007;
-  font-size: 4rem;
+  font-size: 3rem;
   margin-bottom: 0;
   font-weight: 800;
   text-align: center;
@@ -177,21 +176,21 @@ const submitForm = async () => {
   align-items: center;
   gap: 0.5rem;
   margin: 0;
-  font-size: 2rem;
+  /* font-size: 1rem; */
   font-weight: 120;
   justify-content: center;
 }
 
 .signup-prompt .gray-text {
   color: #979797;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 .signup-prompt .green-link {
   color: #6EC007;
   text-decoration: none;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 form label {
@@ -199,17 +198,17 @@ form label {
   margin-top: 2rem;
   display: block;
   color: black;
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 form input {
   width: 100%;
-  padding: 1rem;
-  margin-top: 0.1rem;
+  padding: 0.6rem;
+  margin-top: 0.01rem;
   border: 0.0625rem solid #6EC007; /* 1px = 0.0625rem */
-  border-radius: 1rem;
-  font-size: 1.5rem;
+  border-radius: 0.7rem;
+  font-size: 1.2rem;
   outline: none;
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
@@ -244,17 +243,24 @@ form input:focus {
 }
 
 .submit-btn {
-  width: 100%;
+  width: 50%;
+  margin: 1.2rem auto 0; /* <-- ADD THIS LINE */
+  display: flex;
+  justify-content: center;
   padding: 0.5rem;
   background: #6EC007;
   color: white;
   border: none;
   border-radius: 1rem;
-  font-size: 2.3rem;
+  font-size: 1.7rem;
   font-weight: bold;
   margin-top: 1.2rem;
   cursor: pointer;
   font-family: 'Baloo Tammudu 2', sans-serif;
+}
+
+.submit-btn:hover {
+  background: #57a600;
 }
 
 /* Mobile Responsive */

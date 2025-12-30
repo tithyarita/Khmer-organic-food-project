@@ -2,7 +2,7 @@
   <div>
     <Menu v-if="showLayout" class="header" />
 
-    <main>
+    <main :class="{ 'with-layout': showLayout }">
       <router-view />
     </main>
     <Footer v-if="showLayout" class="footer" />
@@ -71,7 +71,7 @@ body {
   z-index: 1000;
 }
 
-main {
+.with-layout {
   padding-top: 80px; /* adjust to header height */
   padding-bottom: 60px; /* adjust to footer height */
 }

@@ -88,22 +88,23 @@ app.get('/sets', (req, res) => {
 // 🔹 POST API with vegetables
 
 app.post('/vegetables', upload.single('image'), (req, res) => {
-  const { name, price, unit, rating, inStock } = req.body
+  const { name, price, unit, rating, stock } = req.body
   const imageFile = req.file
 
   if (!imageFile) {
     return res.status(400).json({ message: 'Image file is required' })
   }
 const newItem = {
-  id: vegetables.length + 1, // see below for ID fix
+  id: vegetables.length + 1,
   name,
-  category:'vegetables',
+  category: 'vegetables',
   price: Number(price),
   unit,
   rating: Number(rating),
-  inStock: inStock === 'true',
+  stock: stock !== undefined ? Number(stock) : 0,
   image: `http://localhost:3000/uploads/${req.file.filename}`
 }
+
 
   vegetables.push(newItem)
   saveVegetables() // ✅ persist to file
@@ -133,7 +134,8 @@ app.patch('/vegetables/:id', upload.single('image'), (req, res) => {
     return res.status(404).json({ message: 'Vegetable not found' })
   }
 
-  const { name, price, unit, rating, inStock } = req.body
+  const { name, price, unit, rating, stock } = req.body
+
   const imageFile = req.file
 
   vegetables[index] = {
@@ -142,7 +144,7 @@ app.patch('/vegetables/:id', upload.single('image'), (req, res) => {
     price: price ? Number(price) : vegetables[index].price,
     unit: unit ?? vegetables[index].unit,
     rating: rating ? Number(rating) : vegetables[index].rating,
-    inStock: inStock ? inStock === 'true' : vegetables[index].inStock,
+    stock: stock !== undefined ? Number(stock) : vegetables[index].stock,
     image: imageFile
       ? `http://localhost:3000/uploads/${imageFile.filename}`
       : vegetables[index].image
@@ -154,7 +156,7 @@ app.patch('/vegetables/:id', upload.single('image'), (req, res) => {
 
 // 🔹 POST API with image upload for meats
 app.post('/meats', upload.single('image'), (req, res) => {
-  const { name, price, unit, rating, inStock } = req.body
+  const { name, price, unit, rating, stock } = req.body
   const imageFile = req.file
 
   if (!imageFile) {
@@ -168,7 +170,7 @@ app.post('/meats', upload.single('image'), (req, res) => {
     price: Number(price),
     unit,
     rating: Number(rating),
-    inStock: inStock === 'true',
+    stock: stock !== undefined ? Number(stock) : 0,
     image: `http://localhost:3000/uploads/${imageFile.filename}`
   }
 
@@ -195,7 +197,7 @@ app.patch('/meats/:id', upload.single('image'), (req, res) => {
   if (index === -1) {
     return res.status(404).json({ message: 'Meat not found' })
   }
-  const { name, price, unit, rating, inStock } = req.body
+  const { name, price, unit, rating, stock } = req.body
   const imageFile = req.file
   meats[index] = {
     ...meats[index],
@@ -203,7 +205,7 @@ app.patch('/meats/:id', upload.single('image'), (req, res) => {
     price: price ? Number(price) : meats[index].price,
     unit: unit ?? meats[index].unit,
     rating: rating ? Number(rating) : meats[index].rating,
-    inStock: inStock ? inStock === 'true' : meats[index].inStock,
+    stock: stock !== undefined ? Number(stock) : meats[index].stock,
     image: imageFile
       ? `http://localhost:3000/uploads/${imageFile.filename}`
       : meats[index].image
@@ -215,7 +217,7 @@ app.patch('/meats/:id', upload.single('image'), (req, res) => {
 // 🔹 POST API with image upload for sets
 // let globalId =1;
 app.post('/sets', upload.single('image'), (req, res) => {
-  const { name, price, unit, rating, inStock, category } = req.body
+  const { name, price, unit, rating, stock, category } = req.body
   const imageFile = req.file
 
   if (!imageFile) {
@@ -236,7 +238,7 @@ app.post('/sets', upload.single('image'), (req, res) => {
     price: Number(price),
     unit,
     rating: Number(rating),
-    inStock: inStock === 'true',
+    stock: stock !== undefined ? Number(stock) : 0,
     image: `http://localhost:3000/uploads/${imageFile.filename}`
   }
 
@@ -279,7 +281,7 @@ app.patch('/sets/:category/:id', upload.single('image'), (req, res) => {
     return res.status(404).json({ message: 'Item not found' })
   }
 
-  const { name, price, unit, rating, inStock } = req.body
+  const { name, price, unit, rating, stock } = req.body
   const imageFile = req.file
 
   sets[categoryIndex].items[itemIndex] = {
@@ -288,7 +290,7 @@ app.patch('/sets/:category/:id', upload.single('image'), (req, res) => {
     price: price ? Number(price) : sets[categoryIndex].items[itemIndex].price,
     unit: unit ?? sets[categoryIndex].items[itemIndex].unit,
     rating: rating ? Number(rating) : sets[categoryIndex].items[itemIndex].rating,
-    inStock: inStock ? inStock === 'true' : sets[categoryIndex].items[itemIndex].inStock,
+    stock: stock !== undefined ? Number(stock) : sets[categoryIndex].items[itemIndex].Stock,
     image: imageFile
       ? `http://localhost:3000/uploads/${imageFile.filename}`
       : sets[categoryIndex].items[itemIndex].image
