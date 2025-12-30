@@ -72,7 +72,7 @@ body {
 }
 
 .footer {
-  position: fixed;
+  position: static;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -80,7 +80,7 @@ body {
 }
 
 .with-layout {
-  padding-top: 80px; /* adjust to header height */
-  padding-bottom: 60px; /* adjust to footer height */
+  padding-top: 3rem; /* adjust to header height */
+  /* padding-bottom: 60px; */ /* adjust to footer height */
 }
 </style>

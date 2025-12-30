@@ -9,15 +9,8 @@ import ProductDetail from '../views/ProductDetail.vue'
 import LoginSignUpView from '../views/LoginSignUpView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
-<<<<<<< HEAD
 import ProfileView from '../views/ProfileView.vue'
 import Checkout from '../views/CheckoutView.vue'
-=======
-import ProfileUserView from '../views/ProfileUserView.vue'
-import ProfileAdminView from '../views/admin/ProfileAdminView.vue'
-
-
->>>>>>> 3290061e5c70adca285464550ebf236bcbb77042
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },

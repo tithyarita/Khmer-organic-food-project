@@ -25,7 +25,6 @@ const bannerImage = route.meta.image || '/default-banner.jpg'
   height: 30rem;
   overflow: hidden;
   border-radius: 0.5rem;
-  margin-top: 2rem;
  
 }
 
