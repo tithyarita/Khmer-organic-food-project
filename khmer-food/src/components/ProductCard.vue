@@ -36,13 +36,13 @@ function addToFavorite(product: any) {
 </script>
 
 <template>
-  <div class="card" :class="{ 'out-of-stock': product.inStock === false }">
+  <div class="card" :class="{ 'out-of-stock': product.stock === 0 }">
     <!-- Header -->
     <div class="card-header">
       <!-- Stock status -->
       <div v-if="showStock" class="stock-status">
-        <i :class="product.inStock ? 'fa-solid fa-check-circle' : 'fa-solid fa-times-circle'"></i>
-        <span>{{ product.inStock ? 'In Stock' : 'Out of Stock' }}</span>
+        <i :class="product.stock ? 'fa-solid fa-check-circle' : 'fa-solid fa-times-circle'"></i>
+        <span>{{ product.stock ? 'In Stock' : 'Out of Stock' }}</span>
       </div>
 
       <!-- Favorite button -->
@@ -81,11 +81,11 @@ function addToFavorite(product: any) {
       <button
         v-if="showCart"
         class="add-to-cart"
-        :disabled="!product.inStock"
+        :disabled="!product.stock"
         @click="addToCart(product)"
       >
         <i class="fa-solid fa-cart-shopping"></i>
-        {{ product.inStock ? 'Add to Cart' : 'Unavailable' }}
+        {{ product.stock ? 'Add to Cart' : 'Unavailable' }}
       </button>
     </div>
   </div>

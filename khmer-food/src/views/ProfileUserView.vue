@@ -4,9 +4,8 @@
       <div class="avatar">
         <img src="@/assets/forProfile/profile.png" alt="avatar" />
       </div>
-
       <button class="btn" @click="toggleEdit">{{ editing ? 'Cancel' : 'Edit' }}</button>
-      <button class="btn secondary" @click="saveChanges">Save Change</button>
+      <button class="btn secondary" @click="saveChanges" :disabled="!editing">Save Change</button>
     </aside>
 
     <main class="right-panel">
@@ -25,20 +24,13 @@
 
         <label class="field">
           <span class="label-text">Email</span>
-          <input type="email" v-model="form.email" :disabled="!editing" />
+          <input type="email" v-model="form.email" disabled />
         </label>
 
         <label class="field password-field">
           <span class="label-text">Password</span>
           <div class="password-row">
-            <input
-              :type="showPassword ? 'text' : 'password'"
-              v-model="form.password"
-              :disabled="!editing"
-            />
-            <button type="button" class="eye" @click="showPassword = !showPassword">
-              {{ showPassword ? '🙈' : '👁' }}
-            </button>
+            <input type="password" value="********" disabled />
           </div>
         </label>
 
@@ -51,39 +43,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { getUserStorage, logoutUser } from '../loginstorage'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../firebase'
+
+interface UserForm {
+  name: string
+  phone: string
+  email: string
+}
 
 const router = useRouter()
-
 const editing = ref(false)
-const showPassword = ref(false)
-const form = ref({
-  name: 'Ming Ming',
-  phone: '0123456789',
-  email: 'ming@example.com',
-  password: 'password123'
+const form = ref<UserForm>({
+  name: '',
+  phone: '',
+  email: ''
 })
 
-let _backup = null
+let _backup: UserForm | null = null
 
 const toggleEdit = () => {
   if (!editing.value) {
     _backup = { ...form.value }
     editing.value = true
   } else {
-    if (_backup) {
-      form.value = { ..._backup }
-      _backup = null
-    }
+    if (_backup) form.value = { ..._backup }
     editing.value = false
   }
 }
 
-const saveChanges = () => {
+const saveChanges = async () => {
   editing.value = false
   _backup = null
-  // alert('Changes saved!')
+  alert('Changes saved!')
+  // You can update Firestore here if needed
 }
 
 const signOut = () => {
@@ -91,7 +87,29 @@ const signOut = () => {
 }
 
 
+onMounted(async () => {
+  const user = getUserStorage()
+  if (!user) {
+    router.push('/loginSignup')
+    return
+  }
+
+  form.value.email = user.email || ''
+
+  try {
+    const docRef = doc(db, 'users', user.uid)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      const data = docSnap.data()
+      form.value.name = data.name || ''
+      form.value.phone = data.phone || ''
+    }
+  } catch (err) {
+    console.error('Error fetching user info:', err)
+  }
+})
 </script>
+
 
 <style scoped>
 .profile-page {

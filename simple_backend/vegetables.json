@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Onion",
+    "category": "vegetables",
+    "price": 6.55,
+    "unit": "Kg",
+    "rating": 4,
+    "stock": 21,
+    "image": "http://localhost:3000/uploads/9067101aa4e9a78a20c2af48cbb41397"
+  },
+  {
+    "id": 2,
+    "name": "Cucumber",
+    "category": "vegetables",
+    "price": 3.55,
+    "unit": "Kg",
+    "rating": 4,
+    "stock": 0,
+    "image": "http://localhost:3000/uploads/7ed9b515e12d06c186b3a261ad289fbb"
+  },
+  {
+    "id": 4,
+    "name": "Carrot",
+    "category": "vegetables",
+    "price": 3,
+    "unit": "kg",
+    "rating": 3,
+    "stock": 10,
+    "image": "http://localhost:3000/uploads/442c851919304c3aefa3fe722e2346b5"
+  }
+]

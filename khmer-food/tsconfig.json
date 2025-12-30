@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "types": ["vite/client"],
-    "moduleResolution": "bundler",
+    "target": "ES2017",
+    "lib": ["ES2017", "DOM"],
     "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "src"]

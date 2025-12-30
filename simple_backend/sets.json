@@ -1,0 +1,68 @@
+[
+  {
+    "title": "Soup",
+    "items": [
+      {
+        "id": 1,
+        "name": "Brher Soup",
+        "price": 8.89,
+        "unit": "set",
+        "rating": 3,
+        "inStock": false,
+        "image": "http://localhost:3000/uploads/0262292f9a875b9d8402728974a76f41",
+        "stock": 34
+      },
+      {
+        "id": 2,
+        "name": "Korko",
+        "category": "Soup",
+        "price": 9.89,
+        "unit": "set",
+        "rating": 0,
+        "inStock": false,
+        "image": "http://localhost:3000/uploads/db3718ec67368f02bf53727907d1ea24",
+        "stock": 12
+      },
+      {
+        "id": 3,
+        "name": "Mju",
+        "category": "Soup",
+        "price": 8.79,
+        "unit": "set",
+        "rating": 0,
+        "inStock": true,
+        "image": "http://localhost:3000/uploads/6082ec152b3e83f4ec5d80b81bc7135c",
+        "stock": 4
+      },
+      {
+        "id": 4,
+        "name": "Sour Soup",
+        "category": "Soup",
+        "price": 14.79,
+        "unit": "set",
+        "rating": 0,
+        "stock": 0,
+        "image": "http://localhost:3000/uploads/98807b9ff0a87dffb73760489ee90851"
+      }
+    ]
+  },
+  {
+    "title": "Fried (Chha)",
+    "items": [
+      {
+        "id": 5,
+        "name": "Chha Trakoun",
+        "category": "Fried (Chha)",
+        "price": 9.9,
+        "unit": "kg",
+        "rating": 3,
+        "stock": 15,
+        "image": "http://localhost:3000/uploads/21cb7dc29c979f8f549de6c08f8155aa"
+      }
+    ]
+  },
+  {
+    "title": "Steamed",
+    "items": []
+  }
+]

@@ -40,20 +40,57 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { auth } from '../firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { saveUserStorage, getUserStorage } from '../loginstorage'
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const router = useRouter()
 
-const submitForm = () => {
-  console.log('Logging in:', { email: email.value, password: password.value })
-  // alert('Logged in!')
-  router.push('/')
+// If user already logged in, redirect to profile
+onMounted(() => {
+  const user = getUserStorage()
+  if (user) router.push('/profile')
+})
+
+const submitForm = async () => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
+    const user = userCredential.user
+
+    // Save user info in localStorage
+    saveUserStorage({ uid: user.uid, email: user.email })
+
+    alert(`Welcome back, ${user.email}`)
+    router.push('/profile') // redirect to profile after login
+  } catch (error) {
+    if (error instanceof Error) {
+      const firebaseError = error as { code?: string; message: string }
+
+      switch (firebaseError.code) {
+        case 'auth/user-not-found':
+          alert('No account found with this email. Please sign up first.')
+          break
+        case 'auth/wrong-password':
+          alert('Incorrect password. Please try again.')
+          break
+        case 'auth/invalid-email':
+          alert('Invalid email format.')
+          break
+        default:
+          alert(firebaseError.message)
+      }
+    } else {
+      alert('Something went wrong. Please try again.')
+    }
+  }
 }
 </script>
+
 
 <style scoped>
 .login-page {

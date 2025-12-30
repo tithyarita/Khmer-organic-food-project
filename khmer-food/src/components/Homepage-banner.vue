@@ -2,8 +2,9 @@
   <div class="bannerhome-container">
     <!-- Main banner -->
     <div v-if="!showGridOnly && !showColumnOnly" class="banner-image">
-      <img src="/images/banner1-home.png" alt="Home Banner" />
+      <button class="shop-now">Shop Now</button>
     </div>
+
 
     <!-- Grid banners -->
     <div v-if="showGridOnly" class="gridbanner">
@@ -67,17 +68,37 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 30px;
-  border-radius: 20px;
+}
+.banner-image {
+  width: 100%;
+  height: 90vh;
+  background-image: url('/images/Food-banner.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* Shop Now button styling */
+.shop-now {
+  padding: 12px 25px;
+  background: #6ec007;
+  color: white;
+  font-size: 20px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: 'Baloo Da', cursive;
+
+  position: absolute;
+  bottom: 50px;   /* like “below” */
+  left: 150px;    /* similar to your margin-left */
+}
+.shop-now:hover {
+  background-color: white;
+  color: #57a600;
+  transition: background-color 0.3s ease;
 }
 
-/* Main banner */
-.banner-image img {
-  width: 100%;
-  max-width: 1100px;
-  border-radius: 15px;
-  object-fit: cover;
-}
+
 
 /* Grid banners */
 .gridbanner {

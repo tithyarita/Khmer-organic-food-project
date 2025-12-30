@@ -45,26 +45,91 @@
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+// Firebase
+import { auth, db } from '../firebase'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { doc, setDoc, runTransaction } from 'firebase/firestore'
+
+// Form state
 const name = ref('')
 const phone = ref('')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+
 const router = useRouter()
 
-const submitForm = () => {
-  console.log('Signing up:', { name: name.value, phone: phone.value, email: email.value, password: password.value })
-  // alert('Account created!')
-  router.push('/')
+const submitForm = async () => {
+  try {
+    // 1️⃣ Create user in Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    )
+    const user = userCredential.user
+
+    // 2️⃣ Auto-increment numeric ID
+    const userId = await runTransaction(db, async (transaction) => {
+      const counterRef = doc(db, 'counters', 'users')
+      const counterSnap = await transaction.get(counterRef)
+
+      if (!counterSnap.exists()) {
+        transaction.set(counterRef, { lastId: 1 })
+        return 1
+      }
+
+      const lastId = counterSnap.data().lastId as number
+      const nextId = lastId + 1
+      transaction.update(counterRef, { lastId: nextId })
+      return nextId
+    })
+
+    // 3️⃣ Store user info in Firestore (NO password saved)
+    await setDoc(doc(db, 'users', user.uid), {
+      userId, // 1, 2, 3, ...
+      uid: user.uid,
+      name: name.value,
+      phone: phone.value,
+      email: email.value,
+      createdAt: new Date()
+    })
+
+    alert(`Account created successfully!\nYour User ID: ${userId}`)
+    router.push('/')
+
+  } catch (error) {
+    if (error instanceof Error) {
+      // Firebase Auth errors have 'code' property
+      const firebaseError = error as { code?: string; message: string }
+
+      if (firebaseError.code === 'auth/email-already-in-use') {
+        alert('This email is already registered')
+      } else if (firebaseError.code === 'auth/weak-password') {
+        alert('Password must be at least 6 characters')
+      } else {
+        alert(firebaseError.message)
+      }
+    } else {
+      alert('Something went wrong')
+    }
+  }
 }
 </script>
 
+
+
+
+
+
+
+
 <style scoped>
+/* 🔴 YOUR DESIGN — UNCHANGED */
 .signup-page {
   display: flex;
   min-height: 100vh;
@@ -86,7 +151,6 @@ const submitForm = () => {
   max-width: 40rem;
   margin: 0 auto;
   width: 100%;
-  /* gap: 1rem; */
 }
 
 .signup-form h2 {
@@ -146,10 +210,6 @@ form input:focus {
 }
 
 .password-input {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin-top: 0.25rem;
   position: relative;
 }
 
@@ -162,9 +222,6 @@ form input:focus {
   cursor: pointer;
   display: block;
   text-align: right;
-  padding-right: 0.5rem;
-  font-family: 'Baloo Tammudu 2', sans-serif;
-  font-weight: bold;
 }
 
 .submit-btn {
@@ -175,13 +232,10 @@ form input:focus {
   padding: 0.5rem;
   background: #6EC007;
   color: white;
-  border: none;
   border-radius: 1rem;
   font-size: 1.7rem;
   font-weight: bold;
-  margin-top: 1.2rem;
   cursor: pointer;
-  font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 .submit-btn:hover {
@@ -195,12 +249,10 @@ form input:focus {
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
   text-align: center;
   padding: 1rem 2rem;
   position: relative;
-  overflow: hidden;
 }
 
 .signup-banner h1 {
