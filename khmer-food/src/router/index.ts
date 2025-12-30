@@ -11,7 +11,10 @@ import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import Checkout from '../views/CheckoutView.vue'
+<<<<<<< HEAD
 import LoginAdmin from '../components/LoginAdmin.vue'
+=======
+>>>>>>> 9d63f46d6e17dd4f45d106fedf851d7eb2da53bc
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },

@@ -47,6 +47,7 @@ export default {
   font-family: 'Baloo Tamma 2', cursive;
   color: #6ec007;
   margin-bottom: 0px;
+  margin-top: 0;
 }
 
 .categories-section {
