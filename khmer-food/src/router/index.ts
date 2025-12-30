@@ -9,15 +9,9 @@ import ProductDetail from '../views/ProductDetail.vue'
 import LoginSignUpView from '../views/LoginSignUpView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
-<<<<<<< HEAD
 import ProfileView from '../views/ProfileView.vue'
 import Checkout from '../views/CheckoutView.vue'
-=======
-import ProfileUserView from '../views/ProfileUserView.vue'
-import ProfileAdminView from '../views/admin/ProfileAdminView.vue'
-
-
->>>>>>> 3290061e5c70adca285464550ebf236bcbb77042
+import LoginAdmin from '../components/LoginAdmin.vue'
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
@@ -29,6 +23,12 @@ const routes: RouteRecordRaw[] = [
             image: '/images/vegBanner.jpeg',
             bg: '#F5F5F5',
     },
+  },
+  {
+    path: '/adminlogin',
+    name: 'AdminLogin',
+    component: LoginAdmin,
+    meta: { hideLayout: true }
   },
 
 
