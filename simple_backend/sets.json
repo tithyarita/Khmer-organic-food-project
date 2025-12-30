@@ -38,18 +38,28 @@
         "id": 4,
         "name": "Sour Soup",
         "category": "Soup",
-        "price": 7.79,
+        "price": 14.79,
         "unit": "set",
         "rating": 0,
-        "inStock": true,
-        "image": "http://localhost:3000/uploads/95e747cf4348124ec3db968e90573c2d",
-        "stock": 0
+        "stock": 0,
+        "image": "http://localhost:3000/uploads/98807b9ff0a87dffb73760489ee90851"
       }
     ]
   },
   {
     "title": "Fried (Chha)",
-    "items": []
+    "items": [
+      {
+        "id": 5,
+        "name": "Chha Trakoun",
+        "category": "Fried (Chha)",
+        "price": 9.9,
+        "unit": "kg",
+        "rating": 3,
+        "stock": 15,
+        "image": "http://localhost:3000/uploads/21cb7dc29c979f8f549de6c08f8155aa"
+      }
+    ]
   },
   {
     "title": "Steamed",

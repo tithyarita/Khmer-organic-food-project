@@ -249,6 +249,7 @@ const saveProduct = async () => {
     if (form.value.category === 'Vegetables') url = '/vegetables'
     else if (form.value.category === 'Meats') url = '/meats'
     else url = '/sets'
+    formData.append('category', form.value.category)
 
     await axios.post(`http://localhost:3000${url}`, formData)
 
