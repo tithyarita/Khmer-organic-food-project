@@ -170,6 +170,7 @@ const submitForm = async () => {
   line-height: 1;
 }
 
+
 /* Sign Up prompt */
 .signup-prompt {
   display: flex;

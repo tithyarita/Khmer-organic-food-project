@@ -62,7 +62,7 @@ function addToFavorite(product: any) {
     </div>
 
     <!-- Footer -->
-    <div class="card-footer"> 
+    <div class="card-footer">
       <div class="rating">
         <i
           v-for="n in 5"
@@ -70,7 +70,7 @@ function addToFavorite(product: any) {
           :class="n <= product.rating ? 'fa-solid fa-star' : 'fa-regular fa-star'"
         ></i>
       </div>
-      
+
 
       <div class="info-row">
         <span class="product-name">{{ product.name }}</span>
@@ -90,7 +90,7 @@ function addToFavorite(product: any) {
     </div>
   </div>
 
-  
+
 </template>
 
 <style scoped>

@@ -60,6 +60,7 @@ const phone = ref('')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+const role=ref('customer')
 
 const router = useRouter()
 
@@ -95,6 +96,8 @@ const submitForm = async () => {
       uid: user.uid,
       name: name.value,
       phone: phone.value,
+      role: role.value,
+
       email: email.value,
       createdAt: new Date()
     })
@@ -120,13 +123,6 @@ const submitForm = async () => {
   }
 }
 </script>
-
-
-
-
-
-
-
 
 <style scoped>
 /* 🔴 YOUR DESIGN — UNCHANGED */
@@ -155,7 +151,7 @@ const submitForm = async () => {
 
 .signup-form h2 {
   color: #6EC007;
-  font-size: 4rem;
+  font-size: 3rem;
   margin-bottom: 0;
   font-weight: 800;
   text-align: center;
@@ -167,36 +163,46 @@ const submitForm = async () => {
   align-items: center;
   gap: 0.5rem;
   margin: 0;
-  font-size: 2rem;
+  /* font-size: 1.2rem; */
+  font-weight: 120;
   justify-content: center;
 }
 
 .login-prompt .gray-text {
   color: #979797;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 .login-prompt .green-link {
   color: #6EC007;
   text-decoration: none;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 form label {
   font-weight: bold;
-  margin-top: 2rem;
+  margin-top: 1rem;
   display: block;
   color: black;
-  font-size: 2rem;
+  font-size: 1.4rem;
+  font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 form input {
   width: 100%;
-  padding: 1rem;
-  border: 0.0625rem solid #6EC007;
-  border-radius: 1rem;
-  font-size: 1.5rem;
+  padding: 0.5rem;
+  margin-top: 0.01rem;
+  border: 0.0625rem solid #6EC007; /* 1px = 0.0625rem */
+  border-radius: 0.7rem;
+  font-size: 1.2rem;
+  outline: none;
+  font-family: 'Baloo Tammudu 2', sans-serif;
+}
+
+form input:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 0.125rem rgba(76, 175, 80, 0.2);
 }
 
 .password-input {
@@ -206,21 +212,30 @@ form input {
 .forgot-password {
   color: #6EC007;
   font-size: 1.2rem;
-  margin-top: 1rem;
-  margin-bottom: 3rem;
+  margin-top: 0.9rem;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  cursor: pointer;
   display: block;
   text-align: right;
 }
 
 .submit-btn {
-  width: 100%;
+  width: 50%;
+  margin: 1.2rem auto 0; /* <-- ADD THIS LINE */
+  display: flex;
+  justify-content: center;
   padding: 0.5rem;
   background: #6EC007;
   color: white;
   border-radius: 1rem;
-  font-size: 2.3rem;
+  font-size: 1.7rem;
   font-weight: bold;
   cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #57a600;
 }
 
 /* Right Banner */
@@ -232,6 +247,78 @@ form input {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 1rem 2rem;
   position: relative;
+}
+
+.signup-banner h1 {
+  font-size: 4.65rem;
+  margin-top: 7rem;
+  margin-bottom: 0;
+  font-weight: 900;
+  line-height: 1;
+  z-index: 2;
+}
+
+.signup-banner p {
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 300;
+  line-height: 1.2;
+  z-index: 2;
+}
+
+.signup-banner .banner-img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 43rem;
+  border-radius: 1rem;
+  z-index: 1;
+  object-fit: contain;
+}
+
+/* Mobile Responsive */
+@media (max-width: 37.5rem) {
+  .signup-page {
+    flex-direction: column;
+  }
+  .signup-form {
+    padding: 1rem;
+  }
+  .signup-form h2 {
+    font-size: 3rem;
+  }
+  .login-prompt {
+    gap: 0.25rem;
+    justify-content: center;
+    align-items: center;
+  }
+  .login-prompt .gray-text {
+    font-size: 1.25rem;
+  } 
+  .forgot-password {
+    text-align: right;
+    padding-right: 0;
+  }
+  .signup-banner {
+    min-height: 50vh;
+  }
+  .signup-banner h1 {
+    font-size: 3rem;
+    line-height: 1;
+  }
+  .signup-banner p {
+   font-size: 1.25rem;
+    margin: 0.5rem 0 0 0;
+    line-height: 1;
+  }
+  .signup-banner .banner-img {
+    max-width: 30rem;
+    max-height: 25rem;
+    
+  }
 }
 </style>

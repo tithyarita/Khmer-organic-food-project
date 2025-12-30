@@ -31,12 +31,9 @@
       <router-link to="/favorite" class="icon-link">
         <i class="fa-regular fa-heart"></i>
       </router-link>
-      <router-link to="/cart" class="icon-link">
-        <i class="fa-solid fa-cart-shopping"></i>
-      </router-link>
-      <router-link to="/profile" class="icon-link">
-        <i class="fa-regular fa-user"></i>
-      </router-link>
+
+      <router-link to="/cart"><i class="fa-solid fa-cart-shopping"></i></router-link>
+      <router-link to="/profile"><i class="fa-regular fa-user"></i></router-link>
     </div>
   </header>
 </template>
