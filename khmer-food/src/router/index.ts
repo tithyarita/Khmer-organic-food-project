@@ -112,16 +112,15 @@ const routes: RouteRecordRaw[] = [
     name: 'Profile',
     component: () => import('../views/ProfileView.vue'),
   },
-  
+
   {
-    path: '/Proudct/:id',
+    path: '/ProudctDetail',
     name: 'ProudctDetail',
-    component: () => import('../views/ProductDetail.vue'),
+    component: ProductDetail,
     props: true,
     meta: { title: 'KHMER DETAIL FOOD',
     image: '/images/detailbanner.jpg',
     bg: '#F5F5F5'},
-
   },
 
 ]

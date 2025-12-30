@@ -9,7 +9,6 @@
           <span class="stat-change positive">+12% from last month</span>
         </div>
       </div>
-
       <div class="stat-card">
         <div class="stat-icon">📊</div>
         <div class="stat-content">

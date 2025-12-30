@@ -60,6 +60,7 @@ const phone = ref('')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+const role=ref('customer')
 
 const router = useRouter()
 
@@ -95,6 +96,8 @@ const submitForm = async () => {
       uid: user.uid,
       name: name.value,
       phone: phone.value,
+      role: role.value,
+
       email: email.value,
       createdAt: new Date()
     })

@@ -50,6 +50,7 @@ const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const router = useRouter()
+const role = ref('customer')
 
 // If user already logged in, redirect to profile
 onMounted(() => {
@@ -63,7 +64,7 @@ const submitForm = async () => {
     const user = userCredential.user
 
     // Save user info in localStorage
-    saveUserStorage({ uid: user.uid, email: user.email })
+    saveUserStorage({ uid: user.uid, email: user.email, role: role.value })
 
     alert(`Welcome back, ${user.email}`)
     router.push('/profile') // redirect to profile after login
