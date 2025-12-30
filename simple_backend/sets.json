@@ -9,7 +9,8 @@
         "unit": "set",
         "rating": 3,
         "inStock": false,
-        "image": "http://localhost:3000/uploads/0262292f9a875b9d8402728974a76f41"
+        "image": "http://localhost:3000/uploads/0262292f9a875b9d8402728974a76f41",
+        "stock": 34
       },
       {
         "id": 2,
@@ -19,7 +20,8 @@
         "unit": "set",
         "rating": 0,
         "inStock": false,
-        "image": "http://localhost:3000/uploads/db3718ec67368f02bf53727907d1ea24"
+        "image": "http://localhost:3000/uploads/db3718ec67368f02bf53727907d1ea24",
+        "stock": 12
       },
       {
         "id": 3,
@@ -29,7 +31,8 @@
         "unit": "set",
         "rating": 0,
         "inStock": true,
-        "image": "http://localhost:3000/uploads/6082ec152b3e83f4ec5d80b81bc7135c"
+        "image": "http://localhost:3000/uploads/6082ec152b3e83f4ec5d80b81bc7135c",
+        "stock": 4
       },
       {
         "id": 4,
@@ -39,24 +42,14 @@
         "unit": "set",
         "rating": 0,
         "inStock": true,
-        "image": "http://localhost:3000/uploads/95e747cf4348124ec3db968e90573c2d"
+        "image": "http://localhost:3000/uploads/95e747cf4348124ec3db968e90573c2d",
+        "stock": 0
       }
     ]
   },
   {
     "title": "Fried (Chha)",
-    "items": [
-      {
-        "id": 5,
-        "name": "Chha Trakuon",
-        "category": "Fried (Chha)",
-        "price": 4.79,
-        "unit": "set",
-        "rating": 0,
-        "inStock": true,
-        "image": "http://localhost:3000/uploads/8e46f0dc4a92158ec02af824591d961e"
-      }
-    ]
+    "items": []
   },
   {
     "title": "Steamed",

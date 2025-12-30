@@ -27,7 +27,7 @@
             <th>Category</th>
             <th>Price</th>
             <th>Stock</th>
-            <th>Min Level</th>
+            <!-- <th>Min Level</th> -->
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -40,20 +40,26 @@
             <td>{{ item.name }}</td>
             <td>{{ item.category }}</td>
             <td>${{ item.price }}</td>
-            <td>{{ item.inStock ? 'Yes' : 'No' }}</td>
-            <td>10</td>
+
+            <!-- show stock number -->
+            <td>{{ item.stock }}</td>
+            <!-- <td>10</td> -->
+            <!-- stock status -->
             <td>
-              <span class="badge" :class="item.inStock ? 'success' : 'warning'">
-                {{ item.inStock ? 'In Stock' : 'Out' }}
+              <span
+                class="badge"
+                :class="item.stock > 0 ? 'success' : 'warning'"
+              >
+                {{ item.stock > 0 ? 'In Stock' : 'Out of Stock' }}
               </span>
             </td>
+
             <td>
               <button class="btn-edit" @click="openEdit(item)">Edit</button>
-
               <button class="btn-delete" @click="deleteProduct(item)">Delete</button>
-
             </td>
           </tr>
+
         </tbody>
       </table>
       <!-- ADD PRODUCT MODAL -->
@@ -145,6 +151,8 @@
 </template>
 
 <script setup lang="ts">
+import axios from 'axios' 
+import api from '@/services/api'
 import { ref, onMounted, computed } from 'vue'
 import {
   getVegetables,
@@ -163,19 +171,25 @@ const showAddModal = ref(false)
 const showEditModal = ref(false)
 
 // ---------------- FORM ----------------
-const onFileChange = (e: any) => {
-  form.value.image = e.target.files[0]
+const onFileChange = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  if (target.files && target.files.length > 0) {
+    form.value.imageFile = target.files[0]
+  }
 }
+
+
 const form = ref({
   id: null,
   name: '',
   price: 0,
   unit: 'kg',
   rating: 0,
-  inStock: true,
+  stock: 0,              // ✅ replace inStock
   category: 'Vegetables',
-  image: null as File | null
+  imageFile: null as File | null
 })
+
 
 // ---------------- DATA ----------------
 const vegetables = ref<any[]>([])
@@ -211,44 +225,41 @@ const openAddModal = () => {
     price: 0,
     unit: 'kg',
     rating: 0,
-    inStock: true,
-    category: 'Vegetables'
+    stock: 0,
+    category: 'Vegetables',
+    imageFile: null
   }
   showAddModal.value = true
 }
+
+
 // Add product
 const saveProduct = async () => {
-  console.log('SAVE CLICKED', form.value)
-
   try {
-    if (form.value.category === 'Vegetables') {
-      console.log('Adding vegetable')
-      await addVegetable(form.value)
+    const formData = new FormData()
 
-    } else if (form.value.category === 'Meats') {
-      console.log('Adding meat')
-      await addMeat(form.value)
+    formData.append('name', form.value.name)
+    formData.append('price', String(form.value.price))
+    formData.append('unit', form.value.unit)
+    formData.append('rating', String(form.value.rating))
+    formData.append('stock', String(form.value.stock)) // ✅ works
+    formData.append('image', form.value.imageFile!)
 
-    } else {
-      console.log('Adding set item:', form.value.category)
-      await addSetItem(form.value.category, form.value)
-    }
+    let url = ''
+    if (form.value.category === 'Vegetables') url = '/vegetables'
+    else if (form.value.category === 'Meats') url = '/meats'
+    else url = '/sets'
 
-    alert('Product added successfully')
+    await axios.post(`http://localhost:3000${url}`, formData)
+
     showAddModal.value = false
-    await loadProducts()
+    await loadProducts() // ✅ already exists
 
-  }catch (error: any) {
-  console.error('Add failed FULL ERROR:', error)
-  console.error('Response:', error?.response)
-  console.error('Response data:', error?.response?.data)
-  alert(
-    error?.response?.data?.message ||
-    'Add failed – check console'
-  )
+  } catch (err) {
+    console.error('Add product failed:', err)
+  }
 }
 
-}
 
 
 

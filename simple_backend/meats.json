@@ -1,41 +1,22 @@
 [
   {
-    "id": 3,
-    "name": "Chicken Drumsticks",
-    "price": 7.5,
-    "unit": "Kg",
-    "rating": 4,
-    "inStock": false,
-    "image": "http://localhost:3000/uploads/515c5d870056f59122a91a889821ba8b"
-  },
-  {
-    "id": 2,
-    "name": "Beef",
-    "category": "meats",
-    "price": 9.5,
-    "unit": "Kg",
-    "rating": 4,
-    "inStock": true,
-    "image": "http://localhost:3000/uploads/b66990827320ba0e2eb5d69286984ecf"
-  },
-  {
-    "id": 3,
-    "name": "Pork",
-    "category": "meats",
-    "price": 7.5,
-    "unit": "Kg",
-    "rating": 3,
-    "inStock": true,
-    "image": "http://localhost:3000/uploads/d20aac32427e5d5a1857dbf3b0773511"
-  },
-  {
-    "id": 4,
+    "id": 1,
     "name": "Fish",
     "category": "meats",
     "price": 8.76,
     "unit": "Kg",
     "rating": 5,
-    "inStock": true,
-    "image": "http://localhost:3000/uploads/7606f0f3bbf634a411c337c4e14acf0e"
+    "stock": 12,
+    "image": "http://localhost:3000/uploads/c4afdeadf0d6ef0e99051ea82010bdc3"
+  },
+  {
+    "id": 2,
+    "name": "Beef",
+    "category": "meats",
+    "price": 9.89,
+    "unit": "kg",
+    "rating": 4,
+    "stock": 89,
+    "image": "http://localhost:3000/uploads/5b2255c5cb64262461caeeb68a3bf754"
   }
 ]
