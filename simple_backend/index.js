@@ -299,6 +299,70 @@ app.patch('/sets/:category/:id', upload.single('image'), (req, res) => {
   res.json(sets[categoryIndex].items[itemIndex])
 })
 
+
+app.post('/payment-success', (req, res) => {
+  console.log('==============================')
+  console.log('PAYMENT SUCCESS API HIT')
+  console.log('BODY:', req.body)
+  console.log('==============================')
+
+  const { items } = req.body
+  let vegUpdated = false
+  let meatUpdated = false
+  let setUpdated = false
+
+  items.forEach(item => {
+    const category = String(item.category).toLowerCase()
+    const id = Number(item.id)
+    const qty = Number(item.quantity)
+
+    // 🥬 VEGETABLES
+    if (category === 'vegetables') {
+      const product = vegetables.find(v => Number(v.id) === id)
+      if (product) {
+        console.log(`Veg Before (${product.name}):`, product.stock)
+        product.stock = Math.max(0, product.stock - qty)
+        console.log(`Veg After (${product.name}):`, product.stock)
+        vegUpdated = true
+      }
+    }
+
+    // 🥩 MEATS
+    else if (category === 'meats') {
+      const product = meats.find(m => Number(m.id) === id)
+      if (product) {
+        console.log(`Meat Before (${product.name}):`, product.stock)
+        product.stock = Math.max(0, product.stock - qty)
+        console.log(`Meat After (${product.name}):`, product.stock)
+        meatUpdated = true
+      }
+    }
+
+    // 🍲 SETS (Soup / Fried / Steamed)
+    else {
+      sets.forEach(set => {
+        const product = set.items.find(i => Number(i.id) === id)
+        if (product) {
+          console.log(`Set Before (${product.name}):`, product.stock)
+          product.stock = Math.max(0, product.stock - qty)
+          console.log(`Set After (${product.name}):`, product.stock)
+          setUpdated = true
+        }
+      })
+    }
+  })
+
+  // ✅ SAVE ONLY WHAT CHANGED
+  if (vegUpdated) saveVegetables()
+  if (meatUpdated) saveMeats()
+  if (setUpdated) saveSets()
+
+  res.json({ message: 'Stock updated successfully' })
+})
+
+
+
+
 // 🔹 Start the server
 
 app.listen(3000, () => {

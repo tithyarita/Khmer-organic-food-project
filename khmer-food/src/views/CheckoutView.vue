@@ -80,8 +80,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useCartStore } from '../stores/cart'
+import axios from 'axios'
+import router from '../router/index'
 
 const cart = useCartStore()
+
 
 // Computed totals
 const subtotal = computed(() =>
@@ -101,26 +104,39 @@ const paymentDetails = ref({
 })
 
 // Place order
-function placeOrder() {
+async function placeOrder() {
   if (!selectedPayment.value) {
     alert('Please select a payment method.')
     return
   }
 
-  if (selectedPayment.value === 'card') {
-    if (!paymentDetails.value.cardNumber || !paymentDetails.value.expiry || !paymentDetails.value.cvv) {
-      alert('Please fill all card details.')
-      return
-    }
-  } else {
-    if (!paymentDetails.value.accountNumber) {
-      alert(`Please enter your ${selectedPayment.value.toUpperCase()} account number.`)
-      return
-    }
-  }
+  try {
+    // ✅ CALL BACKEND
+    await axios.post('http://localhost:3000/payment-success', {
+      items: cart.items.map(item => ({
+        id: item.id,
+        category: item.category,
+        quantity: item.qty
+      }))
+    })
 
-  alert(`Payment successful using ${selectedPayment.value.toUpperCase()}!`)
+    alert(`Payment successful using ${selectedPayment.value.toUpperCase()}!`)
+
+    
+    // Clear cart AFTER backend success
+    cart.clear()
+
+    // ✅ Redirect to Home
+    // router.push('/')
+
+
+  } 
+  catch (error) {
+    console.error('Payment failed:', error)
+    // alert('Payment failed. Please try again.')
+  }
 }
+
 </script>
 
 <style scoped>

@@ -30,10 +30,18 @@
     <!-- RIGHT: Search Box + Icons -->
     <div class="right-side">
       <!-- Search Box -->
-      <input type="text" placeholder="Search..." class="search-box" />
+      <input
+        type="text"
+        placeholder="Search..."
+        class="search-box"
+        v-model="searchText"
+        @input="emitSearch"
+      />
+
       <router-link to="#" class="icon-link">
         <i class="fa-solid fa-magnifying-glass"></i>
       </router-link>
+
 
       <router-link to="/favorite" class="icon-link">
         <i class="fa-regular fa-heart"></i>
@@ -41,7 +49,7 @@
       <router-link to="/cart" class="icon-link">
         <i class="fa-solid fa-cart-shopping"></i>
       </router-link>
-      <router-link to="/profile" class="icon-link">
+      <router-link to="/ProfileUser" class="icon-link">
         <i class="fa-regular fa-user"></i>
       </router-link>
     </div>

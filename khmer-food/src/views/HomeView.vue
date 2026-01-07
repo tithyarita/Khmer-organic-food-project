@@ -1,5 +1,6 @@
 <template>
   <div class="homepage-container">
+  
     <!-- Main banner -->
     <BannerHomePage />
 
@@ -15,18 +16,19 @@
       <BannerHomePage :showColumnOnly="true" />
     </section>
   </div>
+
+  
 </template>
 
-<script>
+
+<script setup>
+import { ref } from 'vue'
+import Menu from '@/components/Menu.vue'
 import BannerHomePage from '@/components/Homepage-banner.vue'
 
-export default {
-  name: 'HomePage',
-  components: {
-    BannerHomePage,
-  },
-}
+const searchQuery = ref('')
 </script>
+
 
 <style scoped>
 /* Apply background + font to the main container instead of body */
