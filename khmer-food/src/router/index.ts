@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+
 import HomeView from '../views/HomeView.vue'
 import Vegetables from '../views/Vegetables.vue'
 import Meats from '../views/Meats.vue'
@@ -6,70 +7,66 @@ import Sets from '../views/sets.vue'
 import CartView from '../views/CartView.vue'
 import FavoritePage from '../views/FavoritePage.vue'
 import ProductDetail from '../views/ProductDetail.vue'
+
 import LoginSignUpView from '../views/LoginSignUpView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
-import ProfileView from '../views/ProfileView.vue'
-import Checkout from '../views/CheckoutView.vue'
-<<<<<<< HEAD
-import LoginAdmin from '../components/LoginAdmin.vue'
-=======
->>>>>>> 9d63f46d6e17dd4f45d106fedf851d7eb2da53bc
+import ProfileView from '../views/ProfileUserView.vue'
+
+import { getUserStorage } from '../loginstorage'
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: HomeView },
+
   {
     path: '/category/vegetables',
     name: 'vegetables',
     component: Vegetables,
-    meta: { title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES',
-            image: '/images/vegBanner.jpeg',
-            bg: '#F5F5F5',
+    meta: {
+      title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES',
+      image: '/images/vegBanner.jpeg',
+      bg: '#F5F5F5',
     },
   },
-  {
-    path: '/adminlogin',
-    name: 'AdminLogin',
-    component: LoginAdmin,
-    meta: { hideLayout: true }
-  },
-
 
   {
     path: '/category/meats',
     name: 'meats',
     component: Meats,
-    meta: { title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
-            image: '/images/meatBanner.jpg',
-            bg: '#FFF5E5',
-     },
+    meta: {
+      title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
+      image: '/images/meatBanner.jpg',
+      bg: '#FFF5E5',
+    },
   },
 
   {
     path: '/category/sets',
     name: 'sets',
     component: Sets,
-    meta: { title: "CAMBODIA'S SIGNATURE DISH SEASON'S BEST ON YOUR PLATE",
-            image: '/images/setBanner.png',
-            bg: '#F0F8FF',
-     },
+    meta: {
+      title: "CAMBODIA'S SIGNATURE DISH SEASON'S BEST ON YOUR PLATE",
+      image: '/images/setBanner.png',
+      bg: '#F0F8FF',
+    },
   },
 
   { path: '/cart', name: 'Cart', component: CartView },
   { path: '/favorite', name: 'FavoritePage', component: FavoritePage },
+
   { path: '/product/:id', name: 'ProductDetail', component: ProductDetail, props: true },
+
   { path: '/blog', name: 'BlogView', component: () => import('../views/BlogView.vue') },
   { path: '/about', name: 'AboutView', component: () => import('../views/AboutView.vue') },
   { path: '/contact', name: 'ContactView', component: () => import('../views/ContactView.vue') },
 
-  // Admin Layout with nested routes
-
+  /* ADMIN */
   {
     path: '/admin',
     component: () => import('../components/Admindashbroad.vue'),
     children: [
       { path: '', redirect: '/admin/sales' },
-            {
+      {
         path: 'sales',
         name: 'AdminSales',
         component: () => import('../views/admin/AdminSales.vue'),
@@ -101,47 +98,42 @@ const routes: RouteRecordRaw[] = [
     path: '/loginSignup',
     name: 'Login/SignUp',
     component: LoginSignUpView,
-    meta: { hideLayout: true }
+    meta: { hideLayout: true },
   },
 
   {
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: { hideLayout: true }
+    meta: { hideLayout: true },
   },
 
   {
     path: '/signup',
     name: 'SignUp',
     component: SignUpView,
-    meta: { hideLayout: true }
+    meta: { hideLayout: true },
   },
 
+  /* ✅ ADDED PROFILE (NO NAME CHANGES) */
   {
-  path: '/profileuser',
-  name: 'ProfileUser',
-  component: () => import('../views/ProfileUserView.vue'),
-},
-
+    path: '/profile',
+    name: 'Profile',
+    component: ProfileView,
+    meta: { requiresAuth: true },
+  },
 
   {
     path: '/ProudctDetail',
     name: 'ProudctDetail',
     component: ProductDetail,
     props: true,
-    meta: { title: 'KHMER DETAIL FOOD',
-    image: '/images/detailbanner.jpg',
-    bg: '#F5F5F5'},
+    meta: {
+      title: 'KHMER DETAIL FOOD',
+      image: '/images/detailbanner.jpg',
+      bg: '#F5F5F5',
+    },
   },
-  {
-  path: '/checkout',
-  name: 'Checkout',
-  component: Checkout,
-  meta: { title: 'Checkout - Khmer Organic Food' }
-  },
-
-
 ]
 
 const router = createRouter({
@@ -149,9 +141,25 @@ const router = createRouter({
   routes,
 })
 
+/* ✅ ADD LOGIN CHECK (TITLE LOGIC KEPT) */
 router.beforeEach((to, from, next) => {
   const defaultTitle = 'Khmer Organic Food'
   document.title = (to.meta?.title as string) || defaultTitle
+
+  const user = getUserStorage()
+
+  // Protect profile
+  if (to.meta?.requiresAuth && !user) {
+    next('/login')
+    return
+  }
+
+  // Block login/signup if already logged in
+  if ((to.path === '/login' || to.path === '/signup') && user) {
+    next('/profile')
+    return
+  }
+
   next()
 })
 

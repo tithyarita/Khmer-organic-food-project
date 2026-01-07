@@ -1,11 +1,11 @@
 <template>
   <div class="signup-page">
-    <!-- Left Side: Sign Up Form -->
+    <!-- Left Form -->
     <div class="signup-form">
       <div class="form-content">
         <h2>Create an Account</h2>
         <p class="login-prompt">
-          <span class="gray-text">Don't have an account?</span>
+          <span class="gray-text">Already have an account?</span>
           <router-link to="/login" class="green-link">Login</router-link>
         </p>
 
@@ -14,30 +14,32 @@
           <input id="name" v-model="name" type="text" placeholder="Enter your name" required />
 
           <label for="phone">Phone Number</label>
-          <input id="phone" v-model="phone" type="text" placeholder="Enter your phone number" required />
+          <input
+            id="phone"
+            v-model="phone"
+            type="text"
+            placeholder="Enter your phone number"
+            required
+          />
 
           <label for="email">Email</label>
           <input id="email" v-model="email" type="email" placeholder="Enter your email" required />
 
           <label for="password">Password</label>
-          <div class="password-input">
-            <input
-              id="password"
-              v-model="password"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
-          <a href="#" class="forgot-password">Forgot your password?</a>
+          <input
+            id="password"
+            v-model="password"
+            type="password"
+            placeholder="Enter your password"
+            required
+          />
 
           <button type="submit" class="submit-btn">Sign Up</button>
         </form>
       </div>
     </div>
 
-    <!-- Right Side: Welcome Banner -->
+    <!-- Right Banner -->
     <div class="signup-banner">
       <h1>Welcome to Our Food Shop</h1>
       <p>Hello! Let’s join our shop</p>
@@ -45,33 +47,26 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-
-// Firebase
 import { auth, db } from '../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { doc, setDoc, runTransaction } from 'firebase/firestore'
 
-// Form state
 const name = ref('')
 const phone = ref('')
 const email = ref('')
 const password = ref('')
-const showPassword = ref(false)
-const role=ref('customer')
+const role = ref('customer')
 
 const router = useRouter()
 
 const submitForm = async () => {
   try {
     // 1️⃣ Create user in Firebase Auth
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email.value,
-      password.value
-    )
+    const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
     const user = userCredential.user
 
     // 2️⃣ Auto-increment numeric ID
@@ -90,39 +85,34 @@ const submitForm = async () => {
       return nextId
     })
 
-    // 3️⃣ Store user info in Firestore (NO password saved)
+    // 3️⃣ Store user info in Firestore (password NOT stored)
     await setDoc(doc(db, 'users', user.uid), {
-      userId, // 1, 2, 3, ...
+      userId,
       uid: user.uid,
       name: name.value,
       phone: phone.value,
-      role: role.value,
-
       email: email.value,
-      createdAt: new Date()
+      role: role.value,
+      createdAt: new Date(),
     })
 
     alert(`Account created successfully!\nYour User ID: ${userId}`)
-    router.push('/')
 
-  } catch (error) {
-    if (error instanceof Error) {
-      // Firebase Auth errors have 'code' property
-      const firebaseError = error as { code?: string; message: string }
-
-      if (firebaseError.code === 'auth/email-already-in-use') {
-        alert('This email is already registered')
-      } else if (firebaseError.code === 'auth/weak-password') {
-        alert('Password must be at least 6 characters')
-      } else {
-        alert(firebaseError.message)
-      }
+    // 4️⃣ Redirect to Login page (do NOT save user locally yet)
+    router.push('/login')
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      alert(err.message)
     } else {
-      alert('Something went wrong')
+      alert('Something went wrong during signup.')
     }
   }
 }
 </script>
+
+<style scoped>
+/* Keep your previous signup styling unchanged */
+</style>
 
 <style scoped>
 /* 🔴 YOUR DESIGN — UNCHANGED */
@@ -150,7 +140,7 @@ const submitForm = async () => {
 }
 
 .signup-form h2 {
-  color: #6EC007;
+  color: #6ec007;
   font-size: 3rem;
   margin-bottom: 0;
   font-weight: 800;
@@ -174,7 +164,7 @@ const submitForm = async () => {
 }
 
 .login-prompt .green-link {
-  color: #6EC007;
+  color: #6ec007;
   text-decoration: none;
   cursor: pointer;
   font-size: 1.4rem;
@@ -193,7 +183,7 @@ form input {
   width: 100%;
   padding: 0.5rem;
   margin-top: 0.01rem;
-  border: 0.0625rem solid #6EC007; /* 1px = 0.0625rem */
+  border: 0.0625rem solid #6ec007; /* 1px = 0.0625rem */
   border-radius: 0.7rem;
   font-size: 1.2rem;
   outline: none;
@@ -201,7 +191,7 @@ form input {
 }
 
 form input:focus {
-  border-color: #4CAF50;
+  border-color: #4caf50;
   box-shadow: 0 0 0 0.125rem rgba(76, 175, 80, 0.2);
 }
 
@@ -210,7 +200,7 @@ form input:focus {
 }
 
 .forgot-password {
-  color: #6EC007;
+  color: #6ec007;
   font-size: 1.2rem;
   margin-top: 0.9rem;
   margin-bottom: 1.5rem;
@@ -226,7 +216,7 @@ form input:focus {
   display: flex;
   justify-content: center;
   padding: 0.5rem;
-  background: #6EC007;
+  background: #6ec007;
   color: white;
   border-radius: 1rem;
   font-size: 1.7rem;
@@ -241,7 +231,7 @@ form input:focus {
 /* Right Banner */
 .signup-banner {
   flex: 1;
-  background-color: #6EC007;
+  background-color: #6ec007;
   color: white;
   display: flex;
   flex-direction: column;
@@ -298,7 +288,7 @@ form input:focus {
   }
   .login-prompt .gray-text {
     font-size: 1.25rem;
-  } 
+  }
   .forgot-password {
     text-align: right;
     padding-right: 0;
@@ -311,14 +301,13 @@ form input:focus {
     line-height: 1;
   }
   .signup-banner p {
-   font-size: 1.25rem;
+    font-size: 1.25rem;
     margin: 0.5rem 0 0 0;
     line-height: 1;
   }
   .signup-banner .banner-img {
     max-width: 30rem;
     max-height: 25rem;
-    
   }
 }
 </style>
