@@ -1,3 +1,4 @@
+// router/index.ts
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 import HomeView from '../views/HomeView.vue'
@@ -16,51 +17,30 @@ import ProfileView from '../views/ProfileUserView.vue'
 import { getUserStorage } from '../loginstorage'
 
 const routes: RouteRecordRaw[] = [
+  // ---------------- USER ROUTES ----------------
   { path: '/', component: HomeView },
-
-  {
-    path: '/category/vegetables',
-    name: 'vegetables',
-    component: Vegetables,
-    meta: {
-      title: 'GOOD FOOD STARTS WITH GOOD VEGETABLES',
-      image: '/images/vegBanner.jpeg',
-      bg: '#F5F5F5',
-    },
-  },
-
-  {
-    path: '/category/meats',
-    name: 'meats',
-    component: Meats,
-    meta: {
-      title: 'YOUR SOURCE FOR SAFE CLEAN PREMIUM MEAT.',
-      image: '/images/meatBanner.jpg',
-      bg: '#FFF5E5',
-    },
-  },
-
-  {
-    path: '/category/sets',
-    name: 'sets',
-    component: Sets,
-    meta: {
-      title: "CAMBODIA'S SIGNATURE DISH SEASON'S BEST ON YOUR PLATE",
-      image: '/images/setBanner.png',
-      bg: '#F0F8FF',
-    },
-  },
-
+  { path: '/category/vegetables', name: 'vegetables', component: Vegetables },
+  { path: '/category/meats', name: 'meats', component: Meats },
+  { path: '/category/sets', name: 'sets', component: Sets },
   { path: '/cart', name: 'Cart', component: CartView },
   { path: '/favorite', name: 'FavoritePage', component: FavoritePage },
-
   { path: '/product/:id', name: 'ProductDetail', component: ProductDetail, props: true },
 
-  { path: '/blog', name: 'BlogView', component: () => import('../views/BlogView.vue') },
-  { path: '/about', name: 'AboutView', component: () => import('../views/AboutView.vue') },
-  { path: '/contact', name: 'ContactView', component: () => import('../views/ContactView.vue') },
+  // Login/Signup routes
+  {
+    path: '/loginSignup',
+    name: 'Login/SignUp',
+    component: LoginSignUpView,
+    meta: { hideLayout: true },
+  },
+  { path: '/login', name: 'Login', component: LoginView, meta: { hideLayout: true } },
+  { path: '/signup', name: 'SignUp', component: SignUpView, meta: { hideLayout: true } },
 
-  /* ADMIN */
+  // Profile route (protected)
+  { path: '/profile', name: 'Profile', component: ProfileView, meta: { requiresAuth: true } },
+
+  // ---------------- ADMIN ROUTES ----------------
+  // Direct access; no login required
   {
     path: '/admin',
     component: () => import('../components/Admindashbroad.vue'),
@@ -93,47 +73,6 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-
-  {
-    path: '/loginSignup',
-    name: 'Login/SignUp',
-    component: LoginSignUpView,
-    meta: { hideLayout: true },
-  },
-
-  {
-    path: '/login',
-    name: 'Login',
-    component: LoginView,
-    meta: { hideLayout: true },
-  },
-
-  {
-    path: '/signup',
-    name: 'SignUp',
-    component: SignUpView,
-    meta: { hideLayout: true },
-  },
-
-  /* ✅ ADDED PROFILE (NO NAME CHANGES) */
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: ProfileView,
-    meta: { requiresAuth: true },
-  },
-
-  {
-    path: '/ProudctDetail',
-    name: 'ProudctDetail',
-    component: ProductDetail,
-    props: true,
-    meta: {
-      title: 'KHMER DETAIL FOOD',
-      image: '/images/detailbanner.jpg',
-      bg: '#F5F5F5',
-    },
-  },
 ]
 
 const router = createRouter({
@@ -141,23 +80,22 @@ const router = createRouter({
   routes,
 })
 
-/* ✅ ADD LOGIN CHECK (TITLE LOGIC KEPT) */
+// ---------------- GLOBAL NAV GUARD ----------------
 router.beforeEach((to, from, next) => {
   const defaultTitle = 'Khmer Organic Food'
   document.title = (to.meta?.title as string) || defaultTitle
 
   const user = getUserStorage()
 
-  // Protect profile
+  // Protect profile route
   if (to.meta?.requiresAuth && !user) {
-    next('/login')
-    return
+    return next('/login')
   }
 
-  // Block login/signup if already logged in
+  // Prevent logged-in users from visiting login/signup
   if ((to.path === '/login' || to.path === '/signup') && user) {
-    next('/profile')
-    return
+    if (user.role === 'admin') return next('/admin/sales')
+    return next('/profile')
   }
 
   next()

@@ -1,11 +1,13 @@
 <template>
   <div class="login-page">
+    <!-- Left Banner -->
     <div class="login-banner">
       <h1>Welcome Back</h1>
       <p>Hey! Good to see you again</p>
       <img src="@/assets/forLogin_SignUp/logoLogin.png" alt="Food Banner" class="banner-img" />
     </div>
 
+    <!-- Right Form -->
     <div class="login-form">
       <div class="form-content">
         <h2>Login to Your Account</h2>
@@ -29,6 +31,8 @@
 
           <button type="submit" class="submit-btn">Login</button>
         </form>
+
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       </div>
     </div>
   </div>
@@ -37,33 +41,60 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import { saveUserStorage, getUserStorage } from '../loginstorage'
 
 const email = ref('')
 const password = ref('')
+const errorMessage = ref('')
 const router = useRouter()
 
+// Redirect already logged-in customer to profile
 onMounted(() => {
   const user = getUserStorage()
-  if (user) router.push('/profile')
+  if (user && user.role !== 'admin') router.push('/profile')
 })
 
 const submitForm = async () => {
+  errorMessage.value = ''
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
-    const user = userCredential.user
+    // 1️⃣ Sign in with Firebase Auth
+    const cred = await signInWithEmailAndPassword(auth, email.value, password.value)
+    const uid = cred.user.uid
 
-    saveUserStorage({ uid: user.uid, email: user.email })
-    alert(`Welcome back, ${user.email}`)
+    // 2️⃣ Get user data from Firestore
+    const userRef = doc(db, 'users', uid)
+    const userSnap = await getDoc(userRef)
+
+    if (!userSnap.exists()) {
+      errorMessage.value = 'User record not found'
+      return
+    }
+
+    const userData = userSnap.data()
+
+    // 3️⃣ Prevent admin login on customer page
+    if (userData.role === 'admin') {
+      errorMessage.value = 'Admins cannot login here'
+      return
+    }
+
+    // 4️⃣ Save customer data locally
+    saveUserStorage({
+      uid,
+      name: userData.name || '',
+      email: userData.email || '',
+      phone: userData.phone || '',
+      role: 'customer',
+    })
+
+    // 5️⃣ Redirect to customer profile
     router.push('/profile')
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      alert(err.message)
-    } else {
-      alert('Something went wrong during login.')
-    }
+    if (err instanceof Error) errorMessage.value = err.message
+    else errorMessage.value = 'Login failed. Please try again.'
   }
 }
 </script>
@@ -75,7 +106,7 @@ const submitForm = async () => {
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
-/* Left Banner */
+/* Banner */
 .login-banner {
   flex: 1;
   background-color: #6ec007;
@@ -96,7 +127,6 @@ const submitForm = async () => {
   margin-bottom: 0;
   font-weight: 900;
   line-height: 1;
-  z-index: 2;
 }
 
 .login-banner p {
@@ -104,7 +134,6 @@ const submitForm = async () => {
   margin: 0;
   font-weight: 500;
   line-height: 1.2;
-  z-index: 2;
 }
 
 .login-banner .banner-img {
@@ -116,11 +145,10 @@ const submitForm = async () => {
   max-width: 65rem;
   max-height: 70em;
   border-radius: 1rem;
-  z-index: 1;
   object-fit: contain;
 }
 
-/* Right Form */
+/* Form */
 .login-form {
   flex: 1;
   padding: 2rem;
@@ -146,7 +174,6 @@ const submitForm = async () => {
   line-height: 1;
 }
 
-/* Sign Up prompt */
 .signup-prompt {
   display: flex;
   align-items: center;
@@ -175,47 +202,21 @@ form label {
   display: block;
   color: black;
   font-size: 2rem;
-  font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 form input {
   width: 100%;
   padding: 1rem;
   margin-top: 0.1rem;
-  border: 0.0625rem solid #6ec007; /* 1px = 0.0625rem */
+  border: 0.0625rem solid #6ec007;
   border-radius: 1rem;
   font-size: 1.5rem;
   outline: none;
-  font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 form input:focus {
   border-color: #6ec007;
-  /* box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2); */
-  box-shadow: 0 0 0 0.125rem rgba(76, 175, 80, 0.2); /* 2px = 0.125rem */
-}
-
-.password-input {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin-top: 0.25rem;
-  position: relative;
-}
-
-/* ✅ FORGOT PASSWORD: RIGHT-ALIGNED */
-.forgot-password {
-  color: #6ec007;
-  font-size: 1.2rem;
-  margin-top: 0.9rem;
-  margin-bottom: 3rem;
-  text-decoration: none;
-  cursor: pointer;
-  display: block;
-  text-align: right;
-  padding-right: 0.5rem;
-  font-family: 'Baloo Tammudu 2', sans-serif;
-  font-weight: bold;
+  box-shadow: 0 0 0 0.125rem rgba(76, 175, 80, 0.2);
 }
 
 .submit-btn {
@@ -229,11 +230,16 @@ form input:focus {
   font-weight: bold;
   margin-top: 1.2rem;
   cursor: pointer;
-  font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
-/* Mobile Responsive */
-@media (max-width: 37.5rem) {
+.error {
+  color: red;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
   .login-page {
     flex-direction: column;
   }
@@ -243,34 +249,16 @@ form input:focus {
   }
   .login-banner h1 {
     font-size: 3rem;
-    line-height: 1;
   }
   .login-banner p {
     font-size: 1.25rem;
-    margin: 0.5rem 0 0 0;
-    line-height: 1;
   }
   .login-banner .banner-img {
     max-width: 30rem;
     max-height: 25rem;
   }
-  .login-form {
-    padding: 1rem;
-  }
   .login-form h2 {
     font-size: 3rem;
-  }
-  .signup-prompt {
-    gap: 0.25rem;
-    justify-content: center;
-    align-items: center;
-  }
-  .signup-prompt .gray-text {
-    font-size: 1.25rem;
-  }
-  .forgot-password {
-    text-align: right;
-    padding-right: 0;
   }
 }
 </style>

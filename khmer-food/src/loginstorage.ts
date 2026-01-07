@@ -1,21 +1,24 @@
-export interface UserStorage {
+// loginstorage.ts
+export interface UserData {
   uid: string
-  name: string
-  phone: string
   email: string
+  name?: string
+  phone?: string
+  role?: string
 }
 
-const STORAGE_KEY = 'user'
-
-export const saveUserStorage = (user: UserStorage): void => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
+// Save user to localStorage
+export const saveUserStorage = (user: UserData) => {
+  localStorage.setItem('user', JSON.stringify(user))
 }
 
-export const getUserStorage = (): UserStorage | null => {
-  const data = localStorage.getItem(STORAGE_KEY)
+// Get user from localStorage
+export const getUserStorage = (): UserData | null => {
+  const data = localStorage.getItem('user')
   return data ? JSON.parse(data) : null
 }
 
-export const logoutUser = (): void => {
-  localStorage.removeItem(STORAGE_KEY)
+// Remove user from localStorage
+export const logoutUser = () => {
+  localStorage.removeItem('user')
 }
