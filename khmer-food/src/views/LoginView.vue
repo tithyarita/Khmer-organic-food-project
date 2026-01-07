@@ -1,13 +1,13 @@
 <template>
   <div class="login-page">
-    <!-- Left Banner -->
+    <!-- Left Side: Welcome Banner -->
     <div class="login-banner">
       <h1>Welcome Back</h1>
       <p>Hey! Good to see you again</p>
       <img src="@/assets/forLogin_SignUp/logoLogin.png" alt="Food Banner" class="banner-img" />
     </div>
 
-    <!-- Right Form -->
+    <!-- Right Side: Login Form -->
     <div class="login-form">
       <div class="form-content">
         <h2>Login to Your Account</h2>
@@ -18,21 +18,28 @@
 
         <form @submit.prevent="submitForm">
           <label for="email">Email</label>
-          <input id="email" v-model="email" type="email" placeholder="Enter your email" required />
-
-          <label for="password">Password</label>
           <input
-            id="password"
-            v-model="password"
-            type="password"
-            placeholder="Enter your password"
+            id="email"
+            v-model="email"
+            type="email"
+            placeholder="Enter your email"
             required
           />
 
+          <label for="password">Password</label>
+          <div class="password-input">
+            <input
+              id="password"
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <a href="#" class="forgot-password">Forgot your password?</a>
           <button type="submit" class="submit-btn">Login</button>
         </form>
-
-        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       </div>
     </div>
   </div>
@@ -41,99 +48,91 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth, db } from '../firebase'
+import { auth } from '../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { doc, getDoc } from 'firebase/firestore'
 import { saveUserStorage, getUserStorage } from '../loginstorage'
 
 const email = ref('')
 const password = ref('')
-const errorMessage = ref('')
+const showPassword = ref(false)
 const router = useRouter()
 
-// Redirect already logged-in customer to profile
 onMounted(() => {
   const user = getUserStorage()
-  if (user && user.role !== 'admin') router.push('/profile')
+  if (user) router.push('/profile')
 })
 
 const submitForm = async () => {
-  errorMessage.value = ''
   try {
-    // 1️⃣ Sign in with Firebase Auth
-    const cred = await signInWithEmailAndPassword(auth, email.value, password.value)
-    const uid = cred.user.uid
-
-    // 2️⃣ Get user data from Firestore
-    const userRef = doc(db, 'users', uid)
-    const userSnap = await getDoc(userRef)
-
-    if (!userSnap.exists()) {
-      errorMessage.value = 'User record not found'
-      return
-    }
-
-    const userData = userSnap.data()
-
-    // 3️⃣ Prevent admin login on customer page
-    if (userData.role === 'admin') {
-      errorMessage.value = 'Admins cannot login here'
-      return
-    }
-
-    // 4️⃣ Save customer data locally
-    saveUserStorage({
-      uid,
-      name: userData.name || '',
-      email: userData.email || '',
-      phone: userData.phone || '',
-      role: 'customer',
-    })
-
-    // 5️⃣ Redirect to customer profile
+    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
+    const user = userCredential.user
+    saveUserStorage({ uid: user.uid, email: user.email })
+    alert(`Welcome back, ${user.email}`)
     router.push('/profile')
-  } catch (err: unknown) {
-    if (err instanceof Error) errorMessage.value = err.message
-    else errorMessage.value = 'Login failed. Please try again.'
+  } catch (error) {
+    if (error instanceof Error) {
+      const firebaseError = error as { code?: string; message: string }
+      switch (firebaseError.code) {
+        case 'auth/user-not-found':
+          alert('No account found with this email. Please sign up first.')
+          break
+        case 'auth/wrong-password':
+          alert('Incorrect password. Please try again.')
+          break
+        case 'auth/invalid-email':
+          alert('Invalid email format.')
+          break
+        default:
+          alert(firebaseError.message)
+      }
+    } else {
+      alert('Something went wrong. Please try again.')
+    }
   }
 }
 </script>
 
 <style scoped>
+/* ======================== */
+/*      LOGIN PAGE LAYOUT   */
+/* ======================== */
 .login-page {
   display: flex;
   min-height: 100vh;
-  font-family: 'Baloo Tammudu 2', sans-serif;
+  font-family: 'Baloo Tammudu 2', cursive;
 }
 
-/* Banner */
+/* Left Banner */
 .login-banner {
   flex: 1;
-  background-color: #6ec007;
+  background-color: #6EC007; /* base color */
+  background-image: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.0)); /* dark to light */
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding: 3rem 2rem;
+  padding: 2rem 1.5rem;
   position: relative;
   overflow: hidden;
 }
 
 .login-banner h1 {
-  font-size: 7rem;
-  margin-top: 10rem;
-  margin-bottom: 0;
+  font-size: 4.5rem;
+  margin-top: 5rem;
+  margin-bottom: 0.1rem;
   font-weight: 900;
   line-height: 1;
+  z-index: 2;
 }
 
 .login-banner p {
-  font-size: 2.5rem;
-  margin: 0;
+  font-size: 1.8rem;
+  margin: 0.1rem 0 2rem 0;
   font-weight: 500;
   line-height: 1.2;
+  z-index: 2;
 }
 
 .login-banner .banner-img {
@@ -142,16 +141,18 @@ const submitForm = async () => {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 65rem;
-  max-height: 70em;
+  max-width: 28rem; /* smaller than before (was 45rem) */
+  max-height: 22rem; /* smaller than before (was 35rem) */
   border-radius: 1rem;
+  z-index: 1;
   object-fit: contain;
 }
 
-/* Form */
+
+/* Right Form */
 .login-form {
   flex: 1;
-  padding: 2rem;
+  padding: 1.5rem;
   background: white;
 }
 
@@ -160,105 +161,163 @@ const submitForm = async () => {
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  max-width: 40rem;
+  max-width: 30rem;
   margin: 0 auto;
   width: 100%;
 }
 
 .login-form h2 {
-  color: #6ec007;
-  font-size: 4rem;
-  margin-bottom: 0;
+  color: #6EC007;
+  font-size: 2.5rem;
+  margin-bottom: 0.25rem;
   font-weight: 800;
   text-align: center;
-  line-height: 1;
+  line-height: 1.1;
 }
 
+/* Sign Up prompt */
 .signup-prompt {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 120;
+  margin: 0 1rem 1.5rem 0;
+  font-size: 1.2rem;
   justify-content: center;
 }
 
 .signup-prompt .gray-text {
   color: #979797;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 .signup-prompt .green-link {
-  color: #6ec007;
+  color: #6EC007;
   text-decoration: none;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
+/* Form fields */
 form label {
   font-weight: bold;
-  margin-top: 2rem;
+  margin-top: 1rem;
   display: block;
   color: black;
-  font-size: 2rem;
+  font-size: 1.4rem;
+  font-family: 'Baloo Tammudu 2', cursive;
 }
 
 form input {
   width: 100%;
-  padding: 1rem;
+  height: 3rem;
+  padding: 0.35rem 0rem 0rem 1rem;
   margin-top: 0.1rem;
-  border: 0.0625rem solid #6ec007;
-  border-radius: 1rem;
-  font-size: 1.5rem;
+  border: 0.0625rem solid #6EC007;
+  border-radius: 5rem;
+  font-size: 1.2rem;
+  font-family: 'Baloo Tammudu 2', cursive;
   outline: none;
+  color: #000;
+}
+
+form input::placeholder {
+  font-family: 'Baloo Tammudu 2', cursive;
+  color: #888;
 }
 
 form input:focus {
-  border-color: #6ec007;
+  border-color: #6EC007;
   box-shadow: 0 0 0 0.125rem rgba(76, 175, 80, 0.2);
 }
 
+.password-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.25rem;
+  position: relative;
+}
+
+/* Forgot Password */
+.forgot-password {
+  color: #6EC007;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  cursor: pointer;
+  display: block;
+  text-align: right;
+  font-weight: bold;
+  font-family: 'Baloo Tammudu 2', cursive;
+}
+
+/* Login Button */
 .submit-btn {
   width: 100%;
-  padding: 0.5rem;
-  background: #6ec007;
+  height: 2.5rem;
+  padding: 0.2rem;
+  background: #345708;
   color: white;
   border: none;
-  border-radius: 1rem;
-  font-size: 2.3rem;
+  border-radius: 5rem;
+  font-size: 1.35rem;
   font-weight: bold;
-  margin-top: 1.2rem;
+  font-family: 'Baloo Tammudu 2', cursive;
+  margin-top: 0.8rem;
   cursor: pointer;
 }
 
-.error {
-  color: red;
-  margin-top: 1rem;
-  font-weight: bold;
-}
-
-/* Mobile */
-@media (max-width: 600px) {
+/* ======================== */
+/* MOBILE RESPONSIVE */
+@media (max-width: 64rem) {
   .login-page {
     flex-direction: column;
   }
   .login-banner {
-    padding: 2rem 1rem;
-    min-height: 50vh;
+    padding: 1.5rem 1rem;
+    min-height: 40vh;
   }
   .login-banner h1 {
     font-size: 3rem;
+    margin-top: 3rem;
   }
   .login-banner p {
     font-size: 1.25rem;
+    margin: 0.5rem 0 1rem 0;
   }
   .login-banner .banner-img {
-    max-width: 30rem;
-    max-height: 25rem;
+    max-width: 25rem;
+    max-height: 20rem;
+  }
+  .login-form {
+    padding: 1rem;
   }
   .login-form h2 {
-    font-size: 3rem;
+    font-size: 2rem;
+  }
+  .signup-prompt {
+    font-size: 0.9rem;
+    gap: 0.25rem;
+  }
+  .forgot-password {
+    font-size: 0.9rem;
+    text-align: right;
+  }
+  form label {
+    font-size: 1.1rem;
+  }
+  form input {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.1rem;
+    border-radius: 1rem;
+    font-size: 1.2rem;
+  }
+  .submit-btn {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    height: 2.2rem;
   }
 }
 </style>

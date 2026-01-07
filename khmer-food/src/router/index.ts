@@ -14,6 +14,9 @@ import ProfileView from '../views/ProfileUserView.vue'
 import Checkout from '../views/CheckoutView.vue'
 import LoginAdmin from '../components/LoginAdmin.vue'
 import { getUserStorage } from '../loginstorage'
+import ContactView from '../views/ContactView.vue'
+import BlogView from '../views/BlogView.vue'
+import AboutView from '../views/AboutView.vue'
 
 const routes: RouteRecordRaw[] = [
   // ---------------- USER ROUTES ----------------
@@ -25,6 +28,10 @@ const routes: RouteRecordRaw[] = [
   { path: '/favorite', name: 'FavoritePage', component: FavoritePage },
   { path: '/product/:id', name: 'ProductDetail', component: ProductDetail, props: true },
   { path: '/checkout', name: 'Checkout', component: Checkout },
+  { path: '/contact', name: 'Contact', component: ContactView },
+  { path: '/blog', name: 'Blog', component: BlogView },
+  { path: '/about', name: 'About', component: AboutView },
+
 
   // Login / Signup
   {
