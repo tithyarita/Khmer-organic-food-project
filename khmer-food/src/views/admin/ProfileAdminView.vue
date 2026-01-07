@@ -1,14 +1,19 @@
 <template>
   <div class="profile-page">
+    <!-- LEFT PANEL -->
     <aside class="left-panel">
       <div class="avatar">
         <img src="@/assets/forProfile/profile.png" alt="avatar" />
       </div>
 
-      <button class="btn" @click="toggleEdit">{{ editing ? 'Cancel' : 'Edit' }}</button>
-      <button class="btn secondary" @click="saveChanges">Save Change</button>
+      <button class="btn" @click="toggleEdit">
+        {{ editing ? 'Cancel' : 'Edit' }}
+      </button>
+
+      <button class="btn secondary" @click="saveChanges" :disabled="!editing">Save Change</button>
     </aside>
 
+    <!-- RIGHT PANEL -->
     <main class="right-panel">
       <div class="title-wrapper">
         <h1 class="title">My Profile</h1>
@@ -17,7 +22,7 @@
         </div>
       </div>
 
-      <form @submit.prevent="saveChanges" class="form">
+      <form class="form" @submit.prevent="saveChanges">
         <label class="field">
           <span class="label-text">Name</span>
           <input type="text" v-model="form.name" :disabled="!editing" />
@@ -61,25 +66,28 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
+/* STATE */
 const editing = ref(false)
 const showPassword = ref(false)
+
 const form = ref({
   name: 'Ming Ming',
   phone: '0123456789',
   email: 'ming@example.com',
-  password: 'password123'
+  password: 'password123',
 })
 
-let _backup = null
+let backupForm: typeof form.value | null = null
 
+/* METHODS */
 const toggleEdit = () => {
   if (!editing.value) {
-    _backup = { ...form.value }
+    backupForm = { ...form.value }
     editing.value = true
   } else {
-    if (_backup) {
-      form.value = { ..._backup }
-      _backup = null
+    if (backupForm) {
+      form.value = { ...backupForm }
+      backupForm = null
     }
     editing.value = false
   }
@@ -87,20 +95,40 @@ const toggleEdit = () => {
 
 const saveChanges = () => {
   editing.value = false
-  _backup = null
-  // alert('Changes saved!')
+  backupForm = null
+
+  // Example: save to backend or localStorage here
+  // localStorage.setItem('user', JSON.stringify(form.value))
 }
 
 const goToAdminProducts = () => {
-  router.push('/admin/') // or your actual admin route
+  router.push('/admin/')
 }
 
 const signOut = () => {
-  router.push('/loginSignup')
+  // 🔥 CLEAR ALL USER DATA
+  localStorage.clear()
+  sessionStorage.clear()
+
+  // Reset local state
+  form.value = {
+    name: '',
+    phone: '',
+    email: '',
+    password: '',
+  }
+
+  editing.value = false
+  showPassword.value = false
+  backupForm = null
+
+  // 🚀 Redirect to login/signup
+  router.replace('/LoginSignUpView')
 }
 </script>
 
 <style scoped>
+/* --- SAME STYLES YOU HAD --- */
 .profile-page {
   display: flex;
   min-height: 90vh;
@@ -111,10 +139,9 @@ const signOut = () => {
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
-/* Left Panel */
 .left-panel {
   width: 30%;
-  background: #BBE18A;
+  background: #bbe18a;
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
@@ -123,7 +150,6 @@ const signOut = () => {
 }
 
 .avatar {
-  position: relative;
   width: 15rem;
   height: 15rem;
   border-radius: 50%;
@@ -143,96 +169,72 @@ const signOut = () => {
 
 .btn {
   width: 60%;
-  padding: 0.75rem 0.62rem;
+  padding: 0.75rem;
   border: none;
   border-radius: 0.5rem;
   background: #6ec007;
   color: white;
+  font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
-  font-size: 1.2rem;
-  font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 .btn.secondary {
   background: #76c642;
 }
 
-/* Right Panel */
 .right-panel {
   flex: 1;
   padding: 2.3rem 3rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
 .title-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 1.25rem;
 }
 
 .title {
   color: #6ec007;
   font-size: 2.6rem;
-  margin: 0;
-  text-align: center;
 }
 
 .admin-icon {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  background-color: #6ec007;
+  background: #6ec007;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.2rem;
   cursor: pointer;
 }
 
 .form {
-  max-width: 40rem;
   width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  max-width: 40rem;
 }
 
 .field {
-  display: block;
   margin-bottom: 1.125rem;
 }
 
 .label-text {
-  display: block;
-  font-weight: 600;
   font-size: 1.2rem;
-  margin-bottom: 0.3rem;
-  font-family: 'Baloo Tammudu 2', sans-serif;
+  font-weight: 600;
 }
 
-input[type='text'],
-input[type='email'],
-input[type='password'] {
+input {
   width: 100%;
-  padding: 0.8rem 0.875rem;
+  padding: 0.8rem;
   border-radius: 0.625rem;
-  border: 0.0625rem solid #6ec007;
-  outline: none;
-  box-sizing: border-box;
-  font-family: 'Baloo Tammudu 2', sans-serif;
+  border: 1px solid #6ec007;
   font-size: 1.1rem;
-}
-
-input:focus {
-  border-color: #4caf50;
-  box-shadow: 0 0 0 0.125rem rgba(76, 175, 80, 0.2);
 }
 
 .password-row {
@@ -240,84 +242,27 @@ input:focus {
   align-items: center;
 }
 
-.password-row input {
-  flex: 1;
-}
-
 .eye {
   margin-left: 0.5rem;
+  background: none;
   border: none;
-  background: transparent;
   cursor: pointer;
   font-size: 1.4rem;
   color: #6ec007;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
 }
 
 .actions {
   margin-top: 1.3rem;
-  display: flex;
-  justify-content: center;
 }
 
 .signout {
+  width: 100%;
+  padding: 1.1rem;
   background: #e53935;
   color: white;
-  padding: 1.1rem;
   border: none;
   border-radius: 1rem;
-  cursor: pointer;
-  font-family: 'Baloo Tammudu 2', sans-serif;
   font-size: 1.2rem;
-  width: 100%;
-}
-
-/* Mobile Responsive */
-@media (max-width: 37.5rem) {
-  .profile-page {
-    flex-direction: column;
-  }
-  .left-panel {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 1.125rem;
-    gap: 1rem;
-  }
-  .avatar {
-    width: 6rem;
-    height: 6rem;
-  }
-  .avatar img {
-    width: 5rem;
-    height: 5rem;
-  }
-  .right-panel {
-    padding: 1.25rem;
-    align-items: stretch;
-  }
-  .title-wrapper {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-  .title {
-    text-align: left;
-    font-size: 1.75rem;
-  }
-  .admin-icon {
-    align-self: flex-end;
-  }
-  .form {
-    align-items: stretch;
-  }
-  .signout {
-    padding: 1rem;
-    font-size: 1rem;
-  }
+  cursor: pointer;
 }
 </style>

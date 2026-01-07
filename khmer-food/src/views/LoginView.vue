@@ -1,13 +1,11 @@
 <template>
   <div class="login-page">
-    <!-- Left Side: Welcome Banner -->
     <div class="login-banner">
       <h1>Welcome Back</h1>
       <p>Hey! Good to see you again</p>
       <img src="@/assets/forLogin_SignUp/logoLogin.png" alt="Food Banner" class="banner-img" />
     </div>
 
-    <!-- Right Side: Login Form -->
     <div class="login-form">
       <div class="form-content">
         <h2>Login to Your Account</h2>
@@ -21,17 +19,14 @@
           <input id="email" v-model="email" type="email" placeholder="Enter your email" required />
 
           <label for="password">Password</label>
-          <div class="password-input">
-            <input
-              id="password"
-              v-model="password"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
+          <input
+            id="password"
+            v-model="password"
+            type="password"
+            placeholder="Enter your password"
+            required
+          />
 
-          <a href="#" class="forgot-password">Forgot your password?</a>
           <button type="submit" class="submit-btn">Login</button>
         </form>
       </div>
@@ -48,10 +43,8 @@ import { saveUserStorage, getUserStorage } from '../loginstorage'
 
 const email = ref('')
 const password = ref('')
-const showPassword = ref(false)
 const router = useRouter()
 
-// If user already logged in, redirect to profile
 onMounted(() => {
   const user = getUserStorage()
   if (user) router.push('/profile')
@@ -62,35 +55,18 @@ const submitForm = async () => {
     const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
     const user = userCredential.user
 
-    // Save user info in localStorage
     saveUserStorage({ uid: user.uid, email: user.email })
-
     alert(`Welcome back, ${user.email}`)
-    router.push('/profile') // redirect to profile after login
-  } catch (error) {
-    if (error instanceof Error) {
-      const firebaseError = error as { code?: string; message: string }
-
-      switch (firebaseError.code) {
-        case 'auth/user-not-found':
-          alert('No account found with this email. Please sign up first.')
-          break
-        case 'auth/wrong-password':
-          alert('Incorrect password. Please try again.')
-          break
-        case 'auth/invalid-email':
-          alert('Invalid email format.')
-          break
-        default:
-          alert(firebaseError.message)
-      }
+    router.push('/profile')
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      alert(err.message)
     } else {
-      alert('Something went wrong. Please try again.')
+      alert('Something went wrong during login.')
     }
   }
 }
 </script>
-
 
 <style scoped>
 .login-page {
@@ -102,7 +78,7 @@ const submitForm = async () => {
 /* Left Banner */
 .login-banner {
   flex: 1;
-  background-color: #6EC007;
+  background-color: #6ec007;
   color: white;
   display: flex;
   flex-direction: column;
@@ -162,14 +138,13 @@ const submitForm = async () => {
 }
 
 .login-form h2 {
-  color: #6EC007;
+  color: #6ec007;
   font-size: 4rem;
   margin-bottom: 0;
   font-weight: 800;
   text-align: center;
   line-height: 1;
 }
-
 
 /* Sign Up prompt */
 .signup-prompt {
@@ -188,7 +163,7 @@ const submitForm = async () => {
 }
 
 .signup-prompt .green-link {
-  color: #6EC007;
+  color: #6ec007;
   text-decoration: none;
   cursor: pointer;
   font-size: 1.5rem;
@@ -207,7 +182,7 @@ form input {
   width: 100%;
   padding: 1rem;
   margin-top: 0.1rem;
-  border: 0.0625rem solid #6EC007; /* 1px = 0.0625rem */
+  border: 0.0625rem solid #6ec007; /* 1px = 0.0625rem */
   border-radius: 1rem;
   font-size: 1.5rem;
   outline: none;
@@ -215,7 +190,7 @@ form input {
 }
 
 form input:focus {
-  border-color: #6EC007;
+  border-color: #6ec007;
   /* box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2); */
   box-shadow: 0 0 0 0.125rem rgba(76, 175, 80, 0.2); /* 2px = 0.125rem */
 }
@@ -230,7 +205,7 @@ form input:focus {
 
 /* ✅ FORGOT PASSWORD: RIGHT-ALIGNED */
 .forgot-password {
-  color: #6EC007;
+  color: #6ec007;
   font-size: 1.2rem;
   margin-top: 0.9rem;
   margin-bottom: 3rem;
@@ -246,7 +221,7 @@ form input:focus {
 .submit-btn {
   width: 100%;
   padding: 0.5rem;
-  background: #6EC007;
+  background: #6ec007;
   color: white;
   border: none;
   border-radius: 1rem;
