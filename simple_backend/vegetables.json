@@ -23,7 +23,7 @@
     "id": 4,
     "name": "Carrot",
     "category": "vegetables",
-    "price": 3,
+    "price": 3.8,
     "unit": "kg",
     "rating": 3,
     "stock": 8,

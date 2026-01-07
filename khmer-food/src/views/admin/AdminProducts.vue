@@ -7,14 +7,20 @@
         <span>Add Item</span>
         <span class="icon">➕</span>
       </div>
-      <div class="action-box update">
+      <!-- <div class="action-box update">
         <span>Update Item</span>
         <span class="icon">⚙️</span>
+      </div> -->
+      <div class="action-box update" @click="showLowStockOnly = false">
+        <span>All Proudcts</span>
+        <span class="icon">📦 </span>
       </div>
-      <div class="action-box alert">
+
+      <div class="action-box alert" @click="showLowStockOnly = !showLowStockOnly">
         <span>Low Stock</span>
         <span class="icon">⚠️</span>
       </div>
+
     </div>
 
     <!-- INVENTORY TABLE -->
@@ -35,7 +41,11 @@
 
         <tbody>
 
-          <tr v-for="item in allProducts" :key="item.category + item.id">
+          <tr
+            v-for="item in (showLowStockOnly ? lowStockProducts : allProducts)"
+            :key="item.category + item.id"
+          >
+
             <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.category }}</td>
@@ -48,10 +58,23 @@
             <td>
               <span
                 class="badge"
-                :class="item.stock > 0 ? 'success' : 'warning'"
+                :class="
+                  item.stock === 0
+                    ? 'warning'
+                    : item.stock < 5
+                    ? 'low'
+                    : 'success'
+                "
               >
-                {{ item.stock > 0 ? 'In Stock' : 'Out of Stock' }}
+                {{
+                  item.stock === 0
+                    ? 'Out of Stock'
+                    : item.stock < 5
+                    ? 'Low Stock'
+                    : 'In Stock'
+                }}
               </span>
+
             </td>
 
             <td>
@@ -169,6 +192,8 @@ import {
 // ---------------- UI STATE ----------------
 const showAddModal = ref(false)
 const showEditModal = ref(false)
+
+const showLowStockOnly = ref(false)
 
 // ---------------- FORM ----------------
 const onFileChange = (e: Event) => {
@@ -306,13 +331,27 @@ const deleteProduct = async (item: any) => {
     console.error('RESPONSE:', err?.response)
     alert('Delete failed: ' + err?.response?.status)
   }
+
 }
+
+const LOW_STOCK_LIMIT = 5
+
+const lowStockProducts = computed(() =>
+  allProducts.value.filter(item => item.stock < LOW_STOCK_LIMIT)
+)
+
 
 
 </script>
 
 
 <style scoped>
+
+.badge.low {
+  background-color: #f79b2a;
+  color: white;
+}
+
 .admin-inventory {
   background: white;
   padding: 30px;
@@ -485,7 +524,7 @@ tr:hover {
 }
 
 .badge.warning {
-  background-color: #f39c12;
+  background-color: #f93535;
   color: white;
 }
 
