@@ -13,10 +13,12 @@ import SignUpView from '../views/SignUpView.vue'
 import ProfileView from '../views/ProfileUserView.vue'
 import Checkout from '../views/CheckoutView.vue'
 import LoginAdmin from '../components/LoginAdmin.vue'
-import { getUserStorage } from '../loginstorage'
+import AboutView from '../views/AboutView.vue'
 import ContactView from '../views/ContactView.vue'
 import BlogView from '../views/BlogView.vue'
-import AboutView from '../views/AboutView.vue'
+
+import { getUserStorage } from '../loginstorage'
+import * as path from 'path'
 
 const routes: RouteRecordRaw[] = [
   // ---------------- USER ROUTES ----------------
@@ -28,9 +30,58 @@ const routes: RouteRecordRaw[] = [
   { path: '/favorite', name: 'FavoritePage', component: FavoritePage },
   { path: '/product/:id', name: 'ProductDetail', component: ProductDetail, props: true },
   { path: '/checkout', name: 'Checkout', component: Checkout },
+  { path: '/about', name: 'About', component: AboutView },
   { path: '/contact', name: 'Contact', component: ContactView },
   { path: '/blog', name: 'Blog', component: BlogView },
-  { path: '/about', name: 'About', component: AboutView },
+
+  //Banner
+
+ {
+  path: '/ProductDetail/:id',   // spelling matters!
+  name: 'ProductDetail',
+  component: ProductDetail,
+  props: true,
+  meta: {
+    title: 'KHMER DETAIL FOOD',
+    image: '/images/detailbanner.jpg',
+    bg: '#0a0a0aff'
+  }
+},
+
+{
+path: '/category/vegetables',   // spelling matters!
+name: 'vegetables',
+component: Vegetables,
+meta: {
+  title: 'KHMER VEGETABLES FOOD',
+  image: '/images/vegBanner.jpeg',
+  bg: '#0a0a0aff'
+}
+},
+
+{
+path: '/category/meats',   // spelling matters!
+name: 'meats',
+component: Meats,
+meta: {
+  title: 'KHMER MEATS FOOD',
+  image: '/images/meatBanner.jpg',
+  bg: '#0a0a0aff'
+}
+},
+
+{
+
+path: '/category/sets',   // spelling matters!
+name: 'sets',
+component: Sets,
+meta: {
+  title: 'KHMER SETS FOOD',
+  image: '/images/setBanner.png',
+  bg: '#0a0a0aff'
+}
+},
+
 
 
   // Login / Signup
@@ -90,6 +141,8 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
+
+
 
 // ---------------- GLOBAL NAV GUARD ----------------
 router.beforeEach((to, from, next) => {
