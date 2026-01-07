@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="menu">
     <img src="" alt="" />
     <router-link to="/">Home</router-link>

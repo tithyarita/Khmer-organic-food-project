@@ -6,7 +6,7 @@
     "price": 6.55,
     "unit": "Kg",
     "rating": 4,
-    "stock": 21,
+    "stock": 20,
     "image": "http://localhost:3000/uploads/9067101aa4e9a78a20c2af48cbb41397"
   },
   {
@@ -26,7 +26,17 @@
     "price": 3,
     "unit": "kg",
     "rating": 3,
-    "stock": 10,
+    "stock": 8,
     "image": "http://localhost:3000/uploads/442c851919304c3aefa3fe722e2346b5"
+  },
+  {
+    "id": 4,
+    "name": "Brocoli",
+    "category": "vegetables",
+    "price": 2.3,
+    "unit": "kg",
+    "rating": 3,
+    "stock": 12,
+    "image": "http://localhost:3000/uploads/ead795cbec275a019d9d5cf70ceab27f"
   }
 ]

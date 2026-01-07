@@ -1,6 +1,7 @@
 <template>
   <div class="banner">
     <!-- Background Image -->
+     
     <img :src="bannerImage" alt=" " class="banner-img" />
 
     <!-- Text Content -->
@@ -11,11 +12,14 @@
 </template>
 
 <script setup>
+// import { useRoute } from 'vue-router'
+
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 const route = useRoute()
-const pageTitle = route.meta.title || 'Welcome to Our Store'
-const bannerImage = route.meta.image || '/default-banner.jpg'
+const pageTitle = computed(() => route.meta.title || 'Welcome to Our Store')
+const bannerImage = computed(() => route.meta.image || '/default-banner.jpg')
 </script>
 
 <style scoped>

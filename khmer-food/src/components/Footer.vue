@@ -1,4 +1,4 @@
- <template>
+  <template>
   <footer class="footer">
     <div class="footer-container">
       <!-- Left Section: Contact -->
@@ -75,8 +75,7 @@ export default {
 <style scoped>
 
 .footer {
-  background-color: #2b7a0b;
-  color: #f1f5f1;
+  background-color: #6ec007;
   font-family: 'Baloo Da', cursive;
   font-weight: 400;
   padding: 2rem 2.5rem 1rem 2.5rem;
