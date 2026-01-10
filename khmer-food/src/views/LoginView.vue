@@ -38,7 +38,9 @@
           </div>
 
           <a href="#" class="forgot-password">Forgot your password?</a>
-          <button type="submit" class="submit-btn">Login</button>
+          <button type="submit" class="submit-btn" :disabled="loading">
+            {{ loading ? 'Logging in...' : 'Login' }}
+          </button>
         </form>
       </div>
     </div>
@@ -48,49 +50,62 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import { saveUserStorage, getUserStorage } from '../loginstorage'
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+const loading = ref(false)
 const router = useRouter()
 
 onMounted(() => {
   const user = getUserStorage()
-  if (user) router.push('/profile')
+  if (user) router.push(user.role === 'admin' ? '/admin/sales' : '/profile')
 })
 
 const submitForm = async () => {
+  loading.value = true
+
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
-    const user = userCredential.user
-    saveUserStorage({ uid: user.uid, email: user.email })
-    alert(`Welcome back, ${user.email}`)
+    // 1️⃣ Auth login
+    const cred = await signInWithEmailAndPassword(auth, email.value, password.value)
+    const uid = cred.user.uid
+
+    // 2️⃣ Save minimal info immediately so redirect feels fast
+    saveUserStorage({ uid, email: cred.user.email!, role: 'user' })
+
+    // 3️⃣ Redirect user immediately
     router.push('/profile')
-  } catch (error) {
-    if (error instanceof Error) {
-      const firebaseError = error as { code?: string; message: string }
-      switch (firebaseError.code) {
-        case 'auth/user-not-found':
-          alert('No account found with this email. Please sign up first.')
-          break
-        case 'auth/wrong-password':
-          alert('Incorrect password. Please try again.')
-          break
-        case 'auth/invalid-email':
-          alert('Invalid email format.')
-          break
-        default:
-          alert(firebaseError.message)
-      }
-    } else {
-      alert('Something went wrong. Please try again.')
-    }
+
+    // 4️⃣ Fetch Firestore user data in background
+    getDoc(doc(db, 'users', uid))
+      .then(snap => {
+        if (!snap.exists()) throw new Error('User data not found')
+        const data = snap.data()
+
+        // Update localStorage with full user info
+        saveUserStorage({
+          uid,
+          userId: data.userId,
+          email: cred.user.email!,
+          name: data.name || '',
+          phone: data.phone || '',
+          role: data.role || 'user',
+        })
+      })
+      .catch(err => console.error('Failed to load user profile:', err.message))
+
+  } catch (err: any) {
+    alert(err.message || 'Login failed')
+  } finally {
+    loading.value = false
   }
 }
 </script>
+
 
 <style scoped>
 

@@ -3,13 +3,13 @@
     <Banner />
 
     <div class="set-page">
-      <CategorySection 
-        v-for="(cat, index) in categories"
-        :key="index"
-        :title="cat.title"
-        :items="cat.items"
-      />
-    </div>
+        <CategorySection
+          v-for="(cat, index) in categories"
+          :key="index"
+          :title="cat.title"
+          :items="cat.items"
+        />
+      </div>
   </div>
 </template>
 

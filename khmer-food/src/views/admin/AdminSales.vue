@@ -1,38 +1,41 @@
 <template>
   <div class="admin-sales">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">💰</div>
-        <div class="stat-content">
-          <h3>Total Sales</h3>
-          <p class="stat-value">$12,500.00</p>
-          <span class="stat-change positive">+12% from last month</span>
+    <div v-if="loading" class="loading">Loading orders…</div>
+    <div v-else>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-content">
+            <h3>Total Sales</h3>
+            <p class="stat-value">{{ formatCurrency(totalSales) }}</p>
+            <span class="stat-change positive">{{ salesChangeText }}</span>
+          </div>
         </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📊</div>
-        <div class="stat-content">
-          <h3>Orders Count</h3>
-          <p class="stat-value">156</p>
-          <span class="stat-change positive">+8% from last month</span>
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-content">
+            <h3>Orders Count</h3>
+            <p class="stat-value">{{ ordersCount }}</p>
+            <span class="stat-change positive">{{ ordersChangeText }}</span>
+          </div>
         </div>
-      </div>
 
-      <div class="stat-card">
-        <div class="stat-icon">💵</div>
-        <div class="stat-content">
-          <h3>Avg Order Value</h3>
-          <p class="stat-value">$80.13</p>
-          <span class="stat-change positive">+3% from last month</span>
+        <div class="stat-card">
+          <div class="stat-icon">💵</div>
+          <div class="stat-content">
+            <h3>Avg Order Value</h3>
+            <p class="stat-value">{{ formatCurrency(avgOrderValue) }}</p>
+            <span class="stat-change positive">{{ avgChangeText }}</span>
+          </div>
         </div>
-      </div>
 
-      <div class="stat-card">
-        <div class="stat-icon">🎯</div>
-        <div class="stat-content">
-          <h3>Conversion Rate</h3>
-          <p class="stat-value">3.2%</p>
-          <span class="stat-change negative">-0.5% from last month</span>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-content">
+            <h3>Unique Customers</h3>
+            <p class="stat-value">{{ ordersByUser.length }}</p>
+            <span class="stat-change positive">Repeat rate: {{ repeatRate }}%</span>
+          </div>
         </div>
       </div>
     </div>
@@ -47,30 +50,14 @@
             <th>Units Sold</th>
             <th>Revenue</th>
             <th>Percentage</th>
-            <th>Trend</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Vegetables</td>
-            <td>245</td>
-            <td>$3,675.00</td>
-            <td>29%</td>
-            <td><span class="trend up">↑ 15%</span></td>
-          </tr>
-          <tr>
-            <td>Meats</td>
-            <td>189</td>
-            <td>$5,670.00</td>
-            <td>45%</td>
-            <td><span class="trend up">↑ 22%</span></td>
-          </tr>
-          <tr>
-            <td>Sets</td>
-            <td>92</td>
-            <td>$3,155.00</td>
-            <td>26%</td>
-            <td><span class="trend down">↓ 5%</span></td>
+          <tr v-for="cat in salesByCategory" :key="cat.category">
+            <td>{{ cat.category }}</td>
+            <td>{{ cat.units }}</td>
+            <td>{{ formatCurrency(cat.revenue) }}</td>
+            <td>{{ ((cat.revenue / (totalSales || 1)) * 100).toFixed(1) }}%</td>
           </tr>
         </tbody>
       </table>
@@ -85,35 +72,129 @@
             <th>Product Name</th>
             <th>Units Sold</th>
             <th>Revenue</th>
-            <th>Rating</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Organic Tomato</td>
-            <td>85</td>
-            <td>$425.00</td>
-            <td>⭐⭐⭐⭐⭐</td>
-          </tr>
-          <tr>
-            <td>Premium Beef</td>
-            <td>56</td>
-            <td>$1,680.00</td>
-            <td>⭐⭐⭐⭐⭐</td>
-          </tr>
-          <tr>
-            <td>Cambodian Set</td>
-            <td>42</td>
-            <td>$1,470.00</td>
-            <td>⭐⭐⭐⭐</td>
+          <tr v-for="p in topProducts" :key="p.id">
+            <td>{{ p.name }}</td>
+            <td>{{ p.qty }}</td>
+            <td>{{ formatCurrency(p.revenue) }}</td>
           </tr>
         </tbody>
       </table>
     </div>
+
+    <!-- Orders by User -->
+    <!-- <div class="sales-section">
+      <h2>Customer Order History</h2>
+      <div v-if="ordersByUser.length === 0">No orders yet.</div>
+      <div v-for="u in ordersByUser" :key="u.user.uid || u.user.email || u.user" class="user-card">
+        <div class="user-header">
+          <div>
+            <strong>{{ u.user.name || u.user.email || 'Guest' }}</strong>
+            <div class="muted">{{ u.user.uid ? ('UID: ' + u.user.uid) : '' }}</div>
+          </div>
+          <div class="user-stats">Orders: {{ u.orders.length }} — {{ formatCurrency(u.orders.reduce((s,o)=>s+(o.total||0),0)) }}</div>
+        </div>
+        <table class="user-orders">
+          <thead>
+            <tr><th>Order ID</th><th>Date</th><th>Items</th><th>Total</th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="o in u.orders" :key="o.id">
+              <td>{{ o.id }}</td>
+              <td>{{ (o.createdAt && new Date(o.createdAt)).toLocaleString() }}</td>
+              <td>
+                <div v-for="it in o.items" :key="it.id">{{ it.name }} x{{ it.qty }}</div>
+              </td>
+              <td>{{ formatCurrency(o.total || 0) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div> -->
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ref, onMounted, computed } from 'vue'
+import { getAllOrders } from '../../services/orderService'
+
+const orders = ref<any[]>([])
+const loading = ref(true)
+const error = ref(null)
+
+onMounted(async () => {
+  try {
+    orders.value = await getAllOrders()
+  } catch (e) {
+    console.error('Failed to load orders', e)
+    error.value = e
+  } finally {
+    loading.value = false
+  }
+})
+
+const totalSales = computed(() => orders.value.reduce((s, o) => s + (o.total || 0), 0))
+const ordersCount = computed(() => orders.value.length)
+const avgOrderValue = computed(() => (ordersCount.value ? totalSales.value / ordersCount.value : 0))
+
+const topProducts = computed(() => {
+  const map = new Map<string, any>()
+  orders.value.forEach((o: any) => {
+    ;(o.items || []).forEach((it: any) => {
+      const key = `${it.id}:${it.name || ''}`
+      const existing = map.get(key) || { id: it.id, name: it.name || 'Unknown', qty: 0, revenue: 0 }
+      existing.qty += it.qty
+      existing.revenue += (it.price || 0) * it.qty
+      map.set(key, existing)
+    })
+  })
+  return Array.from(map.values()).sort((a: any, b: any) => b.qty - a.qty).slice(0, 10)
+})
+
+const salesByCategory = computed(() => {
+  const map: Record<string, { units: number; revenue: number }> = {}
+  orders.value.forEach((o: any) => {
+    ;(o.items || []).forEach((it: any) => {
+      const cat = it.category || 'Uncategorized'
+      if (!map[cat]) map[cat] = { units: 0, revenue: 0 }
+      map[cat].units += it.qty
+      map[cat].revenue += (it.price || 0) * it.qty
+    })
+  })
+  return Object.entries(map).map(([category, v]) => ({ category, units: v.units, revenue: v.revenue }))
+})
+
+const ordersByUser = computed(() => {
+  const map: Record<string, any> = {}
+  orders.value.forEach((o: any) => {
+    const uid = (o.user && (o.user.uid || o.user.email)) || 'guest'
+    if (!map[uid]) map[uid] = { user: o.user || { uid }, orders: [] }
+    map[uid].orders.push(o)
+  })
+  return Object.values(map)
+})
+
+// Simple additional metrics
+const repeatRate = computed(() => {
+  const users = ordersByUser.value
+  if (!users.length) return 0
+  const repeat = users.filter((u:any) => u.orders.length > 1).length
+  return Math.round((repeat / users.length) * 100)
+})
+
+const salesChangeText = '—'
+const ordersChangeText = '—'
+const avgChangeText = '—'
+
+function formatCurrency(n: number) {
+  return '$' + n.toFixed(2)
+}
+
+// (no unused helpers)
+</script>
 
 <style scoped>
 .admin-sales {

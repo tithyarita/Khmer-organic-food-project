@@ -1,18 +1,28 @@
-// loginstorage.js
-
-// Save user info to localStorage after login
+// Save logged-in user
 export const saveUserStorage = (user) => {
   if (!user) return
-  localStorage.setItem('user', JSON.stringify(user))
+  try {
+    const existing = getUserStorage() || {}
+    const merged = { ...existing, ...user }
+    localStorage.setItem('user', JSON.stringify(merged))
+  } catch (e) {
+    // Fallback to overwrite on error
+    localStorage.setItem('user', JSON.stringify(user))
+  }
 }
 
-// Get currently logged-in user from localStorage
+// Get logged-in user
 export const getUserStorage = () => {
-  const user = localStorage.getItem('user')
-  return user ? JSON.parse(user) : null
+  const data = localStorage.getItem('user')
+  return data ? JSON.parse(data) : null
 }
 
-// Log out user and remove data from localStorage
+// Check login status
+export const isLoggedIn = () => {
+  return !!localStorage.getItem('user')
+}
+
+// Logout
 export const logoutUser = () => {
   localStorage.removeItem('user')
 }

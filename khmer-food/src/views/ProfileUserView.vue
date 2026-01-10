@@ -40,89 +40,72 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { db } from '../firebase'
-import { getUserStorage, logoutUser } from '../loginstorage'
-
-interface UserForm {
-  name: string
-  phone: string
-  email: string
-}
+import { db, auth } from '../firebase'
+import { getUserStorage, logoutUser, saveUserStorage } from '../loginstorage'
+import { useCartStore } from '../stores/cart'
+import { useFavoriteStore } from '../stores/favorite'
 
 const router = useRouter()
 const editing = ref(false)
-const form = ref<UserForm>({ name: '', phone: '', email: '' })
-let backupForm: UserForm | null = null
 
-const toggleEdit = () => {
-  if (!editing.value) {
-    backupForm = { ...form.value }
-    editing.value = true
-  } else {
-    if (backupForm) form.value = { ...backupForm }
-    editing.value = false
-  }
-}
-
-const saveChanges = async () => {
-  if (!editing.value) return
-  const user = getUserStorage()
-  if (!user?.uid) {
-    router.replace('/login')
-    return
-  }
-
-  try {
-    const userRef = doc(db, 'users', user.uid)
-    await updateDoc(userRef, {
-      name: form.value.name,
-      phone: form.value.phone,
-    })
-    editing.value = false
-    backupForm = null
-    alert('Profile updated successfully!')
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      alert(err.message)
-    } else {
-      alert('Failed to update profile.')
-    }
-  }
-}
-
-const signOut = () => {
-  logoutUser()
-  router.replace('/loginSignup')
-}
+const form = ref({
+  name: '',
+  phone: '',
+  email: '',
+})
 
 onMounted(async () => {
   const user = getUserStorage()
-  if (!user?.uid) {
-    router.replace('/login')
-    return
-  }
+  if (!user?.uid) return router.replace('/login')
 
-  form.value.email = user.email || ''
+  form.value.email = user.email
 
-  try {
-    const userRef = doc(db, 'users', user.uid)
-    const userSnap = await getDoc(userRef)
-    if (!userSnap.exists()) {
-      logoutUser()
-      router.replace('/login')
-      return
-    }
-
-    const data = userSnap.data()
-    form.value.name = data.name || ''
-    form.value.phone = data.phone || ''
-  } catch (err: unknown) {
-    if (err instanceof Error) alert(err.message)
-    else alert('Failed to load profile.')
+  const snap = await getDoc(doc(db, 'users', user.uid))
+  if (!snap.exists()) {
     logoutUser()
-    router.replace('/login')
+    return router.replace('/login')
   }
+
+  const data = snap.data()
+  form.value.name = data.name || ''
+  form.value.phone = data.phone || ''
 })
+
+const saveChanges = async () => {
+  const user = getUserStorage()
+  if (!user) return
+
+  await updateDoc(doc(db, 'users', user.uid), {
+    name: form.value.name,
+    phone: form.value.phone,
+  })
+
+  // ✅ UPDATE LOCAL STORAGE TOO
+  saveUserStorage({
+    ...user,
+    name: form.value.name,
+    phone: form.value.phone,
+  })
+
+  editing.value = false
+  alert('Profile updated')
+}
+
+const signOut = async () => {
+  const cart = useCartStore()
+  const favorite = useFavoriteStore()
+  try {
+    await auth.signOut()
+  } catch (e) {
+    console.warn('Firebase signOut failed:', e)
+  }
+
+  // Clear local client data
+  logoutUser()
+  cart.items = []
+  favorite.clearFavorites()
+  router.replace('/loginSignup')
+}
 </script>
 
 <style scoped>

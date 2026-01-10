@@ -41,7 +41,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth, db } from '../../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 
 const router = useRouter()
 const email = ref('')
@@ -53,42 +53,39 @@ const loginAdmin = async () => {
 
   loading.value = true
   try {
-    // 1️⃣ Sign in with Firebase Auth
-    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
-    const user = userCredential.user
+    // 1️⃣ Login with Firebase Auth
+    const res = await signInWithEmailAndPassword(auth, email.value, password.value)
+    const user = res.user
 
-    // 2️⃣ Check role in Firestore
-    const usersRef = collection(db, 'users')
-    const q = query(usersRef, where('email', '==', user.email))
-    const querySnapshot = await getDocs(q)
+    // 2️⃣ Load admin document from Firestore
+    const adminRef = doc(db, 'admin', user.uid)
+    const adminSnap = await getDoc(adminRef)
 
-    if (querySnapshot.empty) {
-      alert('No user found. Please check your credentials.')
+    if (!adminSnap.exists()) {
+      alert('You are not an admin')
       await auth.signOut()
       return
     }
 
-    const userData = querySnapshot.docs[0].data()
-    if (userData.role !== 'admin') {
-      alert('Access denied. You are not an admin.')
+    const adminData = adminSnap.data()
+
+    if (adminData.role !== 'admin') {
+      alert('Access denied')
       await auth.signOut()
       return
     }
 
-    // ✅ Login successful, redirect to admin dashboard
-    alert('Welcome Admin!')
-    router.push('/admin') // change this to your admin dashboard route
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      alert(err.message)
-    } else {
-      alert('Failed to login. Please try again.')
-    }
+    // ✅ SUCCESS
+    router.push('/admin')
+
+  } catch (err: any) {
+    alert(err.message || 'Login failed')
   } finally {
     loading.value = false
   }
 }
 </script>
+
 
 <style scoped>
 .login-page {

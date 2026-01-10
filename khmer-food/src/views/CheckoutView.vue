@@ -73,7 +73,33 @@
     </section>
 
     <!-- Place Order Button -->
-    <button class="order-btn" @click="placeOrder">Place Your Order</button>
+    <button class="order-btn" :disabled="isProcessing || subtotal === 0" @click="placeOrder">
+      <span v-if="!isProcessing">Place Your Order</span>
+      <span v-else class="btn-with-spinner">
+        <span class="spinner" /> Processing...
+      </span>
+    </button>
+
+    <!-- Processing Modal -->
+    <div v-if="isProcessing" class="modal-overlay">
+      <div class="modal-card">
+        <div class="spinner large" />
+        <h3>Processing payment</h3>
+        <p>Please wait while we confirm your payment and save your order.</p>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div v-if="orderSuccess" class="modal-overlay" @click.self="closeSuccess">
+      <div class="modal-card success">
+        <div class="check">✓</div>
+        <h3>Payment Successful</h3>
+        <p>Your order has been placed successfully.</p>
+        <div class="modal-actions">
+          <button class="order-btn" @click="goHome">Continue Shopping</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -82,6 +108,8 @@ import { computed, ref } from 'vue'
 import { useCartStore } from '../stores/cart'
 import axios from 'axios'
 import router from '../router/index'
+import { createOrder } from '../services/orderService'
+import { auth } from '../firebase.js'
 
 const cart = useCartStore()
 
@@ -103,6 +131,11 @@ const paymentDetails = ref({
   accountNumber: '',
 })
 
+// UI and order state
+const isProcessing = ref(false)
+const orderSuccess = ref(false)
+const errorMessage = ref('')
+
 // Place order
 async function placeOrder() {
   if (!selectedPayment.value) {
@@ -110,31 +143,67 @@ async function placeOrder() {
     return
   }
 
+  if (cart.items.length === 0) {
+    alert('Your cart is empty.')
+    return
+  }
+
+  isProcessing.value = true
+  errorMessage.value = ''
+
   try {
-    // ✅ CALL BACKEND
+    // Call backend payment endpoint (best-effort)
     await axios.post('http://localhost:3000/payment-success', {
       items: cart.items.map(item => ({
         id: item.id,
         category: item.category,
         quantity: item.qty
       }))
+    }).catch((e) => {
+      // don't fail entire flow if local backend is down; log and continue
+      console.warn('Payment backend call failed, continuing:', e.message || e)
     })
 
-    alert(`Payment successful using ${selectedPayment.value.toUpperCase()}!`)
+    // Persist order to Firestore (with basic user info if available)
+    try {
+      const user = auth.currentUser ? { uid: auth.currentUser.uid, email: auth.currentUser.email, name: auth.currentUser.displayName } : undefined
+      await createOrder({
+        user,
+        items: cart.items.map(i => ({ id: i.id, name: i.name || i.title || '', price: i.price, qty: i.qty, category: i.category })),
+        subtotal: subtotal.value,
+        delivery: delivery.value,
+        discount: discount.value,
+        total: total.value,
+        paymentMethod: selectedPayment.value,
+        status: 'paid'
+      })
 
-    
-    // Clear cart AFTER backend success
-    cart.clear()
+      // Clear cart AFTER saved successfully
+      cart.clear()
 
-    // ✅ Redirect to Home
-    // router.push('/')
-
-
-  } 
+      // show success
+      orderSuccess.value = true
+    } catch (e) {
+      console.error('Failed to save order to Firestore', e)
+      errorMessage.value = 'Could not save order. Please contact support.'
+    }
+  }
   catch (error) {
     console.error('Payment failed:', error)
-    // alert('Payment failed. Please try again.')
+    errorMessage.value = 'Payment processing failed. Please try again.'
   }
+  finally {
+    isProcessing.value = false
+  }
+}
+
+function closeSuccess() {
+  orderSuccess.value = false
+}
+
+function goHome() {
+  orderSuccess.value = false
+  router.push('/')
 }
 
 </script>
@@ -292,5 +361,65 @@ h1 {
   .order-btn {
     width: 100%;
   }
+}
+
+/* Modal + Spinner */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.45);
+  z-index: 2000;
+  padding: 1.5rem;
+}
+
+.modal-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+}
+
+.modal-card.success { border-top: 6px solid #4caf50 }
+
+.modal-card .check {
+  font-size: 3.2rem;
+  color: #4caf50;
+  margin-bottom: 0.6rem;
+}
+
+.modal-actions { margin-top: 1.4rem }
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid rgba(0,0,0,0.08);
+  border-top-color: #4caf50;
+  animation: spin 1s linear infinite;
+  vertical-align: middle;
+}
+
+.spinner.large {
+  width: 56px;
+  height: 56px;
+  border-width: 5px;
+  margin-bottom: 1rem;
+}
+
+.btn-with-spinner { display: inline-flex; align-items: center; gap: .6rem }
+
+@keyframes spin { to { transform: rotate(360deg) } }
+
+.order-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 </style>
