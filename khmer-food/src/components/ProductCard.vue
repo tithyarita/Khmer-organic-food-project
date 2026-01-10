@@ -3,6 +3,29 @@ import { ref } from 'vue';
 import { useCartStore } from '../stores/cart';
 import { useFavoriteStore } from '../stores/favorite';
 import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+
+onMounted(async () => {
+  const res = await fetch(`/api/reviews/${props.product.id}`);
+  const data = await res.json();
+  // keep decimals for half stars
+  props.product.rating = parseFloat(data.avg);
+});
+
+async function submitRating(value: number) {
+  // Send rating to backend (JSON file API)
+  await fetch('/api/reviews', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ productId: props.product.id, rating: value })
+  });
+
+  // Reload average rating
+  const res = await fetch(`/api/reviews/${props.product.id}`);
+  const data = await res.json();
+  props.product.rating = parseFloat(data.avg);
+}
+
 
 const props = defineProps<{
   product: any;
@@ -33,9 +56,14 @@ function addToFavorite(product: any) {
   emit('add-to-favorite', product);
   router.push('/favorite');
 }
+
+
 </script>
 
 <template>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</link>
   <div class="card" :class="{ 'out-of-stock': product.stock === 0 }">
     <!-- Header -->
     <div class="card-header">
@@ -63,11 +91,18 @@ function addToFavorite(product: any) {
 
     <!-- Footer -->
     <div class="card-footer">
+      <!-- Rating -->
       <div class="rating">
         <i
           v-for="n in 5"
           :key="n"
-          :class="n <= product.rating ? 'fa-solid fa-star' : 'fa-regular fa-star'"
+          :class="{
+            'fa-solid fa-star': n <= Math.floor(product.rating),
+            'fa-regular fa-star': n > product.rating
+          }"
+
+          @click="submitRating(n)"
+          style="cursor: pointer;"
         ></i>
       </div>
 
@@ -177,6 +212,14 @@ function addToFavorite(product: any) {
 .rating {
   color: #FFD700;
   font-size: 1rem;
+}
+
+.rating i {
+  transition: transform 0.2s ease;
+}
+.rating i:hover {
+  transform: scale(1.2);
+  color: #ff9800;
 }
 
 .info-row {

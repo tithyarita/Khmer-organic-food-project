@@ -56,7 +56,7 @@
         "price": 9.9,
         "unit": "kg",
         "rating": 3,
-        "stock": 15,
+        "stock": 12,
         "image": "http://localhost:3000/uploads/21cb7dc29c979f8f549de6c08f8155aa"
       }
     ]

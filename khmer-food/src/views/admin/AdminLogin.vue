@@ -1,226 +1,178 @@
 <template>
-  <div class="login-page">
-    <div class="login-form">
-      <div class="form-content">
-        <h2>Admin Login</h2>
-        <p class="login-prompt">
-          <span class="gray-text">Not an admin?</span>
-          <router-link to="/" class="green-link">Go Home</router-link>
-        </p>
-
-        <form @submit.prevent="loginAdmin">
-          <label for="email">Email</label>
-          <input id="email" v-model="email" type="email" placeholder="Enter admin email" required />
-
-          <label for="password">Password</label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            placeholder="Enter password"
-            required
-          />
-
-          <button type="submit" class="submit-btn" :disabled="loading">
-            {{ loading ? 'Logging in...' : 'Login' }}
-          </button>
-        </form>
+  <div class="admin-login">
+    <h2>Admin Login</h2>
+    <form @submit.prevent="loginAdmin">
+      <div class="form-group">
+        <label>Email</label>
+        <input v-model="email" type="email" placeholder="Enter admin email" required />
       </div>
-    </div>
-
-    <div class="login-banner">
-      <h1>Welcome Back Admin</h1>
-      <p>Manage users and shop settings easily</p>
-      <img src="@/assets/forLogin_SignUp/logoSignup.png" alt="Admin Banner" class="banner-img" />
-    </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input v-model="password" type="password" placeholder="Enter password" required />
+      </div>
+      <button type="submit" :disabled="loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth, db } from '../../firebase'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
+import { saveUserStorage } from '../../loginstorage'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
-const router = useRouter()
+
+// ---------------- Firebase Config ----------------
+const firebaseConfig = {
+  apiKey: 'AIzaSyA1SjLJbVAerNhRdrQnZrXPiRRltdkYpHs',
+  authDomain: 'khmer-organic-food-afdc5.firebaseapp.com',
+  projectId: 'khmer-organic-food-afdc5',
+  storageBucket: 'khmer-organic-food-afdc5.appspot.com',
+  messagingSenderId: '252098645120',
+  appId: '1:252098645120:web:dfdbd69590b90e378c2a65',
+}
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
+
+// ---------------- Component State ----------------
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
+const errorMessage = ref('')
+const router = useRouter()
+
+// ---------------- Login Function ----------------
+// const loginAdmin = async () => {
+//   loading.value = true
+//   errorMessage.value = ''
+
+//   try {
+//     // Query Firestore Admin collection for this email
+//     const q = query(collection(db, 'Admin'), where('email', '==', email.value))
+//     const querySnapshot = await getDocs(q)
+
+//     if (querySnapshot.empty) {
+//       throw new Error('Admin user not found')
+//     }
+
+//     const userDoc = querySnapshot.docs[0]
+//     const UserData = userDoc.data()
+
+//     // Check password
+//     if (UserData.password !== password.value) {
+//       throw new Error('Invalid email or password')
+//     }
+
+//     // Save admin info to localStorage for router guard
+//     saveUserStorage({
+//       email: UserData.email,
+//       name: UserData.name,
+//       role: UserData.role,
+//       uid: ''
+//     })
+
+//     // Redirect to admin dashboard
+//     router.push('/admin/sales')
+//   } catch (error: unknown) {
+//     console.error(error)
+//     if (error instanceof Error) errorMessage.value = error.message
+//     else errorMessage.value = 'Login failed. Please try again.'
+//   } finally {
+//     loading.value = false
+//   }
+// }
+
+// Initialize Firebase Auth
+const auth = getAuth(app)
 
 const loginAdmin = async () => {
-  if (!email.value || !password.value) return
-
   loading.value = true
+  errorMessage.value = ''
+
   try {
-    // 1️⃣ Sign in with Firebase Auth
+    // Authenticate with Firebase Auth
     const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
     const user = userCredential.user
 
-    // 2️⃣ Check role in Firestore
-    const usersRef = collection(db, 'users')
-    const q = query(usersRef, where('email', '==', user.email))
+    // Check if this user is in the Admin collection
+    const q = query(collection(db, 'Admin'), where('email', '==', user.email))
     const querySnapshot = await getDocs(q)
 
     if (querySnapshot.empty) {
-      alert('No user found. Please check your credentials.')
-      await auth.signOut()
-      return
+      throw new Error('Not authorized as admin')
     }
 
-    const userData = querySnapshot.docs[0].data()
-    if (userData.role !== 'admin') {
-      alert('Access denied. You are not an admin.')
-      await auth.signOut()
-      return
-    }
+    const userDoc = querySnapshot.docs[0].data()
+    const adminData = querySnapshot.docs[0].data()
 
-    // ✅ Login successful, redirect to admin dashboard
-    alert('Welcome Admin!')
-    router.push('/admin') // change this to your admin dashboard route
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      alert(err.message)
-    } else {
-      alert('Failed to login. Please try again.')
-    }
+    // Save admin info to localStorage
+    saveUserStorage({
+      email: user.email,
+      name: userDoc.name,
+      role: userDoc.role,
+      uid: user.uid
+    })
+
+    // Redirect to admin dashboard
+    router.push('/admin/sales')
+  } catch (error: any) {
+    console.error(error)
+    errorMessage.value = error.message || 'Login failed. Please try again.'
   } finally {
     loading.value = false
   }
 }
+
+
 </script>
 
 <style scoped>
-.login-page {
-  display: flex;
-  min-height: 100vh;
-  font-family: 'Baloo Tammudu 2', sans-serif;
-}
-
-/* Left Form */
-.login-form {
-  flex: 1;
+.admin-login {
+  max-width: 400px;
+  margin: 8rem auto;
   padding: 2rem;
   background: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
-
-.form-content {
-  width: 100%;
-  max-width: 400px;
-}
-
-.login-form h2 {
-  color: #6ec007;
-  font-size: 3rem;
-  font-weight: 800;
+h2 {
   text-align: center;
-}
-
-.login-prompt {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
   margin-bottom: 1.5rem;
+  color: #53b400;
 }
-
-.gray-text {
-  color: #979797;
-  font-size: 1.2rem;
+.form-group {
+  margin-bottom: 1rem;
 }
-
-.green-link {
-  color: #6ec007;
-  text-decoration: none;
-  font-size: 1.2rem;
-}
-
-form label {
-  font-weight: bold;
-  display: block;
-  margin-top: 1rem;
-  font-size: 1.2rem;
-}
-
-form input {
+.form-group input {
   width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.2rem;
-  border: 1px solid #6ec007;
-  border-radius: 0.7rem;
-  font-size: 1rem;
-  outline: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
-
-form input:focus {
-  border-color: #4caf50;
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-}
-
-.submit-btn {
-  width: 50%;
-  margin: 1.5rem auto 0;
-  display: flex;
-  justify-content: center;
-  padding: 0.7rem;
-  background: #6ec007;
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #53b400;
   color: white;
-  border-radius: 1rem;
-  font-size: 1.3rem;
+  border: none;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
 }
-
-.submit-btn:hover {
-  background: #57a600;
+button:disabled {
+  background: #a8d5a2;
+  cursor: not-allowed;
 }
-
-/* Right Banner */
-.login-banner {
-  flex: 1;
-  background-color: #6ec007;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.error {
+  color: red;
+  margin-top: 1rem;
   text-align: center;
-  padding: 2rem;
-  position: relative;
-}
-
-.login-banner h1 {
-  font-size: 3.5rem;
-  font-weight: 900;
-  margin-top: 5rem;
-}
-
-.login-banner p {
-  font-size: 1.5rem;
-  font-weight: 300;
-  margin-top: 0.5rem;
-}
-
-.login-banner .banner-img {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  max-width: 35rem;
-  object-fit: contain;
-  border-radius: 1rem;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .login-page {
-    flex-direction: column;
-  }
-  .login-banner {
-    min-height: 40vh;
-  }
 }
 </style>
