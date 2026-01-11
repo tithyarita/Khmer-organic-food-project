@@ -16,6 +16,7 @@
           <span class="icon">💰</span>
           <div class="items-name">Sales</div>
         </router-link>
+
         <router-link
           to="/admin/products"
           class="menu-item"
@@ -40,51 +41,65 @@
           :class="{ active: isActive('/admin/users') }"
         >
           <span class="icon">👥</span>
-          <div class="items-name">Info User</div>
+          <div class="items-name">Users</div>
+        </router-link>
+
+        <router-link
+          to="/admin/blogs"
+          class="menu-item"
+          :class="{ active: isActive('/admin/blogs') }"
+        >
+          <span class="icon">📝</span>
+          <div class="items-name">Check Blog</div>
         </router-link>
       </nav>
     </aside>
 
     <!-- RIGHT CONTENT -->
     <section class="content">
+      <!-- TOP BAR -->
       <div class="top-bar">
-        <h1>Dashboard</h1>
+        <h1 class="page-title">Dashboard</h1>
         <div class="search-bar">
-          <input type="text" placeholder="Search" />
+          <input type="text" placeholder="Search..." v-model="searchQuery" />
           <i class="fa-solid fa-magnifying-glass"></i>
         </div>
       </div>
 
-      <!-- Child routes render here -->
-      <router-view />
+      <!-- Child components -->
+      <router-view :search-query="searchQuery" />
     </section>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+const searchQuery = ref('')
+
+// Highlight active menu item
 const isActive = (path: string) => route.path.startsWith(path)
 </script>
 
 <style scoped>
+/* Dashboard Container */
 .dashboard-container {
   display: flex;
   min-height: 100vh;
   width: 100%;
-  background: #e6e6e6;
+  background-color: #e6e6e6;
+  font-family: 'Baloo Tammudu 2', sans-serif;
   overflow-x: hidden;
-
-  font-family: 'Baloo Tamma 2', sans-serif;
 }
 
 /* Sidebar */
 .sidebar {
-  width: 25%;
-  background: #53b400;
-  padding: 40px 20px;
+  width: 260px;
+  background-color: #53b400;
   color: white;
+  padding: 40px 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -95,46 +110,44 @@ const isActive = (path: string) => route.path.startsWith(path)
 }
 
 .welcome-title {
-  font-size: 32px;
+  font-size: 28px;
   margin: 0;
   font-weight: 300;
 }
 
 .welcome-subtitle {
-  font-size: 36px;
+  font-size: 32px;
   margin: 0;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .menu {
-  margin-top: 40px;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
 .menu-item {
-  padding: 18px 15px;
-  text-align: center;
-  font-size: 18px;
-  cursor: pointer;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  text-align: center;
+  padding: 18px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .menu-item:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.15);
   transform: translateX(5px);
 }
 
 .menu-item.active {
-  background: white;
+  background-color: white;
   color: #53b400;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
@@ -144,17 +157,18 @@ const isActive = (path: string) => route.path.startsWith(path)
 }
 
 .items-name {
-  font-size: 16px;
   font-weight: 600;
+  font-size: 14px;
 }
 
-/* Content */
+/* Content Area */
 .content {
-  width: 100%;
+  flex: 1;
   padding: 40px;
   overflow-y: auto;
 }
 
+/* Top Bar */
 .top-bar {
   display: flex;
   align-items: center;
@@ -166,10 +180,11 @@ const isActive = (path: string) => route.path.startsWith(path)
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.top-bar h1 {
+.page-title {
   margin: 0;
-  color: #2c3e50;
   font-size: 28px;
+  color: #2c3e50;
+  font-weight: 700;
 }
 
 .search-bar {
@@ -183,11 +198,22 @@ const isActive = (path: string) => route.path.startsWith(path)
   padding: 10px 15px;
   border: none;
   border-radius: 20px;
-  width: 200px;
+  width: 220px;
+  font-size: 14px;
 }
 
 .search-bar i {
   color: #2c3e50;
   cursor: pointer;
+}
+
+/* Scrollbar Styling */
+.content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 </style>
