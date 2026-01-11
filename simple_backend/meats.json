@@ -16,7 +16,7 @@
     "price": 9.89,
     "unit": "kg",
     "rating": 4,
-    "stock": 83,
+    "stock": 82.5,
     "image": "http://localhost:3000/uploads/5b2255c5cb64262461caeeb68a3bf754"
   },
   {
@@ -46,7 +46,7 @@
     "price": 7.13,
     "unit": "kg",
     "rating": 2,
-    "stock": 78,
+    "stock": 77,
     "image": "http://localhost:3000/uploads/75d1cc4a02146db60a437e75c282249a"
   },
   {

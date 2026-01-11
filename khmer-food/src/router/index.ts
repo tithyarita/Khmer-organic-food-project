@@ -14,8 +14,14 @@ import Checkout from '../views/CheckoutView.vue'
 import AboutView from '../views/AboutView.vue'
 import ContactView from '../views/ContactView.vue'
 import BlogView from '../views/BlogView.vue'
+import ReviewPage from '../views/ReviewPage.vue'
+
+import { auth, db } from '../firebase'
+import { doc, getDoc } from 'firebase/firestore'
+
 
 import { getUserStorage } from '../loginstorage'
+
 
 const routes: RouteRecordRaw[] = [
   // ---------------- USER ROUTES ----------------
@@ -30,6 +36,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/about', name: 'About', component: AboutView },
   { path: '/contact', name: 'Contact', component: ContactView },
   { path: '/blog', name: 'Blog', component: BlogView },
+  { path: '/review/:orderId', name: 'ReviewPage', component: ReviewPage, props: true },
 
   // Login / Signup
   { path: '/loginSignup', name: 'LoginSignUp', component: LoginSignUpView, meta: { hideLayout: true } },
@@ -41,18 +48,28 @@ const routes: RouteRecordRaw[] = [
 
   // ---------------- ADMIN ROUTES ----------------
   {
-    path: '/admin',
-    component: () => import('../components/Admindashbroad.vue'),
-    children: [
-      { path: '', redirect: '/admin/sales' },
-      { path: 'sales', name: 'AdminSales', component: () => import('../views/admin/AdminSales.vue') },
-      { path: 'products', name: 'AdminProducts', component: () => import('../views/admin/AdminProducts.vue') },
-      { path: 'stocks', name: 'AdminStocks', component: () => import('../views/admin/AdminStocks.vue') },
-      { path: 'orders', name: 'AdminOrders', component: () => import('../views/admin/AdminOrders.vue') },
-      { path: 'users', name: 'AdminUsers', component: () => import('../views/admin/AdminUsers.vue') },
-      { path: 'blogs', name: 'AdminBlog', component: () => import('../views/admin/AdminBlog.vue') },
-    ],
-  },
+  path: '/admin',
+  component: () => import('../components/Admindashbroad.vue'),
+  meta: { requiresAdmin: true },
+  children: [
+    { path: '', redirect: '/admin/sales' },
+    { path: 'sales', name: 'AdminSales', component: () => import('../views/admin/AdminSales.vue') },
+    { path: 'products', name: 'AdminProducts', component: () => import('../views/admin/AdminProducts.vue') },
+    { path: 'stocks', name: 'AdminStocks', component: () => import('../views/admin/AdminStocks.vue') },
+    { path: 'orders', name: 'AdminOrders', component: () => import('../views/admin/AdminOrders.vue') },
+    { path: 'users', name: 'AdminUsers', component: () => import('../views/admin/AdminUsers.vue') },
+    { path: 'blogs', name: 'AdminBlog', component: () => import('../views/admin/AdminBlog.vue') },
+  ],
+},
+
+{
+  path: '/admin/login',
+  name: 'AdminLogin',
+  component: () => import('../views/admin/AdminLogin.vue'),
+  meta: { hideLayout: true }
+}
+
+
 ]
 
 const router = createRouter({
@@ -61,23 +78,46 @@ const router = createRouter({
 })
 
 // ---------------- GLOBAL NAV GUARD ----------------
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const defaultTitle = 'Khmer Organic Food'
   document.title = (to.meta?.title as string) || defaultTitle
 
-  const user = getUserStorage()
+  const userStorage = getUserStorage()
+  const firebaseUser = auth.currentUser
 
-  // ---------------- USER PROTECTION ----------------
-  if (to.meta?.requiresAuth && !user) {
+  // ---------------- USER AUTH PROTECTION ----------------
+  if (to.meta?.requiresAuth && !userStorage) {
     return next('/login')
   }
 
+  // ---------------- ADMIN PROTECTION ----------------
+  if (to.meta?.requiresAdmin) {
+    if (!firebaseUser) {
+      return next('/admin/login')
+    }
+
+    try {
+      const adminRef = doc(db, 'admins', firebaseUser.uid)
+      const adminSnap = await getDoc(adminRef)
+
+      if (!adminSnap.exists()) {
+        return next('/') // not admin
+      }
+    } catch (err) {
+      return next('/')
+    }
+  }
+
   // Prevent logged-in users from visiting login/signup
-  if ((to.path === '/login' || to.path === '/signup' || to.path === '/loginSignup') && user) {
+  if (
+    (to.path === '/login' ||
+      to.path === '/signup' ||
+      to.path === '/loginSignup') &&
+    userStorage
+  ) {
     return next('/profile')
   }
 
   next()
 })
-
 export default router

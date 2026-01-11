@@ -5,7 +5,24 @@ import { useFavoriteStore } from '../stores/favorite'
 import { useRouter } from 'vue-router'
 import { getUserStorage, isLoggedIn } from '../loginstorage.js'
 
+import { getDoc } from 'firebase/firestore'
+import { auth, db } from '@/firebase'
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc
+} from 'firebase/firestore'
 
+const userRating = ref(0)
+const canReview = ref(false)
+
+
+// Props
 const props = defineProps<{
   product: any
   showCart?: boolean
@@ -60,6 +77,71 @@ function addToFavorite(product: any) {
   emit('add-to-favorite', product)
 }
 
+
+async function submitRating(stars: number) {
+  // Check login (you already use login storage)
+  if (!isLoggedIn()) {
+    const goLogin = confirm('Please login to rate this product. Go to login page?')
+    if (goLogin) router.push('/loginSignup')
+    return
+  }
+
+  // Get logged-in user (Firebase Auth)
+  const user = auth.currentUser
+  if (!user) return
+
+  const userId = user.uid
+  const productId = props.product.id
+  const reviewId = `${userId}_${productId}`
+
+  // 1️⃣ Save or update user's review
+  await setDoc(
+    doc(db, 'reviews', reviewId),
+    {
+      userId,
+      productId,
+      rating: stars,
+      updatedAt: serverTimestamp()
+    },
+    { merge: true }
+  )
+
+  // 2️⃣ Recalculate average rating
+  const q = query(
+    collection(db, 'reviews'),
+    where('productId', '==', productId)
+  )
+
+  const snap = await getDocs(q)
+
+  let total = 0
+  snap.forEach(d => {
+    total += d.data().rating
+  })
+
+  const avg = snap.size ? total / snap.size : 0
+
+  // 3️⃣ Update product rating
+  await updateDoc(doc(db, 'products', productId), {
+    rating: avg,
+    reviewCount: snap.size
+  })
+}
+
+async function loadUserReview() {
+  if (!auth.currentUser) return
+
+  const reviewId = `${auth.currentUser.uid}_${props.product.id}`
+  const reviewRef = doc(db, 'reviews', reviewId)
+  const snap = await getDoc(reviewRef)
+
+  if (snap.exists()) {
+    userRating.value = snap.data().rating
+  }
+}
+
+
+
 </script>
 
 <template>
@@ -84,6 +166,8 @@ function addToFavorite(product: any) {
       <img :src="product.image || '/default-product.jpg'" :alt="product.name" />
     </div>
 
+
+    
     <!-- Footer -->
     <div class="card-footer">
       <!-- Rating -->
@@ -92,9 +176,10 @@ function addToFavorite(product: any) {
           v-for="n in 5"
           :key="n"
           :class="{
-            'fa-solid fa-star': n <= Math.floor(product.rating),
-            'fa-regular fa-star': n > product.rating
+            'fa-solid fa-star': n <= Math.floor(product.rating || 0),
+            'fa-regular fa-star': n > (product.rating || 0)
           }"
+
 
           @click="submitRating(n)"
           style="cursor: pointer;"

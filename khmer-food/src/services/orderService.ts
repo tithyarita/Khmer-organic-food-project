@@ -1,5 +1,6 @@
 import { collection, addDoc, getDocs, query, orderBy, where } from 'firebase/firestore'
 import { db } from '../firebase.js'
+import { doc, getDoc } from 'firebase/firestore'
 
 type OrderItem = {
   id: number | string
@@ -50,4 +51,11 @@ export async function getOrdersByUser(uid: string) {
   const q = query(col, where('user.uid', '==', uid), orderBy('createdAt', 'desc'))
   const snap = await getDocs(q)
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+}
+
+export async function getOrderById(orderId: string) {
+  const ref = doc(db, 'orders', orderId)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) return null
+  return { id: snap.id, ...snap.data() }
 }

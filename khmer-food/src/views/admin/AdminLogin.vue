@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth, db } from '../../firebase'
@@ -129,7 +129,47 @@ const loginAdmin = async () => {
 }
 
 
+</script> -->
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
+import { auth, db } from '@/firebase'
+
+const email = ref('')
+const password = ref('')
+const loading = ref(false)
+const errorMessage = ref('')
+const router = useRouter()
+
+const loginAdmin = async () => {
+  loading.value = true
+  errorMessage.value = ''
+
+  try {
+    const res = await signInWithEmailAndPassword(auth, email.value, password.value)
+    const user = res.user
+
+    const adminRef = doc(db, 'admins', user.uid)
+    const adminSnap = await getDoc(adminRef)
+
+    if (!adminSnap.exists()) {
+      await signOut(auth)
+      throw new Error('You are not an admin')
+    }
+
+    router.push('/admin/sales')
+  } catch (err: any) {
+    errorMessage.value = err.message || 'Admin login failed'
+  } finally {
+    loading.value = false
+  }
+}
+
 </script>
+
 
 
 <style scoped>

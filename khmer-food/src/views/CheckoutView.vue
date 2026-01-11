@@ -107,9 +107,13 @@
 import { computed, ref } from 'vue'
 import { useCartStore } from '../stores/cart'
 import axios from 'axios'
-import router from '../router/index'
+// import router from '../router/index'
+import { useRouter } from 'vue-router'
+
 import { createOrder } from '../services/orderService'
 import { auth } from '../firebase.js'
+
+const router = useRouter()
 
 const cart = useCartStore()
 
@@ -167,9 +171,26 @@ async function placeOrder() {
     // Persist order to Firestore (with basic user info if available)
     try {
       const user = auth.currentUser ? { uid: auth.currentUser.uid, email: auth.currentUser.email, name: auth.currentUser.displayName } : undefined
-      await createOrder({
+      // await createOrder({
+      //   user,
+      //   items: cart.items.map(i => ({ id: i.id, name: i.name || i.title || '', price: i.price, qty: i.qty, category: i.category })),
+      //   subtotal: subtotal.value,
+      //   delivery: delivery.value,
+      //   discount: discount.value,
+      //   total: total.value,
+      //   paymentMethod: selectedPayment.value,
+      //   status: 'paid'
+      // })
+
+      const order = await createOrder({
         user,
-        items: cart.items.map(i => ({ id: i.id, name: i.name || i.title || '', price: i.price, qty: i.qty, category: i.category })),
+        items: cart.items.map(i => ({
+          id: i.id,
+          name: i.name || i.title || '',
+          price: i.price,
+          qty: i.qty,
+          category: i.category
+        })),
         subtotal: subtotal.value,
         delivery: delivery.value,
         discount: discount.value,
@@ -178,11 +199,17 @@ async function placeOrder() {
         status: 'paid'
       })
 
+
       // Clear cart AFTER saved successfully
       cart.clear()
 
       // show success
-      orderSuccess.value = true
+      // orderSuccess.value = true
+
+      // redirect to review page with orderId
+      router.push(`/review/${order.id}`)
+
+
     } catch (e) {
       console.error('Failed to save order to Firestore', e)
       errorMessage.value = 'Could not save order. Please contact support.'
@@ -197,14 +224,23 @@ async function placeOrder() {
   }
 }
 
+
+
 function closeSuccess() {
   orderSuccess.value = false
+}
+
+function goReview() {
+  orderSuccess.value = false
+  router.push('/ReviewPage')
 }
 
 function goHome() {
   orderSuccess.value = false
   router.push('/')
 }
+
+
 
 </script>
 
