@@ -50,6 +50,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'stocks', name: 'AdminStocks', component: () => import('../views/admin/AdminStocks.vue') },
       { path: 'orders', name: 'AdminOrders', component: () => import('../views/admin/AdminOrders.vue') },
       { path: 'users', name: 'AdminUsers', component: () => import('../views/admin/AdminUsers.vue') },
+      { path: 'blogs', name: 'AdminBlog', component: () => import('../views/admin/AdminBlog.vue') },
     ],
   },
 ]
