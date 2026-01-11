@@ -56,13 +56,54 @@
         "price": 9.9,
         "unit": "kg",
         "rating": 3,
-        "stock": 12,
+        "stock": 0,
         "image": "http://localhost:3000/uploads/21cb7dc29c979f8f549de6c08f8155aa"
+      },
+      {
+        "id": 6,
+        "name": "Chha Vegetable",
+        "category": "Fried (Chha)",
+        "price": 8.9,
+        "unit": "set",
+        "rating": 0,
+        "stock": 17,
+        "image": "http://localhost:3000/uploads/2a7d2ab2feb070b0f2ce225acac62914"
+      },
+      {
+        "id": 7,
+        "name": "Spicy Chicken",
+        "category": "Fried (Chha)",
+        "price": 7.99,
+        "unit": "set",
+        "rating": 0,
+        "stock": 19,
+        "image": "http://localhost:3000/uploads/3780098978aaed387761a6e94d4c1304"
+      },
+      {
+        "id": 8,
+        "name": "Chha Khgey",
+        "category": "Fried (Chha)",
+        "price": 7.89,
+        "unit": "set",
+        "rating": 0,
+        "stock": 29,
+        "image": "http://localhost:3000/uploads/8592bdf5f9f06fbd1e982c52327f1e57"
       }
     ]
   },
   {
     "title": "Steamed",
-    "items": []
+    "items": [
+      {
+        "id": 9,
+        "name": "Amok",
+        "category": "Steamed",
+        "price": 11.9,
+        "unit": "set",
+        "rating": 0,
+        "stock": 21,
+        "image": "http://localhost:3000/uploads/9abc4c7775bbe3b756307802ad09f335"
+      }
+    ]
   }
 ]

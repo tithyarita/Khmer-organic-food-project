@@ -5,8 +5,8 @@
     <h1 class="Title">Feature Products</h1>
 
     <div class="products">
-      <ProductCard
-        v-for="item in products"
+        <ProductCard
+          v-for="item in filteredProducts"
         :key="item.id"
         :product="item"
         :showCart="true"
@@ -19,37 +19,60 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
+<script lang="ts">
+import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import Banner from '../components/Banner.vue'
 import ProductCard from '../components/ProductCard.vue'
 import { useCartStore } from '../stores/cart'
 import { useFavoriteStore } from '../stores/favorite'
 import { getProducts } from '../services/vegService'
 
-const products = ref<any[]>([])
+export default {
+  name: 'VegetablesView',
+  components: { Banner, ProductCard },
+  setup() {
+    const products = ref<any[]>([])
+    const route = useRoute()
 
-const cart = useCartStore()
-const favorite = useFavoriteStore()
+    const filteredProducts = computed(() => {
+      const q = String(route.query.q || '').trim().toLowerCase()
+      if (!q) return products.value
+      return products.value.filter((p: any) => {
+        const name = (p.name || p.title || '').toString().toLowerCase()
+        const desc = (p.description || '').toString().toLowerCase()
+        return name.includes(q) || desc.includes(q)
+      })
+    })
 
-// ✅ load products from backend
-onMounted(async () => {
-  try {
-    const res = await getProducts()
-    products.value = res.data
-  } catch (error) {
-    console.error('Failed to load products', error)
+    const cart = useCartStore()
+    const favorite = useFavoriteStore()
+
+    onMounted(async () => {
+      try {
+        const res = await getProducts()
+        products.value = res.data
+      } catch (error) {
+        console.error('Failed to load products', error)
+      }
+
+      await cart.loadCart()
+      await favorite.loadFavorites()
+    })
+
+    async function addToCart(product: any) {
+      await cart.addItem(product)
+    }
+
+    async function addToFavorite(product: any) {
+      await favorite.addFavorite(product)
+    }
+
+    return { products, filteredProducts, addToCart, addToFavorite }
   }
-})
-
-function addToCart(product: any) {
-  cart.addItem(product)
-}
-
-function addToFavorite(product: any) {
-  favorite.addFavorite(product)
 }
 </script>
+
 
 <style scoped>
 .products {

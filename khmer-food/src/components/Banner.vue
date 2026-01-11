@@ -37,7 +37,7 @@ const bannerImage = computed(() => route.meta.image || '/default-banner.jpg')
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(70%);        /* optional: darker for text visibility */
+  filter: brightness(90%);        /* optional: darker for text visibility */
 }
 
 /* Text overlays image */

@@ -5,7 +5,7 @@
 
     <div class="products">
       <ProductCard
-        v-for="item in products"
+        v-for="item in filteredProducts"
         :key="item.id"
         :product="item"
         :showCart="true"
@@ -19,7 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ref, onMounted, computed } from 'vue'
 import Banner from '../components/Banner.vue'
 import ProductCard from '../components/ProductCard.vue'
 import { useCartStore } from '../stores/cart'
@@ -28,6 +29,19 @@ import { getProducts } from '../services/meatService'
 
 
 const products = ref<any[]>([])
+
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
+const filteredProducts = computed(() => {
+  const q = String(route.query.q || '').trim().toLowerCase()
+  if (!q) return products.value
+  return products.value.filter((p: any) => {
+    const name = (p.name || p.title || '').toString().toLowerCase()
+    const desc = (p.description || '').toString().toLowerCase()
+    return name.includes(q) || desc.includes(q)
+  })
+})
 
 const cart = useCartStore()
 const favorite = useFavoriteStore()

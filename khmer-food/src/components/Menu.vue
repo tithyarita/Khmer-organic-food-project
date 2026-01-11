@@ -1,8 +1,8 @@
-  <template>
+<template>
   <header class="menu">
     <!-- LEFT: Logo + App Name -->
     <div class="left-container">
-      <router-link to="/admin" class="logo-link">
+      <router-link to="/" class="logo-link">
         <img src="/images/Logo.png" alt="Logo" />
       </router-link>
       <span class="app-name">Khmer Organic Food</span>
@@ -29,18 +29,33 @@
 
     <!-- RIGHT: Search Box + Icons -->
     <div class="right-side">
-      <!-- Search Box -->
-      <input type="text" placeholder="Search..." class="search-box" />
-      <router-link to="#" class="icon-link">
-        <i class="fa-solid fa-magnifying-glass"></i>
+      <div class="search-wrap">
+        <!-- <select v-model="searchTarget" class="search-select">
+          <option value="products">Products</option>
+          <option value="blog">Blog</option>
+        </select> -->
+        <input v-model="searchTerm" @keyup.enter="doSearch" type="text" placeholder="Search..." class="search-box" />
+        <!-- <button class="search-btn" @click="doSearch">Search</button> -->
+      </div>
+
+      <!-- Favorite Icon with Badge -->
+      <router-link to="/favorite" class="icon-link cart-container">
+        <i class="fa-regular fa-heart"></i>
+        <span v-if="totalFavorites > 0" class="cart-badge">{{ totalFavorites }}</span>
       </router-link>
 
-      <router-link to="/favorite" class="icon-link">
-        <i class="fa-regular fa-heart"></i>
-      </router-link>
-      <router-link to="/cart" class="icon-link">
+      <!-- Cart Icon with Badge -->
+      <router-link to="/cart" class="icon-link cart-container">
         <i class="fa-solid fa-cart-shopping"></i>
+        <span v-if="totalItems > 0" class="cart-badge">{{ totalItems }}</span>
       </router-link>
+
+      <!-- Notifications (combined) -->
+      <!-- <router-link to="/notifications" class="icon-link cart-container">
+        <i class="fa-regular fa-bell"></i>
+        <span v-if="totalNotifications > 0" class="cart-badge">{{ totalNotifications }}</span>
+      </router-link> -->
+
       <router-link to="/profile" class="icon-link">
         <i class="fa-regular fa-user"></i>
       </router-link>
@@ -49,15 +64,64 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useCartStore } from '../stores/cart'
+import { useFavoriteStore } from '../stores/favorite'
+// removed isLoggedIn import — we load stores regardless to keep header badges in sync
 
 export default defineComponent({
-  name: 'Menu',
+  name: 'AppMenu',
+  setup() {
+    const cartStore = useCartStore()
+    const favoriteStore = useFavoriteStore()
+
+    onMounted(async () => {
+      try {
+        // Always attempt to load persisted favorites and cart (works for logged-in users
+        // and will noop for guests). This keeps the header badges in sync across pages.
+        await favoriteStore.loadFavorites()
+      } catch (e) {
+        console.warn('Could not load favorites on mount', e)
+      }
+
+      try {
+        await cartStore.loadCart()
+      } catch (e) {
+        console.warn('Could not load cart on mount', e)
+      }
+    })
+
+    const totalItems = computed(() =>
+      cartStore.items.reduce((sum, i) => sum + (i.qty || 1), 0)
+    )
+
+    const totalFavorites = computed(() => favoriteStore.items.length)
+
+    const totalNotifications = computed(() => totalItems.value + totalFavorites.value)
+
+    const searchTerm = ref('')
+    const searchTarget = ref('products')
+    const router = useRouter()
+
+    function doSearch() {
+      const q = (searchTerm.value || '').trim()
+      if (!q) return
+      if (searchTarget.value === 'blog') {
+        router.push({ path: '/blog', query: { q } })
+      } else {
+        // default: go to vegetables category with query (category pages read query)
+        router.push({ path: '/category/vegetables', query: { q } })
+      }
+    }
+
+    return { totalItems, totalFavorites, totalNotifications, searchTerm, searchTarget, doSearch }
+  },
 })
 </script>
 
-<style scoped>
 
+<style scoped>
 .menu {
   display: flex;
   justify-content: space-between;
@@ -82,10 +146,9 @@ export default defineComponent({
 
 .app-name {
   color: whitesmoke;
-  font-size: 1.30rem;
+  font-size: 1.3rem;
   font-weight: 400;
 }
-
 
 .navigation {
   display: flex;
@@ -99,10 +162,9 @@ export default defineComponent({
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 100;
-  position: relative;
   cursor: pointer;
+  position: relative;
 }
-
 
 .dropdown {
   position: relative;
@@ -123,42 +185,28 @@ export default defineComponent({
   z-index: 100;
 }
 
-
 .dropdown-content .dropdown-link {
   color: #333;
   padding: 0.8rem 1.2rem;
   font-size: 0.85rem;
   display: block;
   text-decoration: none;
-  position: static;
 }
 
 .dropdown-content .dropdown-link:hover {
   background: #f4f4f4;
 }
 
-.dropdown-content .dropdown-link::after {
-  content: none;
-}
-
-.dropdown-content a:hover {
-  background: #f4f4f4;
-}
-
-
 .dropdown:hover .dropdown-content {
   opacity: 1;
   transform: translateY(0);
 }
-
 
 .right-side {
   display: flex;
   gap: 1rem;
   align-items: center;
 }
-
-
 
 .search-box {
   padding: 0.25rem 0.5rem;
@@ -174,11 +222,15 @@ export default defineComponent({
   height: 1.75rem;
 }
 
+.search-wrap { display: flex; gap: .4rem; align-items: center }
+.search-select { border-radius: 0.6rem; padding: 0.25rem; border: 1px solid #ccc }
+.search-btn { background: #fff; border: 1px solid #ccc; padding: 6px 10px; border-radius: 8px; cursor: pointer }
 
 .icon-link {
   color: white;
   font-size: 0.9rem;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  position: relative;
 }
 
 .icon-link:hover {
@@ -186,7 +238,26 @@ export default defineComponent({
   opacity: 0.9;
 }
 
+/* BADGE */
+.cart-container {
+  position: relative;
+}
 
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: red;
+  color: white;
+  font-size: 8px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
   .menu {
     flex-direction: column;
@@ -205,7 +276,6 @@ export default defineComponent({
     margin: 0;
     gap: 1rem;
   }
-
 
   .nav-link {
     font-size: 0.8rem;

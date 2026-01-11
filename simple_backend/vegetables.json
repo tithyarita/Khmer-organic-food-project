@@ -6,7 +6,7 @@
     "price": 6.55,
     "unit": "Kg",
     "rating": 4,
-    "stock": 20,
+    "stock": 19,
     "image": "http://localhost:3000/uploads/9067101aa4e9a78a20c2af48cbb41397"
   },
   {
@@ -20,23 +20,73 @@
     "image": "http://localhost:3000/uploads/7ed9b515e12d06c186b3a261ad289fbb"
   },
   {
-    "id": 4,
+    "id": 3,
     "name": "Carrot",
     "category": "vegetables",
-    "price": 3.8,
+    "price": 1.98,
     "unit": "kg",
-    "rating": 3,
-    "stock": 8,
-    "image": "http://localhost:3000/uploads/442c851919304c3aefa3fe722e2346b5"
+    "rating": 1,
+    "stock": 90,
+    "image": "http://localhost:3000/uploads/d46100bfeab7e48e21c37c5f58fdf461"
   },
   {
     "id": 4,
     "name": "Brocoli",
     "category": "vegetables",
-    "price": 2.3,
+    "price": 5.89,
+    "unit": "kg",
+    "rating": 2,
+    "stock": 87,
+    "image": "http://localhost:3000/uploads/197c12b76eaa834d5af4dbedf62c44d4"
+  },
+  {
+    "id": 5,
+    "name": "Cabbage",
+    "category": "vegetables",
+    "price": 4.76,
+    "unit": "kg",
+    "rating": 1,
+    "stock": 89,
+    "image": "http://localhost:3000/uploads/500ffc01f67357d44d7e4ea7a2fe994d"
+  },
+  {
+    "id": 6,
+    "name": "Potato",
+    "category": "vegetables",
+    "price": 2.9,
+    "unit": "kg",
+    "rating": 1,
+    "stock": 67,
+    "image": "http://localhost:3000/uploads/0422ddd5456281839e4e2d4e2838bd22"
+  },
+  {
+    "id": 7,
+    "name": "Bell pepper",
+    "category": "vegetables",
+    "price": 5.12,
     "unit": "kg",
     "rating": 3,
-    "stock": 12,
-    "image": "http://localhost:3000/uploads/ead795cbec275a019d9d5cf70ceab27f"
+    "stock": 100,
+    "image": "http://localhost:3000/uploads/e72a661d51e9fc144c607fd3e4993cfb"
+  },
+  {
+    "id": 8,
+    "name": "Lettuce",
+    "category": "vegetables",
+    "price": 4.12,
+    "unit": "kg",
+    "rating": 2,
+    "stock": 19,
+    "image": "http://localhost:3000/uploads/a63fd62da48df1833bc9c07def990b2d"
+  },
+  {
+    "id": 9,
+    "name": "Cauliflower",
+    "category": "vegetables",
+    "price": 6.45,
+    "unit": "kg",
+    "rating": 2,
+    "stock": 46,
+    "image": "http://localhost:3000/uploads/cdb66e5b82bd559c930f257fe51917e6"
   }
 ]

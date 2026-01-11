@@ -18,7 +18,7 @@
         <div class="item-info">
           <div class="name-price">
             <h3 class="item-name">{{ item.name }}</h3>
-            <p class="unit-price">${{ item.price.toFixed(2) }} per {{ item.unit }}</p>
+            <p class="unit-price">${{ item.price.toFixed(1) }} per {{ item.unit }}</p>
           </div>
 
           <div class="quantity-row">
@@ -37,7 +37,7 @@
             </select>
           </div>
 
-          <p class="total-price">Total: ${{ (item.price * item.qty).toFixed(2) }}</p>
+          <p class="total-price">Total: ${{ (item.price * item.qty).toFixed(1) }}</p>
         </div>
       </div>
 
@@ -46,19 +46,19 @@
         <h2>Order Summary</h2>
         <div class="row">
           <span>Sub Total</span>
-          <span>${{ subtotal.toFixed(2) }}</span>
+          <span>${{ subtotal.toFixed(1) }}</span>
         </div>
         <div class="row">
           <span>Delivery Charge</span>
-          <span>${{ delivery.toFixed(2) }}</span>
+          <span>${{ delivery.toFixed(1) }}</span>
         </div>
         <div class="row">
           <span>Discount</span>
-          <span class="discount">- ${{ discount.toFixed(2) }}</span>
+          <span class="discount">- ${{ discount.toFixed(1) }}</span>
         </div>
         <div class="total-row">
           <span>Total</span>
-          <span class="total">${{ total.toFixed(2) }}</span>
+          <span class="total">${{ total.toFixed(1) }}</span>
         </div>
         <button class="checkout-btn" @click="goToCheckout">Checkout</button>
       </div>

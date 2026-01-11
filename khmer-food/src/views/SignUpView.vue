@@ -65,11 +65,11 @@ const router = useRouter()
 
 const submitForm = async () => {
   try {
-    // 1️⃣ Create user in Firebase Auth
+
     const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
     const user = userCredential.user
 
-    // 2️⃣ Auto-increment numeric ID
+
     const userId = await runTransaction(db, async (transaction) => {
       const counterRef = doc(db, 'counters', 'users')
       const counterSnap = await transaction.get(counterRef)
@@ -85,7 +85,7 @@ const submitForm = async () => {
       return nextId
     })
 
-    // 3️⃣ Store user info in Firestore (password NOT stored)
+
     await setDoc(doc(db, 'users', user.uid), {
       userId,
       uid: user.uid,
@@ -98,7 +98,6 @@ const submitForm = async () => {
 
     alert(`Account created successfully!\nYour User ID: ${userId}`)
 
-    // 4️⃣ Redirect to Login page (do NOT save user locally yet)
     router.push('/login')
   } catch (err: unknown) {
     if (err instanceof Error) {
@@ -111,11 +110,11 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
-/* Keep your previous signup styling unchanged */
+
 </style>
 
 <style scoped>
-/* 🔴 YOUR DESIGN — UNCHANGED */
+
 .signup-page {
   display: flex;
   min-height: 100vh;
@@ -141,8 +140,9 @@ const submitForm = async () => {
 
 .signup-form h2 {
   color: #6ec007;
-  font-size: 3rem;
-  margin-bottom: 0;
+  font-size: 2.5rem;
+  margin-top: 0.0025rem;
+  margin-bottom: 0rem;
   font-weight: 800;
   text-align: center;
   line-height: 1;
@@ -152,40 +152,41 @@ const submitForm = async () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 0;
-  /* font-size: 1.2rem; */
+  margin: 0.0025rem;
+  font-size: 1.2rem;
   font-weight: 120;
   justify-content: center;
 }
 
 .login-prompt .gray-text {
   color: #979797;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 
 .login-prompt .green-link {
   color: #6ec007;
   text-decoration: none;
   cursor: pointer;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 
 form label {
   font-weight: bold;
-  margin-top: 1rem;
+  margin-top: 0.25rem;
   display: block;
   color: black;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
 
 form input {
   width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.01rem;
+  height:3rem;
+  padding: 0.2rem 0rem 0rem 1rem;
+  margin-top: 0rem;
   border: 0.0625rem solid #6ec007; /* 1px = 0.0625rem */
-  border-radius: 0.7rem;
-  font-size: 1.2rem;
+  border-radius: 5rem;
+  font-size: 1rem;
   outline: none;
   font-family: 'Baloo Tammudu 2', sans-serif;
 }
@@ -211,64 +212,100 @@ form input:focus {
 }
 
 .submit-btn {
-  width: 50%;
-  margin: 1.2rem auto 0; /* <-- ADD THIS LINE */
+  width: 100%;
+  height: 3rem;
+  margin: 1.2rem auto 0;
   display: flex;
   justify-content: center;
-  padding: 0.5rem;
-  background: #6ec007;
+  align-items: center;
+  padding: 0.5rem ;
+  background: #529203;
   color: white;
-  border-radius: 1rem;
-  font-size: 1.7rem;
+  border-radius: 5rem;
+  font-size: 1.2rem;
   font-weight: bold;
+  font-family: 'Baloo Tammudu 2', sans-serif;
   cursor: pointer;
+
+  border: none;
+  outline: none;
+  box-shadow: none;
+  appearance: none;
 }
 
 .submit-btn:hover {
   background: #57a600;
 }
 
+.submit-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 /* Right Banner */
+/* Right Banner — Dark Overlay + Banner Image */
 .signup-banner {
   flex: 1;
-  background-color: #6ec007;
-  color: white;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   text-align: center;
-  padding: 1rem 2rem;
+  padding: 2rem 1.5rem;
+  color: white;
+  background-color: #6ec007; /* base green */
+  overflow: hidden;
+  font-family: 'Baloo Tammudu 2', cursive;
+}
+
+/* Dark overlay over banner image */
+.signup-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2); /* dark overlay */
+  z-index: 1;
+}
+
+.signup-banner h1,
+.signup-banner p {
   position: relative;
+  z-index: 2; /* on top of overlay */
 }
 
 .signup-banner h1 {
-  font-size: 4.65rem;
-  margin-top: 7rem;
-  margin-bottom: 0;
+  font-size: 4.5rem;
+  margin-top: 5rem;
+  margin-bottom: 0.25rem;
   font-weight: 900;
-  line-height: 1;
-  z-index: 2;
+  line-height: 1.1;
 }
 
 .signup-banner p {
   font-size: 1.8rem;
-  margin: 0;
-  font-weight: 300;
+  margin: 0.25rem 0 2rem 0;
+  font-weight: 500;
   line-height: 1.2;
-  z-index: 2;
 }
 
+/* Banner Image */
 .signup-banner .banner-img {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 43rem;
+  max-width: 40rem;
+  max-height: 30rem;
   border-radius: 1rem;
-  z-index: 1;
   object-fit: contain;
+  z-index: 0; /* under overlay and text */
 }
+
 
 /* Mobile Responsive */
 @media (max-width: 37.5rem) {

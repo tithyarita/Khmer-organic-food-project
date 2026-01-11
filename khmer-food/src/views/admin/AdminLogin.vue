@@ -21,10 +21,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
-import { initializeApp } from 'firebase/app'
-import { saveUserStorage } from '../../loginstorage'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { auth, db } from '../../firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 
 
 // ---------------- Firebase Config ----------------
@@ -97,34 +96,33 @@ const loginAdmin = async () => {
   errorMessage.value = ''
 
   try {
-    // Authenticate with Firebase Auth
-    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
-    const user = userCredential.user
+    // 1️⃣ Login with Firebase Auth
+    const res = await signInWithEmailAndPassword(auth, email.value, password.value)
+    const user = res.user
 
-    // Check if this user is in the Admin collection
-    const q = query(collection(db, 'Admin'), where('email', '==', user.email))
-    const querySnapshot = await getDocs(q)
+    // 2️⃣ Load admin document from Firestore
+    const adminRef = doc(db, 'admin', user.uid)
+    const adminSnap = await getDoc(adminRef)
 
-    if (querySnapshot.empty) {
-      throw new Error('Not authorized as admin')
+    if (!adminSnap.exists()) {
+      alert('You are not an admin')
+      await auth.signOut()
+      return
     }
 
-    const userDoc = querySnapshot.docs[0].data()
-    const adminData = querySnapshot.docs[0].data()
+    const adminData = adminSnap.data()
 
-    // Save admin info to localStorage
-    saveUserStorage({
-      email: user.email,
-      name: userDoc.name,
-      role: userDoc.role,
-      uid: user.uid
-    })
+    if (adminData.role !== 'admin') {
+      alert('Access denied')
+      await auth.signOut()
+      return
+    }
 
-    // Redirect to admin dashboard
-    router.push('/admin/sales')
-  } catch (error: any) {
-    console.error(error)
-    errorMessage.value = error.message || 'Login failed. Please try again.'
+    // ✅ SUCCESS
+    router.push('/admin')
+
+  } catch (err: any) {
+    alert(err.message || 'Login failed')
   } finally {
     loading.value = false
   }
@@ -132,6 +130,7 @@ const loginAdmin = async () => {
 
 
 </script>
+
 
 <style scoped>
 .admin-login {

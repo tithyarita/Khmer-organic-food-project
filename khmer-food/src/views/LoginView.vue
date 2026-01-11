@@ -38,7 +38,9 @@
           </div>
 
           <a href="#" class="forgot-password">Forgot your password?</a>
-          <button type="submit" class="submit-btn">Login</button>
+          <button type="submit" class="submit-btn" :disabled="loading">
+            {{ loading ? 'Logging in...' : 'Login' }}
+          </button>
         </form>
       </div>
     </div>
@@ -48,54 +50,65 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import { saveUserStorage, getUserStorage } from '../loginstorage'
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+const loading = ref(false)
 const router = useRouter()
 
 onMounted(() => {
   const user = getUserStorage()
-  if (user) router.push('/profile')
+  if (user) router.push(user.role === 'admin' ? '/admin/sales' : '/profile')
 })
 
 const submitForm = async () => {
+  loading.value = true
+
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
-    const user = userCredential.user
-    saveUserStorage({ uid: user.uid, email: user.email })
-    alert(`Welcome back, ${user.email}`)
+    // 1️⃣ Auth login
+    const cred = await signInWithEmailAndPassword(auth, email.value, password.value)
+    const uid = cred.user.uid
+
+    // 2️⃣ Save minimal info immediately so redirect feels fast
+    saveUserStorage({ uid, email: cred.user.email!, role: 'user' })
+
+    // 3️⃣ Redirect user immediately
     router.push('/profile')
-  } catch (error) {
-    if (error instanceof Error) {
-      const firebaseError = error as { code?: string; message: string }
-      switch (firebaseError.code) {
-        case 'auth/user-not-found':
-          alert('No account found with this email. Please sign up first.')
-          break
-        case 'auth/wrong-password':
-          alert('Incorrect password. Please try again.')
-          break
-        case 'auth/invalid-email':
-          alert('Invalid email format.')
-          break
-        default:
-          alert(firebaseError.message)
-      }
-    } else {
-      alert('Something went wrong. Please try again.')
-    }
+
+    // 4️⃣ Fetch Firestore user data in background
+    getDoc(doc(db, 'users', uid))
+      .then(snap => {
+        if (!snap.exists()) throw new Error('User data not found')
+        const data = snap.data()
+
+        // Update localStorage with full user info
+        saveUserStorage({
+          uid,
+          userId: data.userId,
+          email: cred.user.email!,
+          name: data.name || '',
+          phone: data.phone || '',
+          role: data.role || 'user',
+        })
+      })
+      .catch(err => console.error('Failed to load user profile:', err.message))
+
+  } catch (err: any) {
+    alert(err.message || 'Login failed')
+  } finally {
+    loading.value = false
   }
 }
 </script>
 
+
 <style scoped>
-/* ======================== */
-/*      LOGIN PAGE LAYOUT   */
-/* ======================== */
+
 .login-page {
   display: flex;
   min-height: 100vh;
@@ -106,7 +119,6 @@ const submitForm = async () => {
 .login-banner {
   flex: 1;
   background-color: #6EC007; /* base color */
-  background-image: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.0)); /* dark to light */
   color: white;
   display: flex;
   flex-direction: column;
@@ -118,13 +130,32 @@ const submitForm = async () => {
   overflow: hidden;
 }
 
+/* Dark overlay on top of image */
+.login-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2); /* solid dark overlay with 50% opacity */
+  z-index: 1; /* below text, above image */
+  pointer-events: none;
+}
+
+
+.login-banner h1,
+.login-banner p {
+  position: relative;
+  z-index: 2; /* text above overlay */
+}
+
 .login-banner h1 {
   font-size: 4.5rem;
   margin-top: 5rem;
   margin-bottom: 0.1rem;
   font-weight: 900;
   line-height: 1;
-  z-index: 2;
 }
 
 .login-banner p {
@@ -132,7 +163,6 @@ const submitForm = async () => {
   margin: 0.1rem 0 2rem 0;
   font-weight: 500;
   line-height: 1.2;
-  z-index: 2;
 }
 
 .login-banner .banner-img {
@@ -141,10 +171,10 @@ const submitForm = async () => {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 28rem; /* smaller than before (was 45rem) */
-  max-height: 22rem; /* smaller than before (was 35rem) */
+  max-width: 40rem;
+  max-height: 30rem;
   border-radius: 1rem;
-  z-index: 1;
+  z-index: 0; /* image behind everything */
   object-fit: contain;
 }
 
@@ -255,9 +285,9 @@ form input:focus {
 /* Login Button */
 .submit-btn {
   width: 100%;
-  height: 2.5rem;
+  height: 3rem;
   padding: 0.2rem;
-  background: #345708;
+  background: #66b309;
   color: white;
   border: none;
   border-radius: 5rem;
