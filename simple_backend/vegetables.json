@@ -6,7 +6,7 @@
     "price": 6.55,
     "unit": "Kg",
     "rating": 4,
-    "stock": 18,
+    "stock": 80,
     "image": "http://localhost:3000/uploads/9067101aa4e9a78a20c2af48cbb41397"
   },
   {
@@ -83,10 +83,10 @@
     "id": 9,
     "name": "Cauliflower",
     "category": "vegetables",
-    "price": 6.45,
-    "unit": "kg",
-    "rating": 2,
-    "stock": 43,
-    "image": "http://localhost:3000/uploads/cdb66e5b82bd559c930f257fe51917e6"
+    "price": 3.55,
+    "unit": "Kg",
+    "rating": 4,
+    "stock": 118,
+    "image": "http://localhost:3000/uploads/913b00637141d8130db85332055c21bb"
   }
 ]

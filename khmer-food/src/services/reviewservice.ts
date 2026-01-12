@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, getDoc } from 'firebase/firestore'
+import { collection, doc, setDoc, getDoc, getDocs } from 'firebase/firestore'
 import { db } from '../firebase'
 
 export async function addOrderReview({
@@ -51,3 +51,40 @@ export async function getReviewsByOrder(orderId: string) {
   const snap = await getDoc(reviewRef)
   return snap.exists() ? snap.data() : null
 }
+
+export async function getProductRatingStats(productId: string | number) {
+  const col = collection(db, 'reviews')
+  const snap = await getDocs(col)
+
+  let totalStars = 0
+  let count = 0
+
+  // Optional distribution
+  const distribution = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0
+  }
+
+  snap.forEach(doc => {
+    const data = doc.data()
+    if (Array.isArray(data.products)) {
+      data.products.forEach((p: any) => {
+        if (p.productId === productId) {
+          totalStars += p.rating
+          count++
+          distribution[p.rating]++
+        }
+      })
+    }
+  })
+
+  return {
+    average: count ? Number((totalStars / count).toFixed(1)) : 0,
+    count,
+    distribution
+  }
+}
+

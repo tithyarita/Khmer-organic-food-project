@@ -114,8 +114,8 @@
           <option>Steamed</option>
         </select>
 
-        <label>Rating</label>
-        <input type="number" min="0" max="5" v-model.number="form.rating" />
+        <!-- <label>Rating</label>
+        <input type="number" min="0" max="5" v-model.number="form.rating" /> -->
 
         <label>Stock</label>
         <input type="number" v-model.number="form.stock" min="0" />
@@ -153,8 +153,8 @@
           <option>Steamed</option>
         </select>
 
-        <label>Rating</label>
-        <input v-model.number="form.rating" type="number" min="0" max="5" />
+        <!-- <label>Rating</label>
+        <input v-model.number="form.rating" type="number" min="0" max="5" /> -->
 
         <label>Stock</label>
         <input type="number" v-model.number="form.stock" min="0" />
@@ -266,10 +266,16 @@ const onFileChange = (e: Event) => {
 }
 
 const saveProduct = async () => {
+  if (!form.value.imageFile) {
+    alert('Please select an image')
+    return
+  }
+
   await addProduct(form.value)
   showAddModal.value = false
   await loadProducts()
 }
+
 
 const updateProductAction = async () => {
   await updateProduct(form.value)

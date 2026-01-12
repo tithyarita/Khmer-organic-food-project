@@ -17,7 +17,7 @@ const upload = multer({
 })
 
 // ✅ LOAD sets from file or initialize to json file for save API
-// let sets = []
+let sets = []
 function getNextSetId() {
   return sets
     .flatMap(c => c.items) // flatten all items

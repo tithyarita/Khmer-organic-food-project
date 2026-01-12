@@ -103,6 +103,16 @@
         "rating": 0,
         "stock": 21,
         "image": "http://localhost:3000/uploads/9abc4c7775bbe3b756307802ad09f335"
+      },
+      {
+        "id": 10,
+        "name": "Steamed Fish",
+        "category": "Steamed",
+        "price": 9,
+        "unit": "kg",
+        "rating": null,
+        "stock": 88,
+        "image": "http://localhost:3000/uploads/8772e0b3729403a1488043d32487b74b"
       }
     ]
   }

@@ -1,26 +1,11 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
 import { useFavoriteStore } from '../stores/favorite'
 import { useRouter } from 'vue-router'
-import { getUserStorage, isLoggedIn } from '../loginstorage.js'
+import { getUserStorage } from '../loginstorage.js'
 
-import { getDoc } from 'firebase/firestore'
-import { auth, db } from '@/firebase'
-import {
-  doc,
-  setDoc,
-  serverTimestamp,
-  collection,
-  query,
-  where,
-  getDocs,
-  updateDoc
-} from 'firebase/firestore'
-
-const userRating = ref(0)
-const canReview = ref(false)
-
+import { getProductRatingStats } from '@/services/reviewService'
 
 // Props
 const props = defineProps<{
@@ -36,10 +21,14 @@ const cart = useCartStore()
 const favorite = useFavoriteStore()
 const router = useRouter()
 
-// Track whether this product is in favorites
+// Favorite state
 const isFavorite = ref(false)
 
-// Watch favorite store to update heart icon
+// Rating state
+const avgRating = ref(0)
+const reviewCount = ref(0)
+
+// Watch favorite store
 watch(
   () => favorite.items,
   () => {
@@ -47,6 +36,13 @@ watch(
   },
   { immediate: true }
 )
+
+// Load rating stats
+onMounted(async () => {
+  const stats = await getProductRatingStats(props.product.id)
+  avgRating.value = stats.average
+  reviewCount.value = stats.count
+})
 
 // Add to cart
 function addToCart(product: any) {
@@ -64,90 +60,24 @@ function addToCart(product: any) {
 // Add to favorite
 function addToFavorite(product: any) {
   const user = getUserStorage()
-
   if (!user) {
     const goLogin = confirm('Please login first. Go to login page?')
     if (goLogin) router.push('/loginSignup')
     return
   }
 
-  // If already logged in, save favorite automatically
   favorite.addFavorite({ ...product })
   isFavorite.value = true
   emit('add-to-favorite', product)
 }
-
-
-async function submitRating(stars: number) {
-  // Check login (you already use login storage)
-  if (!isLoggedIn()) {
-    const goLogin = confirm('Please login to rate this product. Go to login page?')
-    if (goLogin) router.push('/loginSignup')
-    return
-  }
-
-  // Get logged-in user (Firebase Auth)
-  const user = auth.currentUser
-  if (!user) return
-
-  const userId = user.uid
-  const productId = props.product.id
-  const reviewId = `${userId}_${productId}`
-
-  // 1️⃣ Save or update user's review
-  await setDoc(
-    doc(db, 'reviews', reviewId),
-    {
-      userId,
-      productId,
-      rating: stars,
-      updatedAt: serverTimestamp()
-    },
-    { merge: true }
-  )
-
-  // 2️⃣ Recalculate average rating
-  const q = query(
-    collection(db, 'reviews'),
-    where('productId', '==', productId)
-  )
-
-  const snap = await getDocs(q)
-
-  let total = 0
-  snap.forEach(d => {
-    total += d.data().rating
-  })
-
-  const avg = snap.size ? total / snap.size : 0
-
-  // 3️⃣ Update product rating
-  await updateDoc(doc(db, 'products', productId), {
-    rating: avg,
-    reviewCount: snap.size
-  })
-}
-
-async function loadUserReview() {
-  if (!auth.currentUser) return
-
-  const reviewId = `${auth.currentUser.uid}_${props.product.id}`
-  const reviewRef = doc(db, 'reviews', reviewId)
-  const snap = await getDoc(reviewRef)
-
-  if (snap.exists()) {
-    userRating.value = snap.data().rating
-  }
-}
-
-
-
 </script>
 
 <template>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</link>
   <div class="card" :class="{ 'out-of-stock': product.stock === 0 }">
     <!-- Header -->
     <div class="card-header">
@@ -156,9 +86,9 @@ async function loadUserReview() {
         <span>{{ product.stock ? 'In Stock' : 'Out of Stock' }}</span>
       </div>
 
-<button v-if="showFavorite" class="favorite-btn" @click="addToFavorite(product)">
-  <i :class="isFavorite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
-</button>
+      <button v-if="showFavorite" class="favorite-btn" @click="addToFavorite(product)">
+        <i :class="isFavorite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+      </button>
     </div>
 
     <!-- Image -->
@@ -166,32 +96,35 @@ async function loadUserReview() {
       <img :src="product.image || '/default-product.jpg'" :alt="product.name" />
     </div>
 
-
-    
     <!-- Footer -->
     <div class="card-footer">
-      <!-- Rating -->
+      <!-- ⭐ Rating (READ ONLY) -->
       <div class="rating">
         <i
           v-for="n in 5"
           :key="n"
           :class="{
-            'fa-solid fa-star': n <= Math.floor(product.rating || 0),
-            'fa-regular fa-star': n > (product.rating || 0)
+            'fa-solid fa-star': n <= Math.round(avgRating),
+            'fa-regular fa-star': n > Math.round(avgRating)
           }"
-
-
-          @click="submitRating(n)"
-          style="cursor: pointer;"
         ></i>
+        <small v-if="reviewCount">({{ reviewCount }})</small>
+        <small v-else>(0)</small>
       </div>
 
       <div class="info-row">
         <span class="product-name">{{ product.name }}</span>
-        <span class="product-price">${{ product.price }}/{{ product.unit }}</span>
+        <span class="product-price">
+          ${{ product.price }}/{{ product.unit }}
+        </span>
       </div>
 
-      <button v-if="showCart" class="add-to-cart" :disabled="!product.stock" @click="addToCart(product)">
+      <button
+        v-if="showCart"
+        class="add-to-cart"
+        :disabled="!product.stock"
+        @click="addToCart(product)"
+      >
         <i class="fa-solid fa-cart-shopping"></i>
         {{ product.stock ? 'Add to Cart' : 'Unavailable' }}
       </button>
@@ -226,7 +159,6 @@ async function loadUserReview() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
 }
 
 .stock-status {
@@ -241,17 +173,11 @@ async function loadUserReview() {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0;
 }
 
 .favorite-btn i {
   font-size: 1.2rem;
   color: #e91e63;
-  transition: transform 0.2s ease;
-}
-
-.favorite-btn i:hover {
-  transform: scale(1.2);
 }
 
 .card-image {
@@ -267,20 +193,12 @@ async function loadUserReview() {
 .card-footer {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .rating {
   color: #FFD700;
   font-size: 1rem;
-}
-
-.rating i {
-  transition: transform 0.2s ease;
-}
-.rating i:hover {
-  transform: scale(1.2);
-  color: #ff9800;
 }
 
 .info-row {
@@ -300,8 +218,6 @@ async function loadUserReview() {
   font-weight: bold;
   width: 100%;
   height: 3rem;
-  font-size: 1rem;
-  transition: 0.3s ease;
 }
 
 .add-to-cart:hover {
