@@ -28,6 +28,8 @@ const isFavorite = ref(false)
 const avgRating = ref(0)
 const reviewCount = ref(0)
 
+
+
 // Watch favorite store
 watch(
   () => favorite.items,
@@ -45,6 +47,21 @@ onMounted(async () => {
 })
 
 // Add to cart
+// function addToCart(product: any) {
+//   const user = getUserStorage()
+//   if (!user) {
+//     const goLogin = confirm('Please login first. Go to login page?')
+//     if (goLogin) router.push('/loginSignup')
+//     return
+//   }
+
+//   cart.addItem(product)
+//   emit('add-to-cart', product)
+// }
+
+
+const isCartClicked = ref(false)
+
 function addToCart(product: any) {
   const user = getUserStorage()
   if (!user) {
@@ -55,6 +72,12 @@ function addToCart(product: any) {
 
   cart.addItem(product)
   emit('add-to-cart', product)
+
+  // Trigger animation
+  isCartClicked.value = true
+  setTimeout(() => {
+    isCartClicked.value = false
+  }, 600) // match CSS animation duration
 }
 
 // Add to favorite
@@ -119,7 +142,7 @@ function addToFavorite(product: any) {
         </span>
       </div>
 
-      <button
+      <!-- <button
         v-if="showCart"
         class="add-to-cart"
         :disabled="!product.stock"
@@ -127,7 +150,18 @@ function addToFavorite(product: any) {
       >
         <i class="fa-solid fa-cart-shopping"></i>
         {{ product.stock ? 'Add to Cart' : 'Unavailable' }}
-      </button>
+      </button> -->
+
+      <button
+      v-if="showCart"
+      class="add-to-cart"
+      :disabled="!product.stock"
+      @click="addToCart(product)"
+      :class="{ 'clicked': isCartClicked }"
+    >
+      <i class="fa-solid fa-cart-shopping"></i>
+      {{ product.stock ? 'Add to Cart' : 'Unavailable' }}
+    </button>
     </div>
   </div>
 </template>
@@ -147,6 +181,18 @@ function addToFavorite(product: any) {
   gap: 3rem;
   background: #fff;
   transition: 0.3s ease;
+}
+
+.add-to-cart.clicked {
+  animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.15); }
+  50%  { transform: scale(0.95); }
+  70%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 .out-of-stock {

@@ -1,12 +1,12 @@
-<template> 
+<template>
   <div class="product-detail-page">
-    <!-- Banner -->
     <Banner />
 
+    <!-- ✅ PRODUCT DETAIL -->
     <div v-if="product" class="product-detail">
       <div class="product-layout">
-        
-        <!-- Left: Name + Images + Price/Quantity -->
+
+        <!-- LEFT -->
         <div class="left-section">
           <h2 class="dish-name">{{ product.name }}</h2>
 
@@ -19,20 +19,22 @@
             />
           </div>
 
-          <!-- Price + Quantity -->
           <div class="price-quantity-row">
             <p class="price">PRICE: {{ product.price }}</p>
+
             <div class="quantity-selector">
-              <button @click="decreaseQuantity">-</button>
-              <input type="number" v-model="quantity" @input="validateQuantity" min="1" />
-              <button @click="increaseQuantity">+</button>
+              <button @click="quantity--" :disabled="quantity <= 1">-</button>
+              <input type="number" v-model="quantity" min="1" />
+              <button @click="quantity++">+</button>
             </div>
           </div>
         </div>
 
-        <!-- Right: Ingredients -->
+        <!-- RIGHT -->
         <div class="right-section">
-          <h3 class="ingredients-title">To do this food we need Ingredients as below:</h3>
+          <h3 class="ingredients-title">
+            To do this food we need Ingredients as below:
+          </h3>
           <ul class="ingredients-list">
             <li v-for="(item, index) in product.ingredients" :key="index">
               • {{ item }}
@@ -41,29 +43,99 @@
         </div>
       </div>
 
-      <!-- Bottom Actions -->
+      <!-- ACTION BUTTONS -->
       <div class="actions">
-
-        <input type="number" v-model="quantity" min="1" />
-        <button @click="addToFavorite(product, 'detail')">Add to Favorite</button>
-
-        <!-- <button @click="addToFavorite">Add to Favorite</button> -->
-
+        <button @click="addToFavorite">Add to Favorite</button>
         <button @click="addToCart">Add to Cart</button>
       </div>
     </div>
 
+    <!-- ❌ PRODUCT NOT FOUND -->
     <div v-else>
       <p>Product not found.</p>
     </div>
+    <!-- ========================= REVIEW SECTION ========================= -->
+  
+
+    <!-- <div v-if="reviews.length" class="review-section">
+      <h3>
+        ⭐ {{ averageRating }} / 5 ({{ totalReviews }} reviews)
+      </h3>
+      
+      <div v-for="r in reviews" :key="r.orderId" class="review-item">
+        <small class="review-meta">
+          {{
+            r.createdAt?.seconds
+              ? new Date(r.createdAt.seconds * 1000).toLocaleDateString()
+              : ''
+          }}
+        </small>
+
+        <div class="stars">
+          <span v-for="n in 5" :key="n" :class="{ filled: n <= r.rating }">★</span>
+        </div>
+        <p>{{ r.comment }}</p>
+      </div>
+    </div>
+
+    <div v-else>
+      <p>No reviews yet.</p>
+    </div> -->
+
+    
+    <div v-if="reviews.length" class="review-section">
+      <h3>
+        ⭐ {{ averageRating }} / 5 ({{ totalReviews }} reviews)
+      </h3>
+
+      <div v-for="r in reviews" :key="r.id" class="review-item">
+            <div class="review-header">
+              <strong>{{ r.userName }}</strong>
+              <small>
+                {{
+                  r.createdAt?.seconds
+                    ? new Date(r.createdAt.seconds * 1000).toLocaleDateString()
+                    : ''
+                }}
+              </small>
+            </div>
+
+            <div class="stars">
+              <span v-for="n in 5" :key="n" :class="{ filled: n <= r.rating }">★</span>
+            </div>
+
+            <p>{{ r.comment }}</p>
+      </div>
+    </div>
+
+    <div v-else>
+      <p>No reviews yet.</p>
+    </div>
+
+
+
   </div>
 </template>
+
+
 
 <script lang="ts">
 
 import Banner from '../components/Banner.vue';
 import { useCartStore } from '../stores/cart';
 import { useFavoriteStore } from '../stores/favorite';
+import { collection, query, where, orderBy, getDocs } from "firebase/firestore"
+import { db } from "../firebase"
+
+type Review = {
+  id: string
+  rating: number
+  comment: string
+  userId: string
+  userName?: string
+  createdAt?: any
+}
+
 
 export default {
   name: 'ProductDetail',
@@ -74,6 +146,13 @@ export default {
     return {
       quantity: 1,
       product: null,
+
+      // newRating: 0,
+      // newComment: '',
+      // reviewsByProduct: {},
+      reviews: [] as Review[],
+      averageRating: 0,
+      totalReviews: 0,
 
       // Your product list stays the same
       mockProducts: [
@@ -244,17 +323,47 @@ export default {
 
   mounted() {
     this.loadProduct();
+    this.fetchReviews();
   },
 
   watch: {
     id() {
       this.loadProduct();
+       this.fetchReviews();
     }
   },
   methods: {
-  loadProduct() {
-    this.product = this.mockProducts.find(p => p.id === this.id);
-  },
+  async loadProduct() {
+  try {
+    const res = await fetch('http://localhost:3000/sets')
+    const sets = await res.json()
+
+    // Flatten all set items
+    const allItems = sets.flatMap((s: any) => s.items)
+
+    // Find product by id
+    const backendProduct = allItems.find(
+      (p: any) => String(p.id) === String(this.id)
+    )
+
+    if (!backendProduct) {
+      console.error('Product not found in backend')
+      return
+    }
+
+    // Optional: merge UI-only data (ingredients, extra images)
+    const mock = this.mockProducts.find(p => p.id === this.id)
+
+    this.product = {
+      ...backendProduct,
+      images: mock?.images || [backendProduct.image],
+      ingredients: mock?.ingredients || []
+    }
+
+  } catch (err) {
+    console.error('Failed to load product:', err)
+  }
+},
 
   addToFavorite() {
     const favorite = useFavoriteStore(); 
@@ -269,24 +378,110 @@ export default {
   },
 
   addToCart() {
-    const cart = useCartStore();
-    cart.addItem({
-      id: this.product.id,
-      name: this.product.name,
-      image: this.product.images[0],
-      price: Number(this.product.price.replace("$", "")),
-      qty: this.quantity,
-      unit: "set"
-    });
-    this.$router.push("/cart");
+  const cart = useCartStore();
+
+  const normalizedPrice =
+    typeof this.product.price === "string"
+      ? Number(this.product.price.replace("$", "").trim())
+      : Number(this.product.price);
+
+  cart.addItem({
+    id: String(this.product.id), // always string for Firestore consistency
+    name: this.product.name,
+    image: this.product.images?.[0] || "/default-product.jpg",
+    price: normalizedPrice,
+    qty: this.quantity > 0 ? this.quantity : 1,
+    unit: this.product.unit || "set", // fallback to "set"
+    category: "food" // optional: helps distinguish in backend
+  });
+
+  this.$router.push("/cart");
+},
+
+async fetchReviews() {
+  try {
+    const snap = await getDocs(collection(db, "reviews"))
+
+    const list: Review[] = []
+    let sum = 0
+
+    snap.forEach(doc => {
+      const data = doc.data()
+
+      const productReview = data.products?.find(
+        (p: any) => String(p.productId) === String(this.id)
+      )
+
+      if (productReview) {
+        list.push({
+          id: doc.id,
+          rating: productReview.rating,
+          comment: productReview.comment,
+          userId: data.userId,
+          userName: data.userName || "Anonymous",
+          createdAt: data.createdAt
+        })
+
+        sum += productReview.rating
+      }
+    })
+
+    this.reviews = list
+    this.totalReviews = list.length
+    this.averageRating = list.length
+      ? Number((sum / list.length).toFixed(1))
+      : 0
+
+  } catch (err) {
+    console.error("Failed to load reviews:", err)
   }
 }
+
+},
+
 
 };
 </script>
 
 <style scoped>
 /* your CSS unchanged */
+
+/* Review Section */
+.review-section {
+  margin-top: 40px;
+}
+
+.review-item {
+  border-bottom: 1px solid #eee;
+  padding: 12px 0;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.stars span {
+  color: #ddd;
+  font-size: 18px;
+}
+
+.stars .filled {
+  color: #f5a623;
+}
+
+
+/* Individual review card */
+.review-item {
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
 .product-detail-page {
   font-family: 'Baloo Da', cursive;
   padding: 20px;
@@ -398,4 +593,7 @@ export default {
 .actions button:hover {
   background-color: #4CAF50;
 }
+
+
+
 </style>
