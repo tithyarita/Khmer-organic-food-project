@@ -9,8 +9,8 @@
         "unit": "set",
         "rating": 3,
         "inStock": false,
-        "image": "http://localhost:3000/uploads/0262292f9a875b9d8402728974a76f41",
-        "stock": 32
+        "image": "http://localhost:3000/uploads/fcba8899b257a4b88b6261a3c51012c7",
+        "stock": 90
       },
       {
         "id": 2,
@@ -21,7 +21,7 @@
         "rating": 0,
         "inStock": false,
         "image": "http://localhost:3000/uploads/db3718ec67368f02bf53727907d1ea24",
-        "stock": 0
+        "stock": 89
       },
       {
         "id": 3,
@@ -32,7 +32,7 @@
         "rating": 0,
         "inStock": true,
         "image": "http://localhost:3000/uploads/6082ec152b3e83f4ec5d80b81bc7135c",
-        "stock": 4
+        "stock": 9
       },
       {
         "id": 4,
@@ -41,7 +41,7 @@
         "price": 14.79,
         "unit": "set",
         "rating": 0,
-        "stock": 0,
+        "stock": 23,
         "image": "http://localhost:3000/uploads/98807b9ff0a87dffb73760489ee90851"
       }
     ]
@@ -56,7 +56,7 @@
         "price": 9.9,
         "unit": "kg",
         "rating": 3,
-        "stock": 0,
+        "stock": 78,
         "image": "http://localhost:3000/uploads/21cb7dc29c979f8f549de6c08f8155aa"
       },
       {
@@ -66,7 +66,7 @@
         "price": 8.9,
         "unit": "set",
         "rating": 0,
-        "stock": 0,
+        "stock": 23,
         "image": "http://localhost:3000/uploads/2a7d2ab2feb070b0f2ce225acac62914"
       },
       {
@@ -76,7 +76,7 @@
         "price": 7.99,
         "unit": "set",
         "rating": 0,
-        "stock": 19,
+        "stock": 14,
         "image": "http://localhost:3000/uploads/3780098978aaed387761a6e94d4c1304"
       },
       {
@@ -86,7 +86,7 @@
         "price": 7.89,
         "unit": "set",
         "rating": 0,
-        "stock": 29,
+        "stock": 28,
         "image": "http://localhost:3000/uploads/8592bdf5f9f06fbd1e982c52327f1e57"
       }
     ]
@@ -101,18 +101,18 @@
         "price": 11.9,
         "unit": "set",
         "rating": 0,
-        "stock": 21,
+        "stock": 20,
         "image": "http://localhost:3000/uploads/9abc4c7775bbe3b756307802ad09f335"
       },
       {
         "id": 10,
-        "name": "Steamed Fish",
+        "name": "Brhok",
         "category": "Steamed",
         "price": 9,
         "unit": "kg",
         "rating": null,
         "stock": 88,
-        "image": "http://localhost:3000/uploads/8772e0b3729403a1488043d32487b74b"
+        "image": "http://localhost:3000/uploads/a7b56512df34b5c6ff67abd28ac4dcab"
       }
     ]
   }
