@@ -6,7 +6,7 @@
     "price": 6.55,
     "unit": "Kg",
     "rating": 4,
-    "stock": 80,
+    "stock": 76,
     "image": "http://localhost:3000/uploads/9067101aa4e9a78a20c2af48cbb41397"
   },
   {
@@ -26,7 +26,7 @@
     "price": 1.98,
     "unit": "kg",
     "rating": 1,
-    "stock": 86,
+    "stock": 80,
     "image": "http://localhost:3000/uploads/d46100bfeab7e48e21c37c5f58fdf461"
   },
   {
@@ -46,7 +46,7 @@
     "price": 4.76,
     "unit": "kg",
     "rating": 1,
-    "stock": 82.5,
+    "stock": 80.5,
     "image": "http://localhost:3000/uploads/500ffc01f67357d44d7e4ea7a2fe994d"
   },
   {
@@ -56,7 +56,7 @@
     "price": 2.9,
     "unit": "kg",
     "rating": 1,
-    "stock": 66,
+    "stock": 62,
     "image": "http://localhost:3000/uploads/0422ddd5456281839e4e2d4e2838bd22"
   },
   {
@@ -76,7 +76,7 @@
     "price": 4.12,
     "unit": "kg",
     "rating": 2,
-    "stock": 13,
+    "stock": 7.5,
     "image": "http://localhost:3000/uploads/a63fd62da48df1833bc9c07def990b2d"
   },
   {
@@ -86,7 +86,7 @@
     "price": 3.55,
     "unit": "Kg",
     "rating": 4,
-    "stock": 118,
+    "stock": 116,
     "image": "http://localhost:3000/uploads/913b00637141d8130db85332055c21bb"
   }
 ]

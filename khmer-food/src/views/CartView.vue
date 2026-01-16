@@ -9,6 +9,12 @@
         :key="index"
         class="cart-item"
       >
+      <!--Select Item Checkbox-->
+      <input
+        type="checkbox"
+        class="select-item"
+        v-model="item.selected"
+        />
         <button class="remove-btn" @click="cart.removeItem(index)">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -44,6 +50,10 @@
       <!-- SUMMARY -->
       <div class="summary-box">
         <h2>Order Summary</h2>
+        <div class="row">
+          <span>Selected Items</span>
+          <span>{{ selectedItems.length }}</span>
+        </div>
         <div class="row">
           <span>Sub Total</span>
           <span>${{ subtotal.toFixed(1) }}</span>
@@ -83,9 +93,17 @@ const router = useRouter()
 const weights = [0.5, 1.0, 1.5, 2.0] // for kg
 const sets = [1, 2, 3, 4]            // for set
 
-// Computed totals
+/* ✅ Selected items only */
+const selectedItems = computed(() =>
+  cart.items.filter(item => item.selected)
+)
+
+/* Totals based on selected items */
 const subtotal = computed(() =>
-  cart.items.reduce((sum, item) => sum + item.price * item.qty, 0)
+  selectedItems.value.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  )
 )
 const discount = computed(() => subtotal.value * 0.07)
 const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0))
@@ -134,7 +152,11 @@ const goToCheckout = () => {
   position: relative;
   transition: transform 0.2s;
 }
-
+.select-item {
+  transform: scale(1.3);
+  cursor: pointer;
+  margin-top: 6px;
+}
 .cart-item:hover {
   transform: translateY(-3px);
 }

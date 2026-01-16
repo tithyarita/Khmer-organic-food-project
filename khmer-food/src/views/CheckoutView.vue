@@ -77,6 +77,10 @@
     <!-- Price Summary -->
     <section class="summary">
       <div class="summary-row">
+        <span>Selected Items</span>
+        <span>{{ selectedItems.length }}</span>
+      </div>
+      <div class="summary-row">
         <span>Sub Total</span>
         <span>${{ subtotal.toFixed(2) }}</span>
       </div>
@@ -139,14 +143,19 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { getUserStorage, saveUserStorage } from '../loginstorage'
 
 const router = useRouter()
-
 const cart = useCartStore()
 
-
-// Computed totals
-const subtotal = computed(() =>
-  cart.items.reduce((sum, item) => sum + item.price * item.qty, 0)
+/* ✅ Only selected items from cart */
+const selectedItems = computed(() =>
+  cart.items.filter(item => item.selected)
 )
+
+/* Totals based on selected items */
+const subtotal = computed(() =>
+  selectedItems.value.reduce((sum, item) => sum + item.price * item.qty, 0)
+)
+
+
 const discount = computed(() => subtotal.value * 0.07)
 const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0))
 const total = computed(() => subtotal.value + delivery.value - discount.value)

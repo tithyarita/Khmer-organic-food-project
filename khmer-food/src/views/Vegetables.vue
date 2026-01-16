@@ -77,8 +77,8 @@ export default {
 <style scoped>
 .products {
   display: grid;
-  grid-template-columns: repeat(3, 350px);
-  gap: 2rem;
+  grid-template-columns: repeat(4, 300px);
+  gap: 1rem;
   justify-content: center;
   margin-top: 2rem;
   margin-bottom: 3rem;
