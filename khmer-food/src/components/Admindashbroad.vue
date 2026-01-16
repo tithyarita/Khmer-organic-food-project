@@ -52,6 +52,15 @@
           <span class="icon">📝</span>
           <div class="items-name">Check Blog</div>
         </router-link>
+        <router-link
+  to="/admin/contact"
+  class="menu-item"
+  :class="{ active: isActive('/admin/contact') }"
+>
+  <span class="icon">📍</span>
+  <div class="items-name">Contact</div>
+</router-link>
+
       </nav>
     </aside>
 

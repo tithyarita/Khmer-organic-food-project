@@ -1,40 +1,58 @@
 <template>
   <div class="profile-page">
     <aside class="left-panel">
-      <div class="avatar">
-        <img src="@/assets/forProfile/profile.png" alt="avatar" />
+      <div class="avatar" @click="editing && fileInput.click()">
+        <img :src="avatarPreview || defaultAvatar" alt="avatar" />
+        <input
+          type="file"
+          ref="fileInput"
+          hidden
+          accept="image/*"
+          @change="onFileChange"
+        />
       </div>
 
-      <button class="btn" @click="toggleEdit">{{ editing ? 'Cancel' : 'Edit' }}</button>
-      <button class="btn secondary" @click="saveChanges" :disabled="!editing">Save Changes</button>
+      <p v-if="editing" class="hint">Click photo to change</p>
+
+      <button class="btn" @click="toggleEdit">
+        {{ editing ? 'Cancel' : 'Edit' }}
+      </button>
+
+      <!-- ✅ SAVE BUTTON MOVED HERE -->
+      <button v-if="editing" class="btn save-btn" @click="saveChanges">
+        Save
+      </button>
     </aside>
 
     <main class="right-panel">
       <h1 class="title">My Profile</h1>
 
-      <form @submit.prevent="saveChanges" class="form">
+      <form class="form">
         <label class="field">
           <span class="label-text">Name</span>
-          <input type="text" v-model="form.name" :disabled="!editing" />
+          <input v-model="form.name" :disabled="!editing" />
         </label>
 
         <label class="field">
           <span class="label-text">Phone Number</span>
-          <input type="text" v-model="form.phone" :disabled="!editing" />
+          <input v-model="form.phone" :disabled="!editing" />
         </label>
 
         <label class="field">
           <span class="label-text">Email</span>
-          <input type="email" v-model="form.email" disabled />
+          <input v-model="form.email" disabled />
         </label>
 
         <div class="actions">
-          <button type="button" class="signout" @click="signOut">Sign Out</button>
+          <button type="button" class="signout" @click="signOut">
+            Sign Out
+          </button>
         </div>
       </form>
     </main>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
@@ -48,11 +66,32 @@ import { useFavoriteStore } from '../stores/favorite'
 const router = useRouter()
 const editing = ref(false)
 
+const defaultAvatar = '/forProfile/profile.png'
+const avatarPreview = ref('')
+const avatarBase64 = ref('')
+const fileInput = ref<HTMLInputElement | null>(null)
+
 const form = ref({
   name: '',
   phone: '',
   email: '',
 })
+
+const toggleEdit = () => {
+  editing.value = !editing.value
+}
+
+const onFileChange = (e: Event) => {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    avatarPreview.value = reader.result as string
+    avatarBase64.value = reader.result as string
+  }
+  reader.readAsDataURL(file)
+}
 
 onMounted(async () => {
   const user = getUserStorage()
@@ -61,30 +100,30 @@ onMounted(async () => {
   form.value.email = user.email
 
   const snap = await getDoc(doc(db, 'users', user.uid))
-  if (!snap.exists()) {
-    logoutUser()
-    return router.replace('/login')
-  }
-
   const data = snap.data()
-  form.value.name = data.name || ''
-  form.value.phone = data.phone || ''
+
+  form.value.name = data?.name || ''
+  form.value.phone = data?.phone || ''
+  avatarPreview.value = data?.avatar || ''
 })
 
 const saveChanges = async () => {
   const user = getUserStorage()
   if (!user) return
 
+  const avatar = avatarBase64.value || avatarPreview.value
+
   await updateDoc(doc(db, 'users', user.uid), {
     name: form.value.name,
     phone: form.value.phone,
+    avatar
   })
 
-  // ✅ UPDATE LOCAL STORAGE TOO
   saveUserStorage({
     ...user,
     name: form.value.name,
     phone: form.value.phone,
+    avatar
   })
 
   editing.value = false
@@ -94,13 +133,8 @@ const saveChanges = async () => {
 const signOut = async () => {
   const cart = useCartStore()
   const favorite = useFavoriteStore()
-  try {
-    await auth.signOut()
-  } catch (e) {
-    console.warn('Firebase signOut failed:', e)
-  }
 
-  // Clear local client data
+  await auth.signOut()
   logoutUser()
   cart.items = []
   favorite.clearFavorites()
@@ -113,137 +147,111 @@ const signOut = async () => {
   display: flex;
   min-height: 90vh;
   font-family: 'Baloo Tammudu 2', sans-serif;
+  background: linear-gradient(180deg, #f7fff0, #ffffff);
 }
 
-/* Left Panel */
+/* LEFT */
 .left-panel {
-  width: 30%;
-  background: #bbe18a;
-  padding: 2rem 1rem;
+  width: 32%;
+  background: linear-gradient(180deg, #7ed957, #b7f397);
+  padding: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.125rem;
+  border-radius: 0 40px 40px 0;
 }
 
 .avatar {
-  width: 15rem;
-  height: 15rem;
-  border-radius: 50%;
-  background: #ffd700;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.avatar img {
   width: 14rem;
   height: 14rem;
   border-radius: 50%;
-  object-fit: cover;
-  border: 0.375rem solid #fff;
-}
-
-.btn {
-  width: 60%;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 0.5rem;
-  background: #6ec007;
-  color: white;
-  font-weight: bold;
+  background: white;
+  padding: 6px;
   cursor: pointer;
 }
 
-.btn.secondary {
-  background: #76c642;
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-/* Right Panel */
+.hint {
+  margin-top: 10px;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.btn {
+  margin-top: 1.5rem;
+  background: white;
+  color: #3a7f1f;
+  padding: 0.8rem 2rem;
+  border-radius: 999px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+/* RIGHT */
 .right-panel {
   flex: 1;
-  padding: 2.3rem 3rem;
+  padding: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .title {
-  color: #6ec007;
   font-size: 2.6rem;
-  margin-bottom: 1.25rem;
+  color: #4caf50;
 }
 
 .form {
-  width: 50%;
-  max-width: 40rem;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 24px;
 }
 
 .field {
-  margin-bottom: 1.125rem;
+  margin-bottom: 1.3rem;
 }
 
 .label-text {
+  display: block;
   font-weight: 600;
-  font-size: 1.2rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
 }
 
 input {
   width: 100%;
   padding: 0.8rem;
-  border-radius: 0.625rem;
-  border: 1px solid #6ec007;
-  font-size: 1.1rem;
-  outline: none;
-}
-
-input:focus {
-  border-color: #4caf50;
-  box-shadow: 0 0 0 0.125rem rgba(76, 175, 80, 0.2);
+  border-radius: 999px;
+  border: 2px solid #e2f5d9;
 }
 
 .actions {
-  margin-top: 1.3rem;
+  margin-top: 2rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+}
+
+.save {
+  background: #4caf50;
+  color: white;
+  border-radius: 999px;
+  padding: 0.7rem 1.5rem;
+  border: none;
 }
 
 .signout {
-  background: #e53935;
+  background: #ff5252;
   color: white;
-  padding: 1.1rem;
+  border-radius: 999px;
+  padding: 0.7rem 1.5rem;
   border: none;
-  border-radius: 1rem;
-  cursor: pointer;
-  width: 100%;
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  .profile-page {
-    flex-direction: column;
-  }
-  .left-panel {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-around;
-  }
-  .avatar {
-    width: 6rem;
-    height: 6rem;
-  }
-  .avatar img {
-    width: 5rem;
-    height: 5rem;
-  }
-  .right-panel {
-    padding: 1rem;
-  }
-  .title {
-    font-size: 1.75rem;
-  }
 }
 </style>

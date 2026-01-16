@@ -2,18 +2,17 @@
   <div class="admin-blog">
     <h2>Admin Blog Dashboard</h2>
 
-    <!-- Add Blog Button -->
     <div class="actions">
       <button class="btn-add" @click="openAddBlog">➕ Add Blog</button>
     </div>
 
-    <!-- Blog Table -->
     <div class="blogs-table">
       <table>
         <thead>
           <tr>
             <th>Title</th>
-            <th>Created At</th>
+            <th>Created</th>
+            <th>Image</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -22,44 +21,36 @@
             <td>{{ blog.title }}</td>
             <td>{{ formatDate(blog.createdAt) }}</td>
             <td>
+              <img v-if="blog.image" :src="blog.image" class="thumb" />
+            </td>
+            <td>
               <button class="btn-edit" @click="openEditBlog(blog)">Edit</button>
               <button class="btn-delete" @click="deleteBlog(blog)">Delete</button>
             </td>
-          </tr>
-          <tr v-if="blogs.length === 0">
-            <td colspan="3" style="text-align:center">No blogs yet</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Blog Modal -->
-    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+    <div v-if="showModal" class="modal-overlay">
       <div class="modal-card">
-        <h3>{{ modalMode === 'add' ? 'Add New Blog' : 'Edit Blog' }}</h3>
+        <h3>{{ modalMode === 'add' ? 'Add Blog' : 'Edit Blog' }}</h3>
+
         <form @submit.prevent="saveBlog">
-          <div class="form-group">
-            <label>Title</label>
-            <input v-model="blogForm.title" type="text" required placeholder="Blog title" />
-          </div>
+          <input v-model="blogForm.title" placeholder="Title" required />
+          <textarea v-model="blogForm.content" placeholder="Content" required />
 
-          <div class="form-group">
-            <label>Image URL</label>
-            <input v-model="blogForm.image" type="text" placeholder="Image URL (optional)" />
-          </div>
-
-          <div class="form-group">
-            <label>Content</label>
-            <textarea v-model="blogForm.content" rows="6" placeholder="Write your blog..." required></textarea>
-          </div>
+          <input type="file" accept="image/*" @change="handleImageUpload" />
+          <img v-if="imagePreview" :src="imagePreview" class="preview"/>
 
           <div class="modal-actions">
-            <button type="button" class="btn-cancel" @click="closeModal">Cancel</button>
-            <button type="submit" class="btn-save">{{ loading ? 'Saving...' : 'Save Blog' }}</button>
+            <button type="button" @click="closeModal">Cancel</button>
+            <button type="submit">{{ loading ? 'Saving...' : 'Save' }}</button>
           </div>
         </form>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -69,7 +60,7 @@ import { collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc, Timestamp } 
 import { db } from '../../firebase'
 
 interface Blog {
-  id?: string
+  id?: number | string
   title: string
   content: string
   image?: string
@@ -78,32 +69,41 @@ interface Blog {
 
 const blogs = ref<Blog[]>([])
 const showModal = ref(false)
-const modalMode = ref<'add'|'edit'>('add')
-const editingBlogId = ref<string|null>(null)
+const modalMode = ref<'add' | 'edit'>('add')
+const editingBlogId = ref<string | null>(null)
 const loading = ref(false)
 
 const blogForm = ref<Blog>({
   title: '',
   content: '',
-  image: '',
-  createdAt: undefined
+  image: ''
 })
 
-// Fetch blogs from Firebase
+const imagePreview = ref<string | null>(null)
+
 onMounted(() => {
   const q = collection(db, 'blogs')
-  onSnapshot(q, snapshot => {
-    blogs.value = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...(doc.data() as Blog)
-    })).sort((a,b)=>b.createdAt?.seconds - a.createdAt?.seconds)
+  onSnapshot(q, snap => {
+    blogs.value = snap.docs.map(d => ({ id: d.id, ...(d.data() as Blog) }))
   })
 })
 
-// Modal functions
+function handleImageUpload(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    blogForm.value.image = reader.result as string
+    imagePreview.value = reader.result as string
+  }
+  reader.readAsDataURL(file)
+}
+
 function openAddBlog() {
   modalMode.value = 'add'
-  blogForm.value = { title:'', content:'', image:'' }
+  blogForm.value = { title: '', content: '', image: '' }
+  imagePreview.value = null
   editingBlogId.value = null
   showModal.value = true
 }
@@ -112,53 +112,48 @@ function openEditBlog(blog: Blog) {
   modalMode.value = 'edit'
   blogForm.value = { ...blog }
   editingBlogId.value = blog.id!
+  imagePreview.value = blog.image || null
   showModal.value = true
 }
 
 function closeModal() {
   showModal.value = false
-  blogForm.value = { title:'', content:'', image:'' }
+  imagePreview.value = null
 }
 
-// Save blog
 async function saveBlog() {
   loading.value = true
   try {
-    if(modalMode.value === 'add'){
-      await addDoc(collection(db, 'blogs'), {...blogForm.value, createdAt: Timestamp.now()})
-      alert('Blog added successfully!')
-    } else if(modalMode.value === 'edit' && editingBlogId.value){
-      await updateDoc(doc(db,'blogs',editingBlogId.value), {...blogForm.value})
-      alert('Blog updated successfully!')
+    if (modalMode.value === 'add') {
+      await addDoc(collection(db, 'blogs'), {
+        ...blogForm.value,
+        createdAt: Timestamp.now()
+      })
+    } else {
+      await updateDoc(doc(db, 'blogs', editingBlogId.value!), blogForm.value)
     }
     closeModal()
-  } catch(err) {
-    console.error(err)
-    alert('Failed to save blog')
-  } finally {
-    loading.value = false
+  } catch {
+    alert('Save failed')
   }
+  loading.value = false
 }
 
-// Delete blog
 async function deleteBlog(blog: Blog) {
-  if(confirm('Are you sure you want to delete this blog?')){
-    try {
-      await deleteDoc(doc(db, 'blogs', blog.id!))
-      alert('Blog deleted!')
-    } catch(err) {
-      console.error(err)
-      alert('Failed to delete blog')
-    }
+  if (confirm('Delete blog?')) {
+    await deleteDoc(doc(db, 'blogs', blog.id!))
   }
 }
 
-// Format Firebase timestamp
 function formatDate(ts?: Timestamp) {
-  if(!ts?.seconds) return '-'
-  return new Date(ts.seconds*1000).toLocaleDateString()
+  return ts ? new Date(ts.seconds * 1000).toLocaleDateString() : '-'
 }
 </script>
+
+<style scoped>
+.thumb { width:50px; border-radius:6px }
+.preview { width:200px; margin-top:10px }
+</style>
 
 <style scoped>
 .admin-blog{

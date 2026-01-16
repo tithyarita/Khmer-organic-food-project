@@ -1,18 +1,19 @@
 <template>
-  <div>
+  <main class="blog-page">
     <BlogBanner />
-    <FoodSection />
-  </div>
+    <BlogList />
+  </main>
 </template>
 
-<script lang="ts">
-import BlogBanner from "@/components/BlogBanner.vue";
-import FoodSection from "@/components/FoodSection.vue";
-
-export default {
-  components: {
-    BlogBanner,
-    FoodSection
-  }
-};
+<script setup lang="ts">
+import BlogBanner from "@/components/BlogBanner.vue"
+import BlogList from "@/components/BlogList.vue"
 </script>
+
+<style scoped>
+.blog-page{
+  background:#f3fbf2;
+  min-height:100vh;
+  padding-bottom:4rem;
+}
+</style>

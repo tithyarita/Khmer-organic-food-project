@@ -16,22 +16,22 @@
       <div class="contact-item">
         <img src="@/assets/forContact/house.png" alt="icon" class="icon" />
         <h3 class="contact-title">Visit us</h3>
-        <p class="contact-text">Toul Kork, Phnom Penh</p>
+        <p class="contact-text">{{ contact.address || 'Toul Kork, Phnom Penh' }}</p>
       </div>
       <div class="contact-item">
         <img src="@/assets/forContact/phone-call.png" alt="icon" class="icon" />
         <h3 class="contact-title">Call us</h3>
-        <p class="contact-text">+855 17213327 (telegram)</p>
+        <p class="contact-text">{{ contact.phone || '+855 17213327 (telegram)' }}</p>
       </div>
       <div class="contact-item">
         <img src="@/assets/forContact/email1.png" alt="icon" class="icon" />
         <h3 class="contact-title">E-mail</h3>
-        <p class="contact-text">Admin@gmail.com</p>
+        <p class="contact-text">{{ contact.email || 'Admin@gmail.com' }}</p>
       </div>
       <div class="contact-item">
         <img src="@/assets/forContact/facebook.png" alt="icon" class="icon" />
         <h3 class="contact-title">Facebook</h3>
-        <p class="contact-text">AdminPage</p>
+        <p class="contact-text">{{ contact.facebook || 'AdminPage' }}</p>
       </div>
     </section>
 
@@ -44,7 +44,7 @@
       <div class="map-wrapper">
         <iframe
           class="map-frame"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.7411808898805!2d104.89551077356433!3d11.570402744050202!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3109517388680e15%3A0x63057e6682968f5!2sInstitute%20of%20Technology%20of%20Cambodia!5e0!3m2!1sen!2skh!4v1764574871884!5m2!1sen!2skh"
+          :src="contact.mapUrl || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.7411808898805!2d104.89551077356433!3d11.570402744050202!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3109517388680e15%3A0x63057e6682968f5!2sInstitute%20of%20Technology%20of%20Cambodia!5e0!3m2!1sen!2skh!4v1764574871884!5m2!1sen!2skh'"
           allowfullscreen
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
@@ -60,17 +60,25 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  methods: {
-    goToMap() {
-      window.open(
-        "https://www.google.com/maps/place/Institute+of+Technology+of+Cambodia/@11.5685269,104.9182919,17z",
-        "_blank"
-      );
-    },
-  },
-};
+<script setup lang="ts">
+import { ref, onMounted } from "vue"
+import { db } from "../firebase"
+import { doc, getDoc } from "firebase/firestore"
+
+const contact = ref({
+  address: "",
+  phone: "",
+  email: "",
+  facebook: "",
+  mapUrl: ""
+})
+
+onMounted(async () => {
+  const snap = await getDoc(doc(db, "site", "contact"))
+  if (snap.exists()) {
+    contact.value = snap.data() as any
+  }
+})
 </script>
 
 <style scoped>

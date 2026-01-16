@@ -5,14 +5,37 @@
     <!-- Shipping Address -->
     <section class="box">
       <h3>Shipping Address</h3>
-      <div class="address">
+
+      <div v-if="!shippingEditable" class="address">
         <div>
-          <strong class="name">Tithyarita</strong>
-          <p class="contact">+885 17213337</p>
-          <p class="location">Sen Sok, Aeon2, Phnom Penh</p>
+          <strong class="name">{{ shipping.name || 'Guest' }}</strong>
+          <p class="contact">{{ shipping.phone || '-' }}</p>
+          <p class="location">{{ shipping.address || 'No address provided' }}</p>
         </div>
-        <span class="arrow">›</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="order-btn" style="padding:8px 12px;width:auto" @click="shippingEditable = true">Edit</button>
+        </div>
       </div>
+
+      <div v-else class="address-edit">
+        <label class="field"><span class="label-text">Name</span>
+          <input type="text" v-model="shipping.name" />
+        </label>
+
+        <label class="field"><span class="label-text">Phone</span>
+          <input type="text" v-model="shipping.phone" />
+        </label>
+
+        <label class="field"><span class="label-text">Address</span>
+          <textarea v-model="shipping.address" rows="3"></textarea>
+        </label>
+
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="order-btn" :disabled="savingAddress" @click="saveShipping">{{ savingAddress ? 'Saving...' : 'Save Address' }}</button>
+          <button class="order-btn" style="background:#ccc;color:#111" @click="shippingEditable = false">Cancel</button>
+        </div>
+      </div>
+
     </section>
 
     <!-- Payment Method -->
@@ -104,14 +127,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
 import axios from 'axios'
 // import router from '../router/index'
 import { useRouter } from 'vue-router'
 
 import { createOrder } from '../services/orderService'
-import { auth } from '../firebase.js'
+import { auth, db } from '../firebase.js'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { getUserStorage, saveUserStorage } from '../loginstorage'
 
 const router = useRouter()
 
@@ -140,6 +165,56 @@ const isProcessing = ref(false)
 const orderSuccess = ref(false)
 const errorMessage = ref('')
 
+// Shipping info (loaded from users collection)
+const shipping = ref({ name: '', phone: '', address: '' })
+const shippingEditable = ref(false)
+const savingAddress = ref(false)
+
+onMounted(async () => {
+  try {
+    const user = getUserStorage()
+    if (!user?.uid) return
+
+    const snap = await getDoc(doc(db, 'users', user.uid))
+    if (!snap.exists()) return
+
+    const data: any = snap.data()
+    shipping.value.name = data.name || user.name || ''
+    shipping.value.phone = data.phone || user.phone || ''
+    shipping.value.address = data.address || (data.shipping && data.shipping.address) || ''
+  } catch (e) {
+    console.warn('Failed to load shipping info:', e)
+  }
+})
+
+async function saveShipping() {
+  const user = getUserStorage()
+  if (!user?.uid) {
+    alert('Please login to save shipping information')
+    return
+  }
+
+  savingAddress.value = true
+  try {
+    await updateDoc(doc(db, 'users', user.uid), {
+      name: shipping.value.name,
+      phone: shipping.value.phone,
+      address: shipping.value.address,
+      updatedAt: new Date()
+    })
+
+    saveUserStorage({ ...user, name: shipping.value.name, phone: shipping.value.phone, address: shipping.value.address })
+
+    shippingEditable.value = false
+    alert('Shipping address saved')
+  } catch (e) {
+    console.error('Failed to save shipping info', e)
+    alert('Failed to save address. Try again.')
+  } finally {
+    savingAddress.value = false
+  }
+}
+
 // Place order
 async function placeOrder() {
   if (!selectedPayment.value) {
@@ -156,13 +231,25 @@ async function placeOrder() {
   errorMessage.value = ''
 
   try {
+    // Normalize cart items for backend (ensure numeric id, clear category for sets)
+    const normalizedItems = cart.items.map((item: any) => {
+      const idNum = Number(item.id)
+      const category = item.category
+        ? String(item.category).toLowerCase()
+        : (item.unit === 'set' ? 'sets' : undefined)
+
+      return {
+        id: Number.isNaN(idNum) ? item.id : idNum,
+        category,
+        quantity: item.qty,
+        name: item.name || item.title || '',
+        price: item.price
+      }
+    })
+
     // Call backend payment endpoint (best-effort)
     await axios.post('http://localhost:3000/payment-success', {
-      items: cart.items.map(item => ({
-        id: item.id,
-        category: item.category,
-        quantity: item.qty
-      }))
+      items: normalizedItems.map(i => ({ id: i.id, category: i.category, quantity: i.quantity }))
     }).catch((e) => {
       // don't fail entire flow if local backend is down; log and continue
       console.warn('Payment backend call failed, continuing:', e.message || e)
@@ -184,11 +271,11 @@ async function placeOrder() {
 
       const order = await createOrder({
         user,
-        items: cart.items.map(i => ({
+        items: normalizedItems.map(i => ({
           id: i.id,
-          name: i.name || i.title || '',
+          name: i.name,
           price: i.price,
-          qty: i.qty,
+          qty: i.quantity,
           category: i.category
         })),
         subtotal: subtotal.value,
@@ -206,8 +293,8 @@ async function placeOrder() {
       // show success
       // orderSuccess.value = true
 
-      // redirect to review page with orderId
-      router.push(`/review/${order.id}`)
+      // redirect to thank you page with orderId
+      router.push(`/thankyou/${order.id}`)
 
 
     } catch (e) {
@@ -249,17 +336,17 @@ function goHome() {
   max-width: 720px;
   margin: 2rem auto;
   padding: 2.5rem;
-  font-family: 'Roboto', sans-serif;
-  background: #fdfdfd;
-  border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  font-family: 'Poppins', sans-serif;
+  background: #fff8f0; /* soft pastel background */
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 
 /* Title */
 h1 {
   text-align: center;
-  color: #4caf50;
-  font-family: 'Baloo Tammudu 2', cursive;
+  color: #ff6f61;
+  font-family: 'Baloo 2', cursive;
   font-size: 3rem;
   margin-bottom: 2.5rem;
   line-height: 1.2;
@@ -268,19 +355,21 @@ h1 {
 /* Box Sections */
 .box {
   margin-bottom: 3rem;
-  background: #fff;
+  background: #fff3e6;
   padding: 2.5rem 2rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(255,111,97,0.08);
   transition: all 0.3s ease;
 }
 
 .box h3 {
   margin-bottom: 1.5rem;
   font-size: 1.6rem;
-  color: #333;
+  color: #ff6f61;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Address */
@@ -289,60 +378,115 @@ h1 {
   justify-content: space-between;
   align-items: center;
   padding: 1.2rem;
-  background: #f9f9f9;
-  border-radius: 10px;
+  background: #fff7f0;
+  border-radius: 15px;
   cursor: pointer;
 }
 
 .address .name {
   font-size: 1.2rem;
   font-weight: 600;
+  color: #ff6f61;
 }
 
-.arrow {
-  font-size: 1.8rem;
-  color: #4caf50;
+.address .contact,
+.address .location {
+  font-size: 0.95rem;
+  color: #555;
 }
 
-/* Payment */
+/* Edit Button */
+.address .order-btn {
+  background: #ffaf91;
+  border-radius: 12px;
+  padding: 8px 16px;
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.address .order-btn:hover {
+  background: #ff6f61;
+}
+
+/* Editable Fields */
+.address-edit .field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.address-edit .label-text {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #ff6f61;
+}
+
+.address-edit input,
+.address-edit textarea {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #ffc1b0;
+  outline: none;
+  font-size: 1rem;
+}
+.address-edit input:focus,
+.address-edit textarea:focus {
+  border-color: #ff6f61;
+  box-shadow: 0 0 8px rgba(255,111,97,0.2);
+}
+
+/* Edit Actions */
+.address-edit button.order-btn {
+  border-radius: 12px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.address-edit button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Payment Options */
 .payment-options {
   display: flex;
   flex-direction: column;
+  gap: 0.8rem;
 }
-
 .payment-item {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  background: #fff2e6;
   display: flex;
   align-items: center;
-  padding: 1rem 0;
-  font-size: 1.05rem;
-  border-bottom: 1px solid #eee;
+  gap: 0.6rem;
   cursor: pointer;
+  transition: 0.2s;
+}
+.payment-item:hover {
+  background: #ffdac9;
 }
 
-.payment-item input {
-  margin-right: 12px;
-}
-
+/* Payment Input Fields */
 .payment-details input {
   width: 100%;
   padding: 1rem;
   margin-top: 0.8rem;
   font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px solid #ffc1b0;
 }
-
 .payment-details input:focus {
-  border-color: #4caf50;
-  outline: none;
+  border-color: #ff6f61;
+  box-shadow: 0 0 8px rgba(255,111,97,0.2);
 }
 
 /* Price Summary */
 .summary {
-  background: #fff;
+  background: #fff5ed;
   padding: 2rem 1.8rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(255,111,97,0.08);
 }
 
 .summary-row {
@@ -354,7 +498,7 @@ h1 {
 }
 
 .discount {
-  color: #4caf50;
+  color: #ff6f61;
 }
 
 .total {
@@ -362,7 +506,7 @@ h1 {
   justify-content: space-between;
   font-size: 1.45rem;
   font-weight: 700;
-  color: #e53935;
+  color: #ff4a3a;
   margin-top: 1.2rem;
 }
 
@@ -372,10 +516,10 @@ h1 {
   width: 220px;
   padding: 1.1rem;
   margin: 2.5rem auto 0 auto;
-  background: #4caf50;
+  background: #ff6f61;
   color: white;
   border: none;
-  border-radius: 15px;
+  border-radius: 20px;
   font-size: 18.5px;
   font-weight: 700;
   cursor: pointer;
@@ -383,61 +527,19 @@ h1 {
 }
 
 .order-btn:hover {
-  background: #43a047;
+  background: #ff4a3a;
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 15px rgba(255,111,97,0.15);
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-  .checkout-page {
-    padding: 1.5rem;
-  }
-
-  .order-btn {
-    width: 100%;
-  }
-}
-
-/* Modal + Spinner */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.45);
-  z-index: 2000;
-  padding: 1.5rem;
-}
-
-.modal-card {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  text-align: center;
-  max-width: 420px;
-  width: 100%;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
-}
-
-.modal-card.success { border-top: 6px solid #4caf50 }
-
-.modal-card .check {
-  font-size: 3.2rem;
-  color: #4caf50;
-  margin-bottom: 0.6rem;
-}
-
-.modal-actions { margin-top: 1.4rem }
-
+/* Spinner */
 .spinner {
   display: inline-block;
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 3px solid rgba(0,0,0,0.08);
-  border-top-color: #4caf50;
+  border: 3px solid rgba(255,111,97,0.3);
+  border-top-color: #ff6f61;
   animation: spin 1s linear infinite;
   vertical-align: middle;
 }
@@ -449,13 +551,50 @@ h1 {
   margin-bottom: 1rem;
 }
 
-.btn-with-spinner { display: inline-flex; align-items: center; gap: .6rem }
-
 @keyframes spin { to { transform: rotate(360deg) } }
 
-.order-btn[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  z-index: 2000;
+  padding: 1.5rem;
 }
+
+.modal-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 18px;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.modal-card.success { border-top: 6px solid #4BB543; }
+
+.modal-card .check {
+  font-size: 3.2rem;
+  color: #4BB543;
+  margin-bottom: 0.6rem;
+}
+
+.modal-actions button.order-btn {
+  background: #4BB543;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .checkout-page {
+    padding: 1.5rem;
+  }
+  .order-btn {
+    width: 100%;
+  }
+}
+
 </style>

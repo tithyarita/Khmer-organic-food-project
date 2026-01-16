@@ -1,72 +1,96 @@
 <template>
-  <section class="banner">
-    <img src="/forBlog/BlogBanner.png" class="banner-img" alt="Khmer Food Banner" />
+  <section class="cute-banner">
+    <img src="/forBlog/BlogBanner.png" class="banner-bg" />
 
-    <div class="banner-text">
-      <h2 class="text-green">Khmer</h2>
+    <div class="cute-overlay"></div>
 
-      <div class="blog-title">
-        <img class="imBanner" src="/forBlog/leaf.png" alt="Icon" />
-        <h1 class="text-main">Blog</h1>
-      </div>
-
-      <h2 class="text-green">Food</h2>
+    <div class="cute-content">
+      <span class="cute-tag">🌱 Khmer Food</span>
+      <h1>Our Lovely Blog</h1>
+      <p>
+        Discover tasty Cambodian recipes, sweet farm stories and fresh ideas from nature.
+      </p>
     </div>
   </section>
 </template>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@400;500;600;700&display=swap');
-</style>
-
 <style scoped>
-.banner {
-  position: relative;
-  width: 100%;
+.cute-banner{
+  position:relative;
+  height:380px;
+  margin:2rem 4%;
+  border-radius:30px;
+  overflow:hidden;
+  box-shadow:0 25px 50px rgba(0,0,0,0.15);
 }
 
-.banner-img {
-  width: 100%;
-  height: 20.625rem;
-  object-fit: cover;
+.banner-bg{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-.banner-text {
-  text-align: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.cute-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    180deg,
+    rgba(40,120,40,0.25),
+    rgba(20,80,20,0.8)
+  );
 }
 
-.blog-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
+.cute-content{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:white;
+  padding:2rem;
 }
 
-.text-green {
-  color: #59b500;
-  font-size: 2.5rem;
-  margin: 0;
-  font-weight: 700;
-  font-family: "Baloo Tammudu 2", sans-serif;
-  line-height: 2rem;
+.cute-tag{
+  background:rgba(255,255,255,0.2);
+  padding:8px 18px;
+  border-radius:999px;
+  font-size:0.85rem;
+  margin-bottom:1rem;
+  letter-spacing:1px;
 }
 
-.text-main {
-  color: #2d7600;
-  font-size: 5rem;
-  margin: 0;
-  font-weight: 800;
-  font-family: "Baloo Tammudu 2", sans-serif;
-  line-height: 0.5rem;
+.cute-content h1{
+  font-size:3rem;
+  margin:0;
+  font-weight:900;
+  background:linear-gradient(135deg,#b8ff9c,#5fcf65);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
-.imBanner {
-  width: 5rem;
-  height: 5rem;
-  margin-bottom: 1rem;
+.cute-content p{
+  max-width:680px;
+  margin-top:1rem;
+  font-size:1.05rem;
+  line-height:1.6;
+  color:#ecffec;
+}
+
+@media(max-width:768px){
+  .cute-banner{
+    height:280px;
+    margin:1rem;
+    border-radius:20px;
+  }
+
+  .cute-content h1{
+    font-size:2rem;
+  }
+
+  .cute-content p{
+    font-size:0.95rem;
+  }
 }
 </style>
