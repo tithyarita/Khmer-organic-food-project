@@ -96,6 +96,7 @@ function addToFavorite(product: any) {
 </script>
 
 <template>
+  
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -171,14 +172,14 @@ function addToFavorite(product: any) {
   border: 1px solid #ccc;
   border-radius: 0.5rem;
   padding: 1rem;
-  width: 350px;
-  height: 470px;
+  width: 300px;
+  height: 380px;
   box-shadow: 0 0.25rem 0.5rem rgba(133, 237, 121, 0.1);
   font-family: 'Baloo Da', cursive;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 3rem;
+  gap: 1rem;
   background: #fff;
   transition: 0.3s ease;
 }
@@ -232,7 +233,7 @@ function addToFavorite(product: any) {
 
 .card-image img {
   max-width: 250px;
-  height: 180px;
+  height: 130px;
   border-radius: 0.25rem;
 }
 
@@ -278,4 +279,5 @@ function addToFavorite(product: any) {
 .product-price {
   color: #6EC007;
 }
+
 </style>

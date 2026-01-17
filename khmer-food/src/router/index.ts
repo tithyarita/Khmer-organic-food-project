@@ -15,6 +15,8 @@ import AboutView from '../views/AboutView.vue'
 import ContactView from '../views/ContactView.vue'
 import BlogView from '../views/BlogView.vue'
 import ReviewPage from '../views/ReviewPage.vue'
+import ThankYouView from '../views/ThankYouView.vue'
+import ItemRatingView from '../views/ItemRatingView.vue'
 
 import { auth, db } from '../firebase'
 import { doc, getDoc } from 'firebase/firestore'
@@ -37,6 +39,8 @@ const routes: RouteRecordRaw[] = [
   { path: '/contact', name: 'Contact', component: ContactView },
   { path: '/blog', name: 'Blog', component: BlogView },
   { path: '/review/:orderId', name: 'ReviewPage', component: ReviewPage, props: true },
+  { path: '/thankyou/:orderId', name: 'ThankYou', component: ThankYouView, props: true },
+  { path: '/rate/:itemId', name: 'ItemRating', component: ItemRatingView, props: true },
 
   // Login / Signup
   { path: '/loginSignup', name: 'LoginSignUp', component: LoginSignUpView, meta: { hideLayout: true } },
@@ -59,6 +63,8 @@ const routes: RouteRecordRaw[] = [
     { path: 'orders', name: 'AdminOrders', component: () => import('../views/admin/AdminOrders.vue') },
     { path: 'users', name: 'AdminUsers', component: () => import('../views/admin/AdminUsers.vue') },
     { path: 'blogs', name: 'AdminBlog', component: () => import('../views/admin/AdminBlog.vue') },
+    { path: 'contact', name: 'AdminContact', component: () => import('../views/admin/AdminContact.vue') },
+
   ],
 },
 
