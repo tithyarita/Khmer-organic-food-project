@@ -54,6 +54,7 @@
               <div class="order-total"><strong>Total:</strong> {{ formatCurrency(ord.total || 0) }}</div>
               <div class="order-items">
                 <div v-for="it in ord.items || []" :key="it.id" class="order-item">
+                  <img v-if="it.image" :src="it.image.startsWith('http') ? it.image : `http://localhost:3000/uploads/${it.image}`" alt="it.name" class="item-image" />
                   <span class="item-name">{{ it.name }}</span>
                   <span class="item-qty">×{{ it.qty }}</span>
                   <span class="item-price">{{ formatCurrency((it.price||0) * it.qty) }}</span>
@@ -280,6 +281,14 @@ tr:hover {
 
 .btn-edit:hover {
   background-color: #e67e22;
+}
+
+.item-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 8px;
 }
 
 .muted { color: #666; font-size: 0.9rem; }

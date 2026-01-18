@@ -236,6 +236,41 @@ async function placeOrder() {
     return
   }
 
+  const user = auth.currentUser
+  if (!user) {
+    errorMessage.value = 'Please log in to place an order.'
+    return
+  }
+
+  // Get user name from users collection
+  let userName = user.displayName || user.email
+  try {
+    const userRef = doc(db, 'users', user.uid)
+    const userSnap = await getDoc(userRef)
+    if (userSnap.exists()) {
+      const userData = userSnap.data()
+      userName = userData.name || userName
+    }
+  } catch (e) {
+    console.warn('Failed to get user name:', e)
+  }
+
+  const orderUser = { uid: user.uid, email: user.email, name: userName }
+
+  // Check if user is admin
+  try {
+    const adminRef = doc(db, 'admin', user.uid)
+    const adminSnap = await getDoc(adminRef)
+    if (adminSnap.exists()) {
+      errorMessage.value = 'Admins cannot place orders.'
+      return
+    }
+  } catch (e) {
+    console.error('Error checking admin status:', e)
+    errorMessage.value = 'Error processing order. Please try again.'
+    return
+  }
+
   isProcessing.value = true
   errorMessage.value = ''
 
@@ -252,7 +287,8 @@ async function placeOrder() {
         category,
         quantity: item.qty,
         name: item.name || item.title || '',
-        price: item.price
+        price: item.price,
+        image: item.image // include image
       }
     })
 
@@ -278,15 +314,20 @@ async function placeOrder() {
       //   status: 'paid'
       // })
 
+      // Convert item images to base64
+    const itemsWithImages = normalizedItems.map(i => {
+      return {
+        id: i.id,
+        name: i.name,
+        price: i.price,
+        qty: i.quantity,
+        category: i.category,
+        image: i.image // store the filename
+      }
+    })
       const order = await createOrder({
-        user,
-        items: normalizedItems.map(i => ({
-          id: i.id,
-          name: i.name,
-          price: i.price,
-          qty: i.quantity,
-          category: i.category
-        })),
+        user: orderUser,
+        items: itemsWithImages,
         subtotal: subtotal.value,
         delivery: delivery.value,
         discount: discount.value,

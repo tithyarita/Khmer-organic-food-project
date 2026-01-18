@@ -40,6 +40,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/blog', name: 'Blog', component: BlogView },
   { path: '/review/:orderId', name: 'ReviewPage', component: ReviewPage, props: true },
   { path: '/thankyou/:orderId', name: 'ThankYou', component: ThankYouView, props: true },
+  { path: '/orders', name: 'Orders', component: () => import('../views/ViewOrders.vue'), meta: { requiresAuth: true } },
   { path: '/rate/:itemId', name: 'ItemRating', component: ItemRatingView, props: true },
 
   // Login / Signup
