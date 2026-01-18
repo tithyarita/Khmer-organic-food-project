@@ -44,6 +44,9 @@
         </label>
 
         <div class="actions">
+          <button type="button" class="orders-btn" @click="goToOrders">
+            My Orders
+          </button>
           <button type="button" class="signout" @click="signOut">
             Sign Out
           </button>
@@ -139,6 +142,10 @@ const signOut = async () => {
   cart.items = []
   favorite.clearFavorites()
   router.replace('/loginSignup')
+}
+
+const goToOrders = () => {
+  router.push('/orders')
 }
 </script>
 
@@ -249,6 +256,14 @@ input {
 
 .signout {
   background: #ff5252;
+  color: white;
+  border-radius: 999px;
+  padding: 0.7rem 1.5rem;
+  border: none;
+}
+
+.orders-btn {
+  background: #2196f3;
   color: white;
   border-radius: 999px;
   padding: 0.7rem 1.5rem;

@@ -1,40 +1,96 @@
 <template>
-  <div class="thankyou-page">
-    <div class="container">
-      <div class="thankyou-header">
-        <div class="check-icon">✓</div>
-        <h1>Thank You for Your Order!</h1>
-        <p>Your payment has been processed successfully.</p>
-        <p>Order ID: {{ orderId }}</p>
+  <div class="receipt-page">
+    <div class="receipt">
+
+      <!-- Receipt Header -->
+      <div class="receipt-header">
+        <h1>🧾 Fresh Market</h1>
+        <p class="subtitle">Vegetables & Meat Shop</p>
+        <div class="success">✔ PAYMENT SUCCESSFUL</div>
       </div>
 
-      <div class="order-summary">
-        <h2>Order Summary</h2>
-        <div v-if="order" class="summary-details">
-          <p><strong>Total:</strong> ${{ order.total?.toFixed(2) }}</p>
-          <p><strong>Items:</strong></p>
-          <ul>
-            <li v-for="item in order.items" :key="item.id">
-              {{ item.name }} (Qty: {{ item.qty }}) - ${{ item.price?.toFixed(2) }}
-              <button class="rate-btn" @click="goToRating(item)">Rate This Item</button>
-            </li>
-          </ul>
+      <!-- Receipt Info -->
+      <div class="receipt-info">
+        <div>
+          <span>Order ID</span>
+          <span>{{ orderId }}</span>
         </div>
-        <div v-else>
-          <p>Loading order details...</p>
+        <div>
+          <span>Date</span>
+          <span>{{ orderDate }}</span>
+        </div>
+        <div>
+          <span>Time</span>
+          <span>{{ orderTime }}</span>
         </div>
       </div>
 
+      <div class="divider"></div>
+
+      <!-- Items -->
+      <div v-if="order" class="receipt-items">
+        <div class="item-header">
+          <span>Item</span>
+          <span>Qty</span>
+          <span>Price</span>
+        </div>
+
+        <div
+          class="item-row"
+          v-for="item in order.items"
+          :key="item.id"
+        >
+          <span>{{ item.name }}</span>
+          <span>x{{ item.qty }}</span>
+          <span>${{ item.price?.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div v-else class="loading">
+        Loading receipt...
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Totals -->
+      <div v-if="order" class="totals">
+        <div>
+          <span>Subtotal</span>
+          <span>${{ order.subtotal?.toFixed(2) }}</span>
+        </div>
+        <div>
+          <span>Delivery</span>
+          <span>${{ order.delivery?.toFixed(2) }}</span>
+        </div>
+        <div>
+          <span>Discount</span>
+          <span>- ${{ order.discount?.toFixed(2) }}</span>
+        </div>
+        <div class="total">
+          <span>Total Paid</span>
+          <span>${{ order.total?.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div class="divider dashed"></div>
+
+      <!-- Footer -->
+      <div class="receipt-footer">
+        <p>Thank you for shopping with us 🥬🥩</p>
+        <p class="small">Fresh food • Fast delivery • Fair price</p>
+      </div>
+
+      <!-- Actions -->
       <div class="actions">
-        <button class="btn-primary" @click="goHome">Continue Shopping</button>
-        <button class="btn-secondary" @click="goToOrders">View My Orders</button>
+        <button @click="goHome">Continue Shopping</button>
+        <button class="secondary" @click="goToOrders">My Orders</button>
       </div>
+
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getOrderById } from '../services/orderService'
 
@@ -46,131 +102,143 @@ const order = ref<any>(null)
 
 onMounted(async () => {
   if (orderId) {
-    try {
-      order.value = await getOrderById(orderId)
-    } catch (e) {
-      console.error('Failed to load order:', e)
-    }
+    order.value = await getOrderById(orderId)
   }
 })
 
-function goToRating(item: any) {
-  // Assuming a rating page for each item, e.g., /rate/:itemId
-  router.push(`/rate/${item.id}`)
-}
+const orderDate = computed(() => {
+  if (!order.value?.createdAt) return '-'
+  return new Date(order.value.createdAt).toLocaleDateString()
+})
+
+const orderTime = computed(() => {
+  if (!order.value?.createdAt) return '-'
+  return new Date(order.value.createdAt).toLocaleTimeString()
+})
 
 function goHome() {
   router.push('/')
 }
 
 function goToOrders() {
-  // Assuming there's an orders page, or redirect to profile
-  router.push('/profile')
+  router.push('/orders')
 }
 </script>
-
 <style scoped>
-.thankyou-page {
+  .receipt-page {
   min-height: 100vh;
+  background: #f3f3f3;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: #f9f9f9;
+  align-items: center;
   padding: 2rem;
+  font-family: 'Courier New', monospace;
 }
 
-.container {
-  max-width: 800px;
-  background: white;
-  border-radius: 12px;
-  padding: 3rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+.receipt {
+  width: 380px;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+.receipt-header {
   text-align: center;
 }
 
-.thankyou-header {
-  margin-bottom: 2rem;
+.receipt-header h1 {
+  margin: 0;
+  font-size: 1.6rem;
 }
 
-.check-icon {
-  font-size: 4rem;
+.subtitle {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.success {
+  margin-top: 0.6rem;
   color: #4caf50;
-  margin-bottom: 1rem;
+  font-weight: bold;
 }
 
-h1 {
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-p {
-  color: #666;
-  margin-bottom: 0.5rem;
-}
-
-.order-summary {
-  margin-bottom: 2rem;
-  text-align: left;
-}
-
-.summary-details ul {
-  list-style: none;
-  padding: 0;
-}
-
-.summary-details li {
+.receipt-info div,
+.totals div {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
+  margin: 0.4rem 0;
+  font-size: 0.85rem;
 }
 
-.rate-btn {
-  background: #ff9800;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
+.divider {
+  border-top: 1px solid #ddd;
+  margin: 1rem 0;
 }
 
-.rate-btn:hover {
-  background: #e68900;
+.divider.dashed {
+  border-top: 1px dashed #bbb;
+}
+
+.item-header,
+.item-row {
+  display: grid;
+  grid-template-columns: 1fr 40px 70px;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+.item-header {
+  font-weight: bold;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 0.3rem;
+}
+
+.item-row span:last-child {
+  text-align: right;
+}
+
+.totals {
+  font-size: 0.85rem;
+}
+
+.total {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.receipt-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.small {
+  font-size: 0.7rem;
+  color: #888;
 }
 
 .actions {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
-.btn-primary {
+.actions button {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
   background: #4caf50;
   color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
 }
 
-.btn-primary:hover {
-  background: #45a049;
-}
-
-.btn-secondary {
+.actions button.secondary {
   background: #ccc;
   color: #333;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
 }
-
-.btn-secondary:hover {
-  background: #bbb;
+.actions button:hover {
+  opacity: 0.9;
 }
 </style>
