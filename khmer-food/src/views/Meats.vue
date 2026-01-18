@@ -70,7 +70,7 @@ function addToFavorite(product: any) {
 .products {
   display: grid;
   grid-template-columns: repeat(4, 300px);
-  gap: 1rem;
+  gap: 2rem;
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 2rem;
@@ -78,7 +78,7 @@ function addToFavorite(product: any) {
 }
 .Title {
   text-align: center;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
   font-size: 2.5rem;
   margin-top: 2rem;
   color: #548D0C;

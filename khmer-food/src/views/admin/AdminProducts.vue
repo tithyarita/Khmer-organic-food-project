@@ -43,6 +43,7 @@
             <th>Category</th>
             <th>Price</th>
             <th>Stock</th>
+            <!-- <th>Discount</th> -->
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -57,7 +58,20 @@
               {{ item.name }}
             </td>
             <td>{{ item.category }}</td>
-            <td>${{ item.price }}</td>
+            <!-- <td>${{ item.price }}</td> -->
+             <td>
+              <template v-if="item.discount && item.discount > 0">
+                <span class="old-price">${{ item.price }}</span>
+                <span class="new-price">
+                  ${{ (item.price - (item.price * item.discount) / 100).toFixed(2) }}
+                </span>
+                <span class="discount-text">-{{ item.discount }}%</span>
+              </template>
+              <template v-else>
+                ${{ item.price }}
+              </template>
+            </td>
+
             <td>{{ item.stock }}</td>
             <td>
               <span
@@ -105,6 +119,9 @@
           <option value="set">set</option>
         </select>
 
+        <label>Discount (%)</label>
+        <input type="number" v-model.number="form.discount" min="0" max="100" />
+
         <label>Category</label>
         <select v-model="form.category">
           <option>Vegetables</option>
@@ -143,6 +160,15 @@
 
         <label>Price</label>
         <input v-model.number="form.price" type="number" />
+
+        <label>Unit</label>
+        <select v-model="form.unit">
+          <option value="kg">kg</option>
+          <option value="set">set</option>
+        </select>
+
+        <label>Discount (%)</label>
+        <input type="number" v-model.number="form.discount" min="0" max="100" />
 
         <label>Category</label>
         <select v-model="form.category">
@@ -200,6 +226,7 @@ const form = ref({
   rating: 0,
   stock: 0,
   category: 'Vegetables',
+  discount: 0,
   imageFile: null as File | null
 })
 
@@ -247,7 +274,7 @@ const toggleSelectAll = () => {
 
 // ---------------- Add/Edit ----------------
 const openAddModal = () => {
-  form.value = { id: null, name: '', price: 0, unit: 'kg', rating: 0, stock: 0, category: 'Vegetables', imageFile: null }
+  form.value = { id: null, name: '', price: 0, unit: 'kg', discount: 0, rating: 0, stock: 0, category: 'Vegetables', imageFile: null }
   showAddModal.value = true
 }
 
@@ -308,7 +335,7 @@ const placeholderImg = '/placeholder.png'
 
 .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 20px; margin-bottom: 20px; }
 .action-box { padding: 20px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-radius: 6px; cursor: pointer; }
-.action-box.add { background: linear-gradient(135deg, #53b400, #4a9a00); }
+.action-box.add { background: linear-gradient(125deg, #53b400, #4a9a00); }
 .action-box.update { background: linear-gradient(135deg, #3498db, #2980b9); }
 .action-box.alert { background: linear-gradient(135deg, #f39c12, #e67e22); }
 
@@ -317,7 +344,7 @@ const placeholderImg = '/placeholder.png'
 
 .table-wrapper { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
-th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e0e0e0; }
 tr:hover { background-color: #f9f9f9; }
 
 .btn-edit { background-color: #3498db; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-right: 6px; }
@@ -332,10 +359,28 @@ tr:hover { background-color: #f9f9f9; }
 .badge.warning { background-color: #f93535; color: white; }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.modal { background: white; padding: 25px; border-radius: 8px; width: 400px; display: flex; flex-direction: column; gap: 10px; }
+.modal { background: white; padding: 25px; border-radius: 8px; width: 400px; display: flex; flex-direction: column; gap: 0px; }
 .modal input, .modal select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
-.btn-save { background: #53b400; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; }
-.btn-cancel { background: #e74c3c; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; }
+.btn-save { background: #53b400; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin-top: 5px; }
+.btn-cancel { background: #e74c3c; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin-top: 5px; }
 .bulk-actions { margin-top: 10px; }
+
+.old-price {
+  text-decoration: line-through;
+  color: #999;
+  margin-right: 0.5rem;
+}
+
+.new-price {
+  color: #6EC007;
+  font-weight: bold;
+}
+
+.discount-text {
+  color: #ff0000;   /* plain red */
+  font-weight: bold;
+  margin-left: 1rem;
+}
+
 </style>

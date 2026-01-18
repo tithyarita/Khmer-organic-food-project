@@ -42,7 +42,7 @@ function removeFromFavorite(product: any) {
 /* Page */
 .favorite-page {
   padding: 2rem 1rem;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
   overflow-x: hidden; /* 🔥 prevent side scroll */
 }
 

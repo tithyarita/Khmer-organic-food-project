@@ -24,7 +24,21 @@
         <div class="item-info">
           <div class="name-price">
             <h3 class="item-name">{{ item.name }}</h3>
-            <p class="unit-price">${{ item.price.toFixed(1) }} per {{ item.unit }}</p>
+            <!-- <p class="unit-price">${{ item.price.toFixed(1) }} per {{ item.unit }}</p> -->
+          
+            <p class="unit-price">
+              <template v-if="item.discount && item.discount > 0">
+                <span class="old-price">${{ item.price.toFixed(1) }}/{{ item.unit }}</span>
+                <span class="new-price">
+                  ${{ (item.price - (item.price * item.discount) / 100).toFixed(1) }}/{{ item.unit }}
+                  <span class="discount-text">(-{{ item.discount }}%)</span>
+                </span>
+              </template>
+              <template v-else>
+                ${{ item.price.toFixed(1) }}/{{ item.unit }}
+              </template>
+            </p>
+
           </div>
 
           <div class="quantity-row">
@@ -43,7 +57,18 @@
             </select>
           </div>
 
-          <p class="total-price">Total: ${{ (item.price * item.qty).toFixed(1) }}</p>
+          <!-- <p class="total-price">Total: ${{ (item.price * item.qty).toFixed(1) }}</p> -->
+          
+          <p class="total-price">
+            Total:
+            <template v-if="item.discount && item.discount > 0">
+              ${{ ((item.price - (item.price * item.discount) / 100) * item.qty).toFixed(1) }}
+            </template>
+            <template v-else>
+              ${{ (item.price * item.qty).toFixed(1) }}
+            </template>
+          </p>
+        
         </div>
       </div>
 
@@ -62,10 +87,10 @@
           <span>Delivery Charge</span>
           <span>${{ delivery.toFixed(1) }}</span>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <span>Discount</span>
           <span class="discount">- ${{ discount.toFixed(1) }}</span>
-        </div>
+        </div> -->
         <div class="total-row">
           <span>Total</span>
           <span class="total">${{ total.toFixed(1) }}</span>
@@ -100,23 +125,38 @@ const selectedItems = computed(() =>
 
 /* Totals based on selected items */
 const subtotal = computed(() =>
-  selectedItems.value.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  )
+  selectedItems.value.reduce((sum, item) => {
+    // discounted price if applicable
+    const discountedPrice = item.discount && item.discount > 0
+      ? item.price - (item.price * item.discount) / 100
+      : item.price
+    return sum + discountedPrice * item.qty
+  }, 0)
 )
-const discount = computed(() => subtotal.value * 0.07)
-const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0))
-const total = computed(() => subtotal.value + delivery.value - discount.value)
 
-// Update quantity and ensure it's always a number
+const discount = computed(() =>
+  selectedItems.value.reduce((sum, item) => {
+    if (item.discount && item.discount > 0) {
+      const originalTotal = item.price * item.qty
+      const discountedTotal = (item.price - (item.price * item.discount) / 100) * item.qty
+      return sum + (originalTotal - discountedTotal)
+    }
+    return sum
+  }, 0)
+)
+
+const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0))
+
+const total = computed(() => subtotal.value + delivery.value)
+
+/* Update quantity and ensure it's always a number */
 const updateQty = (index: number, value: number) => {
   const qty = Number(value)
   const minQty = cart.items[index].unit === 'kg' ? 0.5 : 1
   cart.updateQty(index, qty < minQty ? minQty : qty)
 }
 
-// Navigate to Checkout page
+/* Navigate to Checkout page */
 const goToCheckout = () => {
   if (cart.items.length > 0) {
     router.push({ name: 'Checkout' })
@@ -130,7 +170,7 @@ const goToCheckout = () => {
 .cart-page {
   max-width: 800px;
   margin: 0 auto;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
   padding: 20px;
 }
 
@@ -293,5 +333,24 @@ const goToCheckout = () => {
 
 .shop-now-btn:hover {
   background: #3a8410;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 0.9rem;
+  margin-right: 0.3rem;
+}
+
+.new-price {
+  color: #6EC007;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.discount-text {
+  color: #ff0000;
+  font-weight: bold;
+  margin-left: 0.3rem;
 }
 </style>

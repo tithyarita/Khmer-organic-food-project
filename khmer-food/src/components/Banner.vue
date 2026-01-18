@@ -51,8 +51,8 @@ const bannerImage = computed(() => route.meta.image || '/default-banner.jpg')
 
 /* Title style */
 .banner-title {
-  font-size: 2.2rem;
+  font-size: 3.2rem;
   font-weight: 700;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
 }
 </style>

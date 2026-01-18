@@ -7,7 +7,8 @@
     "unit": "Kg",
     "rating": 4,
     "stock": 76,
-    "image": "http://localhost:3000/uploads/9067101aa4e9a78a20c2af48cbb41397"
+    "image": "http://localhost:3000/uploads/9067101aa4e9a78a20c2af48cbb41397",
+    "discount": 12
   },
   {
     "id": 2,
@@ -27,7 +28,8 @@
     "unit": "kg",
     "rating": 1,
     "stock": 80,
-    "image": "http://localhost:3000/uploads/d46100bfeab7e48e21c37c5f58fdf461"
+    "image": "http://localhost:3000/uploads/d46100bfeab7e48e21c37c5f58fdf461",
+    "discount": 15
   },
   {
     "id": 4,
@@ -36,7 +38,7 @@
     "price": 5.89,
     "unit": "kg",
     "rating": 2,
-    "stock": 85.5,
+    "stock": 84.5,
     "image": "http://localhost:3000/uploads/197c12b76eaa834d5af4dbedf62c44d4"
   },
   {
@@ -86,7 +88,28 @@
     "price": 3.55,
     "unit": "Kg",
     "rating": 4,
-    "stock": 116,
+    "stock": 115,
     "image": "http://localhost:3000/uploads/913b00637141d8130db85332055c21bb"
+  },
+  {
+    "id": 10,
+    "name": "Apple",
+    "category": "vegetables",
+    "price": 9,
+    "unit": "kg",
+    "rating": null,
+    "stock": 9,
+    "image": "http://localhost:3000/uploads/8bbd39d0434de2cd0999ffd1648894dd"
+  },
+  {
+    "id": 11,
+    "name": "orange",
+    "category": "vegetables",
+    "price": 9,
+    "unit": "kg",
+    "rating": null,
+    "stock": 3,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/1ae882b242cbf87982a01bb7f1eafca3"
   }
 ]

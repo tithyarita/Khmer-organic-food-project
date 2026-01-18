@@ -76,7 +76,7 @@ export default {
 
 .footer {
   background-color: #6ec007;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
   font-weight: 400;
   padding: 2rem 2.5rem 1rem 2.5rem;
 }

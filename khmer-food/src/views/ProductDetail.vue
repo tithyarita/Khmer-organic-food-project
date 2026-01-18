@@ -20,7 +20,23 @@
           </div>
 
           <div class="price-quantity-row">
-            <p class="price">PRICE: {{ product.price }}</p>
+            <div class="price">
+              <template v-if="product.discount && product.discount > 0">
+                <span class="old-price">
+                  ${{ product.price }}/{{ product.unit }}
+                </span>
+                <span class="new-price">
+                  ${{ (product.price - (product.price * product.discount) / 100).toFixed(2) }}/{{ product.unit }}
+                  <span class="discount-text">(-{{ product.discount }}%)</span>
+                </span>
+              </template>
+
+              <template v-else>
+                <span class="new-price">
+                  ${{ product.price }}/{{ product.unit }}
+                </span>
+              </template>
+            </div>
 
             <div class="quantity-selector">
               <button @click="quantity--" :disabled="quantity <= 1">-</button>
@@ -116,7 +132,6 @@
 
   </div>
 </template>
-
 
 
 <script lang="ts">
@@ -483,7 +498,7 @@ async fetchReviews() {
 }
 
 .product-detail-page {
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
   padding: 20px;
   background-color: #f9f9f9;
 }
@@ -594,6 +609,29 @@ async fetchReviews() {
   background-color: #4CAF50;
 }
 
+.price {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  gap: 0.2rem;
+}
 
+.old-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 1rem; /* smaller */
+}
+
+.new-price {
+  color: #6EC007;   /* green highlight */
+  font-weight: bold;
+  font-size: 1.5rem; /* bigger emphasis */
+}
+
+.discount-text {
+  color: #ff0000;   /* red for discount */
+  font-weight: bold;
+  font-size: 1rem;
+  margin-left: 0.3rem;
+}
 
 </style>

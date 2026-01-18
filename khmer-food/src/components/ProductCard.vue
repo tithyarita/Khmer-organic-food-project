@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { useCartStore } from '../stores/cart'
 import { useFavoriteStore } from '../stores/favorite'
 import { useRouter } from 'vue-router'
@@ -28,7 +28,13 @@ const isFavorite = ref(false)
 const avgRating = ref(0)
 const reviewCount = ref(0)
 
-
+// Discounted price computed
+const discountedPrice = computed(() => {
+  if (props.product.discount && props.product.discount > 0) {
+    return (props.product.price - (props.product.price * props.product.discount) / 100).toFixed(2)
+  }
+  return props.product.price
+})
 
 // Watch favorite store
 watch(
@@ -46,19 +52,7 @@ onMounted(async () => {
   reviewCount.value = stats.count
 })
 
-// Add to cart
-// function addToCart(product: any) {
-//   const user = getUserStorage()
-//   if (!user) {
-//     const goLogin = confirm('Please login first. Go to login page?')
-//     if (goLogin) router.push('/loginSignup')
-//     return
-//   }
-
-//   cart.addItem(product)
-//   emit('add-to-cart', product)
-// }
-
+// Add to cart with animation
 
 const isCartClicked = ref(false)
 
@@ -96,7 +90,6 @@ function addToFavorite(product: any) {
 </script>
 
 <template>
-  
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -115,6 +108,11 @@ function addToFavorite(product: any) {
       </button>
     </div>
 
+    <!-- Discount under header -->
+    <div v-if="product.discount && product.discount > 0" class="discount-label">
+      -{{ product.discount }}%
+    </div>
+
     <!-- Image -->
     <div class="card-image">
       <img :src="product.image || '/default-product.jpg'" :alt="product.name" />
@@ -122,47 +120,51 @@ function addToFavorite(product: any) {
 
     <!-- Footer -->
     <div class="card-footer">
-      <!-- ⭐ Rating (READ ONLY) -->
-      <div class="rating">
-        <i
-          v-for="n in 5"
-          :key="n"
-          :class="{
-            'fa-solid fa-star': n <= Math.round(avgRating),
-            'fa-regular fa-star': n > Math.round(avgRating)
-          }"
-        ></i>
-        <small v-if="reviewCount">({{ reviewCount }})</small>
-        <small v-else>(0)</small>
-      </div>
+      <!-- Rating + Old Price -->
+      <div class="footer-row">
+        <div class="rating">
+          <i
+            v-for="n in 5"
+            :key="n"
+            :class="{
+              'fa-solid fa-star': n <= Math.round(avgRating),
+              'fa-regular fa-star': n > Math.round(avgRating)
+            }"
+          ></i>
+          <small v-if="reviewCount">({{ reviewCount }})</small>
+          <small v-else>(0)</small>
+        </div>
 
-      <div class="info-row">
-        <span class="product-name">{{ product.name }}</span>
-        <span class="product-price">
+        <!-- Old price (small, strike) -->
+        <span v-if="product.discount && product.discount > 0" class="old-price">
           ${{ product.price }}/{{ product.unit }}
         </span>
       </div>
 
-      <!-- <button
+      <!-- Product name + New price -->
+      <div class="footer-row">
+        <span class="product-name">{{ product.name }}</span>
+        <span class="new-price">
+          <template v-if="product.discount && product.discount > 0">
+            ${{ (product.price - (product.price * product.discount) / 100).toFixed(2) }}/{{ product.unit }}
+          </template>
+          <template v-else>
+            ${{ product.price }}/{{ product.unit }}
+          </template>
+        </span>
+      </div>
+
+      <!-- Cart button -->
+      <button
         v-if="showCart"
         class="add-to-cart"
         :disabled="!product.stock"
         @click="addToCart(product)"
+        :class="{ 'clicked': isCartClicked }"
       >
         <i class="fa-solid fa-cart-shopping"></i>
         {{ product.stock ? 'Add to Cart' : 'Unavailable' }}
-      </button> -->
-
-      <button
-      v-if="showCart"
-      class="add-to-cart"
-      :disabled="!product.stock"
-      @click="addToCart(product)"
-      :class="{ 'clicked': isCartClicked }"
-    >
-      <i class="fa-solid fa-cart-shopping"></i>
-      {{ product.stock ? 'Add to Cart' : 'Unavailable' }}
-    </button>
+      </button>
     </div>
   </div>
 </template>
@@ -173,13 +175,13 @@ function addToFavorite(product: any) {
   border-radius: 0.5rem;
   padding: 1rem;
   width: 300px;
-  height: 380px;
+  height: 400px;
   box-shadow: 0 0.25rem 0.5rem rgba(133, 237, 121, 0.1);
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 2rem;
   background: #fff;
   transition: 0.3s ease;
 }
@@ -279,5 +281,43 @@ function addToFavorite(product: any) {
 .product-price {
   color: #6EC007;
 }
+
+.discount-label {
+  background-color: #ff5252;
+  color: white;
+  font-weight: bold;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  text-align: center;
+  width: fit-content;
+  margin-left: 0rem;
+  margin-top: -1.7rem;
+}
+
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 0.9rem; /* smaller */
+}
+
+.new-price {
+  color: #6EC007;
+  font-weight: bold;
+  font-size: 1.2rem; /* bigger */
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
 
 </style>

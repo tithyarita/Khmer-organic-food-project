@@ -74,6 +74,8 @@ export const addProduct = (data: any) => {
   fd.append('name', data.name)
   fd.append('price', String(data.price))
   fd.append('unit', data.unit)
+  fd.append('rating', String(data.rating))
+  fd.append('discount', String(data.discount))
   fd.append('stock', String(data.stock))
   fd.append('image', data.imageFile)
 
@@ -99,6 +101,8 @@ export const updateProduct = (data: any) => {
   fd.append('name', data.name)
   fd.append('price', String(data.price))
   fd.append('unit', data.unit)
+  fd.append('rating', String(data.rating))
+  fd.append('discount', String(data.discount))
   fd.append('stock', String(data.stock))
 
   if (data.imageFile) {

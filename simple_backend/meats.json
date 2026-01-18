@@ -16,8 +16,9 @@
     "price": 9.89,
     "unit": "kg",
     "rating": 4,
-    "stock": 71.5,
-    "image": "http://localhost:3000/uploads/5b2255c5cb64262461caeeb68a3bf754"
+    "stock": 70,
+    "image": "http://localhost:3000/uploads/5b2255c5cb64262461caeeb68a3bf754",
+    "discount": 20
   },
   {
     "id": 3,
@@ -37,7 +38,8 @@
     "unit": "kg",
     "rating": 3,
     "stock": 89,
-    "image": "http://localhost:3000/uploads/33afdda0d9e637ad6ede5a9115c86d4e"
+    "image": "http://localhost:3000/uploads/33afdda0d9e637ad6ede5a9115c86d4e",
+    "discount": 8
   },
   {
     "id": 5,
@@ -46,7 +48,7 @@
     "price": 7.13,
     "unit": "kg",
     "rating": 2,
-    "stock": 75.5,
+    "stock": 75,
     "image": "http://localhost:3000/uploads/75d1cc4a02146db60a437e75c282249a"
   },
   {
@@ -76,7 +78,7 @@
     "price": 3.15,
     "unit": "kg",
     "rating": 3,
-    "stock": 14,
+    "stock": 0,
     "image": "http://localhost:3000/uploads/bebcb085ed882535082140901ff3acf3"
   },
   {
@@ -86,7 +88,8 @@
     "price": 8.99,
     "unit": "kg",
     "rating": 3,
-    "stock": 89.5,
-    "image": "http://localhost:3000/uploads/a99c4f04372f8ccd3065b9747f7a85e1"
+    "stock": 87.5,
+    "image": "http://localhost:3000/uploads/a99c4f04372f8ccd3065b9747f7a85e1",
+    "discount": 8
   }
 ]

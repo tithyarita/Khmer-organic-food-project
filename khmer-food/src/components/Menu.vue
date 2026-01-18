@@ -128,7 +128,7 @@ export default defineComponent({
   align-items: center;
   background: #6ec007;
   padding: 0.5rem 3rem;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
   width: 100%;
   height: 3rem;
 }
@@ -216,7 +216,7 @@ export default defineComponent({
   font-size: 0.9rem;
   font-weight: 200;
   color: black;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
   background: white;
   width: 17rem;
   height: 1.75rem;

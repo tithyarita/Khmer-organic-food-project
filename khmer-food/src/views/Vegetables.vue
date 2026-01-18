@@ -78,7 +78,7 @@ export default {
 .products {
   display: grid;
   grid-template-columns: repeat(4, 300px);
-  gap: 1rem;
+  gap: 2rem;
   justify-content: center;
   margin-top: 2rem;
   margin-bottom: 3rem;
@@ -86,7 +86,7 @@ export default {
 
 .Title {
   text-align: center;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Roboto', sans-serif;
   font-size: 2.5rem;
   margin-top: 2rem;
   color: #548D0C;

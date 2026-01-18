@@ -345,7 +345,7 @@ function goHome() {
   max-width: 720px;
   margin: 2rem auto;
   padding: 2.5rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Roboto', sans-serif;
   background: #fff8f0; /* soft pastel background */
   border-radius: 20px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.08);
@@ -355,7 +355,7 @@ function goHome() {
 h1 {
   text-align: center;
   color: #ff6f61;
-  font-family: 'Baloo 2', cursive;
+  font-family: 'Roboto', sans-serif;
   font-size: 3rem;
   margin-bottom: 2.5rem;
   line-height: 1.2;

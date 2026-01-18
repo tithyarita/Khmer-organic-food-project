@@ -136,6 +136,10 @@ async function submitAllReviews() {
 const allReviewed = computed(() => {
   return order.value?.items.every((item: any) => isReviewed(item.id))
 })
+
+function goHome() {
+  router.push('/')
+}
 </script>
 
 <style scoped>
