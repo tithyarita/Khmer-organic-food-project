@@ -155,9 +155,26 @@ const subtotal = computed(() =>
   selectedItems.value.reduce((sum, item) => sum + item.price * item.qty, 0)
 )
 
+const DELIVERY_FEE = 1.06
+const delivery = computed(() => (subtotal.value > 0 ? DELIVERY_FEE : 0))
+// const discount = computed(() => subtotal.value * 0.07)
 
-const discount = computed(() => subtotal.value * 0.07)
-const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0))
+const getDiscountedPrice = (item: CartItem) =>
+  item.discount && item.discount > 0
+    ? item.price - (item.price * item.discount) / 100
+    : item.price
+
+
+const discount = computed(() =>
+  selectedItems.value.reduce((sum, item) => {
+    const originalTotal = item.price * item.qty
+    const discountedTotal = getDiscountedPrice(item) * item.qty
+    return sum + (originalTotal - discountedTotal)
+  }, 0)
+)
+
+// const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0))
+// const total = computed(() => subtotal.value + delivery.value - discount.value)
 const total = computed(() => subtotal.value + delivery.value - discount.value)
 
 // Payment state

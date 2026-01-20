@@ -28,9 +28,9 @@
           
             <p class="unit-price">
               <template v-if="item.discount && item.discount > 0">
-                <span class="old-price">${{ item.price.toFixed(1) }}/{{ item.unit }}</span>
+                <span class="old-price">${{ item.price.toFixed(2) }}/{{ item.unit }}</span>
                 <span class="new-price">
-                  ${{ (item.price - (item.price * item.discount) / 100).toFixed(1) }}/{{ item.unit }}
+                  ${{ (item.price - (item.price * item.discount) / 100).toFixed(2) }}/{{ item.unit }}
                   <span class="discount-text">(-{{ item.discount }}%)</span>
                 </span>
               </template>
@@ -62,10 +62,10 @@
           <p class="total-price">
             Total:
             <template v-if="item.discount && item.discount > 0">
-              ${{ ((item.price - (item.price * item.discount) / 100) * item.qty).toFixed(1) }}
+              ${{ ((item.price - (item.price * item.discount) / 100) * item.qty).toFixed(2) }}
             </template>
             <template v-else>
-              ${{ (item.price * item.qty).toFixed(1) }}
+              ${{ (item.price * item.qty).toFixed(2) }}
             </template>
           </p>
         
@@ -81,19 +81,19 @@
         </div>
         <div class="row">
           <span>Sub Total</span>
-          <span>${{ subtotal.toFixed(1) }}</span>
+          <span>${{ subtotal.toFixed(2) }}</span>
         </div>
         <div class="row">
           <span>Delivery Charge</span>
-          <span>${{ delivery.toFixed(1) }}</span>
+          <span>${{ delivery.toFixed(2) }}</span>
         </div>
-        <!-- <div class="row">
+        <div class="row">
           <span>Discount</span>
-          <span class="discount">- ${{ discount.toFixed(1) }}</span>
-        </div> -->
+          <span class="discount">- ${{ discount.toFixed(2) }}</span>
+        </div>
         <div class="total-row">
           <span>Total</span>
-          <span class="total">${{ total.toFixed(1) }}</span>
+          <span class="total">${{ total.toFixed(2) }}</span>
         </div>
         <button class="checkout-btn" @click="goToCheckout">Checkout</button>
       </div>
@@ -114,49 +114,42 @@ import { useCartStore } from '../stores/cart'
 const cart = useCartStore()
 const router = useRouter()
 
-// Selectable quantities
-const weights = [0.5, 1.0, 1.5, 2.0] // for kg
-const sets = [1, 2, 3, 4]            // for set
 
-/* ✅ Selected items only */
-const selectedItems = computed(() =>
-  cart.items.filter(item => item.selected)
-)
 
-/* Totals based on selected items */
+const weights = [0.5, 1.0, 1.5, 2.0]
+const sets = [1, 2, 3, 4]
+
+const selectedItems = computed(() => cart.items.filter(item => item.selected))
+
+const getDiscountedPrice = (item: CartItem) =>
+  item.discount && item.discount > 0
+    ? item.price - (item.price * item.discount) / 100
+    : item.price
+
 const subtotal = computed(() =>
-  selectedItems.value.reduce((sum, item) => {
-    // discounted price if applicable
-    const discountedPrice = item.discount && item.discount > 0
-      ? item.price - (item.price * item.discount) / 100
-      : item.price
-    return sum + discountedPrice * item.qty
-  }, 0)
+  selectedItems.value.reduce((sum, item) => sum + item.price * item.qty, 0)
 )
 
 const discount = computed(() =>
   selectedItems.value.reduce((sum, item) => {
-    if (item.discount && item.discount > 0) {
-      const originalTotal = item.price * item.qty
-      const discountedTotal = (item.price - (item.price * item.discount) / 100) * item.qty
-      return sum + (originalTotal - discountedTotal)
-    }
-    return sum
+    const originalTotal = item.price * item.qty
+    const discountedTotal = getDiscountedPrice(item) * item.qty
+    return sum + (originalTotal - discountedTotal)
   }, 0)
 )
 
-const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0))
+const DELIVERY_FEE = 1.06
+const delivery = computed(() => (subtotal.value > 0 ? DELIVERY_FEE : 0))
+const total = computed(() => subtotal.value + delivery.value- discount.value)
+// const total = computed(() => subtotal.value)
 
-const total = computed(() => subtotal.value + delivery.value)
-
-/* Update quantity and ensure it's always a number */
 const updateQty = (index: number, value: number) => {
+  if (!cart.items[index]) return
   const qty = Number(value)
   const minQty = cart.items[index].unit === 'kg' ? 0.5 : 1
   cart.updateQty(index, qty < minQty ? minQty : qty)
 }
 
-/* Navigate to Checkout page */
 const goToCheckout = () => {
   if (cart.items.length > 0) {
     router.push({ name: 'Checkout' })
