@@ -61,42 +61,58 @@ const showPassword = ref(false)
 const loading = ref(false)
 const router = useRouter()
 
+// 🔁 Auto-redirect if already logged in
 onMounted(() => {
   const user = getUserStorage()
-  if (user) router.push(user.role === 'admin' ? '/admin/sales' : '/profile')
+  if (!user) return
+  router.push(user.role === 'admin' ? '/admin/sales' : '/profile')
 })
 
 const submitForm = async () => {
   loading.value = true
 
   try {
-    // 1️⃣ Auth login
+    // 1️⃣ Firebase Auth login
     const cred = await signInWithEmailAndPassword(auth, email.value, password.value)
     const uid = cred.user.uid
+    const emailAddr = cred.user.email!
 
-    // 2️⃣ Save minimal info immediately so redirect feels fast
-    saveUserStorage({ uid, email: cred.user.email!, role: 'user' })
+    // 2️⃣ Check ADMIN collection first
+    const adminSnap = await getDoc(doc(db, 'admins', uid))
 
-    // 3️⃣ Redirect user immediately
-    router.push('/profile')
+    if (adminSnap.exists()) {
+      const admin = adminSnap.data()
 
-    // 4️⃣ Fetch Firestore user data in background
-    getDoc(doc(db, 'users', uid))
-      .then(snap => {
-        if (!snap.exists()) throw new Error('User data not found')
-        const data = snap.data()
-
-        // Update localStorage with full user info
-        saveUserStorage({
-          uid,
-          userId: data.userId,
-          email: cred.user.email!,
-          name: data.name || '',
-          phone: data.phone || '',
-          role: data.role || 'user',
-        })
+      saveUserStorage({
+        uid,
+        email: emailAddr,
+        name: admin.name || '',
+        phone: admin.phone || '',
+        role: 'admin',
       })
-      .catch(err => console.error('Failed to load user profile:', err.message))
+
+      router.push('/admin/sales')
+      return
+    }
+
+    // 3️⃣ Check USER collection
+    const userSnap = await getDoc(doc(db, 'users', uid))
+    if (!userSnap.exists()) {
+      throw new Error('User profile not found')
+    }
+
+    const user = userSnap.data()
+
+    saveUserStorage({
+      uid,
+      userId: user.userId,
+      email: emailAddr,
+      name: user.name || '',
+      phone: user.phone || '',
+      role: 'user',
+    })
+
+    router.push('/profile')
 
   } catch (err: any) {
     alert(err.message || 'Login failed')
@@ -105,6 +121,7 @@ const submitForm = async () => {
   }
 }
 </script>
+
 
 
 <style scoped>

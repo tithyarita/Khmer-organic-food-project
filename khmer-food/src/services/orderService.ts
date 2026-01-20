@@ -1,6 +1,6 @@
-import { collection, addDoc, getDocs, query, orderBy, where } from 'firebase/firestore'
+import { collection, addDoc, getDocs, query, orderBy, where, updateDoc, doc } from 'firebase/firestore'
 import { db } from '../firebase.js'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc as docRef, getDoc } from 'firebase/firestore'
 
 type OrderItem = {
   id: number | string
@@ -19,13 +19,16 @@ export async function createOrder(order: {
   total: number
   paymentMethod?: string
   status?: string
+  paymentStatus?: string
 }) {
   const col = collection(db, 'orders')
   const payload = {
     ...order,
     userId: order.user?.uid,
     status: order.status || 'pending',
+    paymentStatus: order.paymentStatus || 'unpaid',
     createdAt: new Date(),
+    paymentDate: order.paymentStatus === 'paid' ? new Date() : null,
   }
 
   const docRef = await addDoc(col, payload)
@@ -42,8 +45,12 @@ export async function getAllOrders() {
     const createdAt = data.createdAt && typeof (data.createdAt as any).toDate === 'function'
       ? (data.createdAt as any).toDate()
       : data.createdAt
+    // normalize paymentDate
+    const paymentDate = data.paymentDate && typeof (data.paymentDate as any).toDate === 'function'
+      ? (data.paymentDate as any).toDate()
+      : data.paymentDate
 
-    return { id: d.id, ...data, createdAt }
+    return { id: d.id, ...data, createdAt, paymentDate }
   })
 }
 
@@ -61,6 +68,41 @@ export async function getOrderById(orderId: string) {
   const createdAt = data.createdAt && typeof (data.createdAt as any).toDate === 'function'
     ? (data.createdAt as any).toDate()
     : data.createdAt
+  // normalize paymentDate
+  const paymentDate = data.paymentDate && typeof (data.paymentDate as any).toDate === 'function'
+    ? (data.paymentDate as any).toDate()
+    : data.paymentDate
 
-  return { id: snap.id, ...data, createdAt }
+  return { id: snap.id, ...data, createdAt, paymentDate }
+}
+
+export async function updateOrderStatus(orderId: string, status: string) {
+  const ref = doc(db, 'orders', orderId)
+  await updateDoc(ref, { status, updatedAt: new Date() })
+}
+
+export async function autoUpdateOrderStatuses() {
+  const allOrders = await getAllOrders()
+  const now = new Date()
+
+  for (const order of allOrders) {
+    if (order.paymentStatus !== 'paid' || !order.paymentDate) continue
+
+    const paymentDate = new Date(order.paymentDate)
+    const daysSincePaid = (now.getTime() - paymentDate.getTime()) / (1000 * 60 * 60 * 24)
+
+    let newStatus = order.status
+
+    if (daysSincePaid >= 1.5) {
+      newStatus = 'completed'
+    } else if (daysSincePaid >= 1) {
+      newStatus = 'delivering'
+    } else if (daysSincePaid >= 0.5) {
+      newStatus = 'preparing'
+    }
+
+    if (newStatus !== order.status) {
+      await updateOrderStatus(order.id, newStatus)
+    }
+  }
 }

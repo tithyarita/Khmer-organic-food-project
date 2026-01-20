@@ -35,21 +35,7 @@
 
         <label class="field">
           <span class="label-text">Email</span>
-          <input type="email" v-model="form.email" :disabled="!editing" />
-        </label>
-
-        <label class="field password-field">
-          <span class="label-text">Password</span>
-          <div class="password-row">
-            <input
-              :type="showPassword ? 'text' : 'password'"
-              v-model="form.password"
-              :disabled="!editing"
-            />
-            <button type="button" class="eye" @click="showPassword = !showPassword">
-              <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-            </button>
-          </div>
+          <input type="email" v-model="form.email" disabled />
         </label>
 
         <div class="actions">
@@ -61,8 +47,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { auth, db } from '../../firebase'
+import { signOut as firebaseSignOut } from 'firebase/auth'
+import { doc, updateDoc } from 'firebase/firestore'
+import { getUserStorage, saveUserStorage } from '../../loginstorage'
 
 const router = useRouter()
 
@@ -71,15 +61,24 @@ const editing = ref(false)
 const showPassword = ref(false)
 
 const form = ref({
-  name: 'Ming Ming',
-  phone: '0123456789',
-  email: 'ming@example.com',
-  password: 'password123',
+  name: '',
+  phone: '',
+  email: '',
+  password: '',
 })
 
 let backupForm: typeof form.value | null = null
 
 /* METHODS */
+onMounted(() => {
+  const user = getUserStorage()
+  if (user) {
+    form.value.name = user.name || ''
+    form.value.phone = user.phone || ''
+    form.value.email = user.email || ''
+  }
+})
+
 const toggleEdit = () => {
   if (!editing.value) {
     backupForm = { ...form.value }
@@ -93,37 +92,39 @@ const toggleEdit = () => {
   }
 }
 
-const saveChanges = () => {
-  editing.value = false
-  backupForm = null
-
-  // Example: save to backend or localStorage here
-  // localStorage.setItem('user', JSON.stringify(form.value))
+const saveChanges = async () => {
+  const user = getUserStorage()
+  if (user && editing.value) {
+    try {
+      const collection = user.role === 'admin' ? 'admins' : 'users'
+      await updateDoc(doc(db, collection, user.uid), {
+        name: form.value.name,
+        phone: form.value.phone,
+      })
+      // Update localStorage
+      saveUserStorage({ ...user, name: form.value.name, phone: form.value.phone })
+      editing.value = false
+      backupForm = null
+      alert('Profile updated successfully!')
+    } catch (error) {
+      console.error('Error updating profile:', error)
+      alert('Failed to update profile.')
+    }
+  }
 }
 
 const goToAdminProducts = () => {
-  router.push('/admin/')
+  router.push('/admin/products')
 }
 
-const signOut = () => {
-  // 🔥 CLEAR ALL USER DATA
-  localStorage.clear()
-  sessionStorage.clear()
-
-  // Reset local state
-  form.value = {
-    name: '',
-    phone: '',
-    email: '',
-    password: '',
+const signOut = async () => {
+  try {
+    await firebaseSignOut(auth)
+    localStorage.removeItem('user')
+    router.push('/login')
+  } catch (error) {
+    console.error('Error signing out:', error)
   }
-
-  editing.value = false
-  showPassword.value = false
-  backupForm = null
-
-  // 🚀 Redirect to login/signup
-  router.replace('/LoginSignUpView')
 }
 </script>
 

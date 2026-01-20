@@ -17,6 +17,10 @@ import BlogView from '../views/BlogView.vue'
 import ReviewPage from '../views/ReviewPage.vue'
 import ThankYouView from '../views/ThankYouView.vue'
 import ItemRatingView from '../views/ItemRatingView.vue'
+import ViewOrders from '../views/ViewOrders.vue'
+import OrdersCenter from '../views/OrdersCenter.vue'
+import OrderView from '../views/OrderView.vue'
+import Delivery from '../views/Delivery.vue'
 
 import { auth, db } from '../firebase'
 import { doc, getDoc } from 'firebase/firestore'
@@ -40,8 +44,12 @@ const routes: RouteRecordRaw[] = [
   { path: '/blog', name: 'Blog', component: BlogView },
   { path: '/review/:orderId', name: 'ReviewPage', component: ReviewPage, props: true },
   { path: '/thankyou/:orderId', name: 'ThankYou', component: ThankYouView, props: true },
-  { path: '/orders', name: 'Orders', component: () => import('../views/ViewOrders.vue'), meta: { requiresAuth: true } },
+  { path: '/orders', name: 'ViewOrders', component: ViewOrders },
   { path: '/rate/:itemId', name: 'ItemRating', component: ItemRatingView, props: true },
+  { path: '/orders-center', name: 'OrdersCenter', component: OrdersCenter },
+  { path: '/order/:id', name: 'OrderView', component: OrderView, props: true },
+  { path: '/delivery', name: 'Delivery', component: Delivery },
+
 
   // Login / Signup
   { path: '/loginSignup', name: 'LoginSignUp', component: LoginSignUpView, meta: { hideLayout: true } },
@@ -65,6 +73,7 @@ const routes: RouteRecordRaw[] = [
     { path: 'users', name: 'AdminUsers', component: () => import('../views/admin/AdminUsers.vue') },
     { path: 'blogs', name: 'AdminBlog', component: () => import('../views/admin/AdminBlog.vue') },
     { path: 'contact', name: 'AdminContact', component: () => import('../views/admin/AdminContact.vue') },
+    { path: 'profile', name: 'AdminProfile', component: () => import('../views/admin/ProfileAdminView.vue') },
 
   ],
 },
@@ -99,19 +108,8 @@ router.beforeEach(async (to, from, next) => {
 
   // ---------------- ADMIN PROTECTION ----------------
   if (to.meta?.requiresAdmin) {
-    if (!firebaseUser) {
+    if (!userStorage || userStorage.role !== 'admin') {
       return next('/admin/login')
-    }
-
-    try {
-      const adminRef = doc(db, 'admins', firebaseUser.uid)
-      const adminSnap = await getDoc(adminRef)
-
-      if (!adminSnap.exists()) {
-        return next('/') // not admin
-      }
-    } catch (err) {
-      return next('/')
     }
   }
 

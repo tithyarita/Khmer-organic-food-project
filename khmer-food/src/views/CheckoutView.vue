@@ -333,7 +333,8 @@ async function placeOrder() {
         discount: discount.value,
         total: total.value,
         paymentMethod: selectedPayment.value,
-        status: 'paid'
+        status: 'paid',
+        paymentStatus: 'paid'
       })
 
 

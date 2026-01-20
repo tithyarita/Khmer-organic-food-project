@@ -55,6 +55,11 @@
         <i class="fa-regular fa-bell"></i>
         <span v-if="totalNotifications > 0" class="cart-badge">{{ totalNotifications }}</span>
       </router-link> -->
+      <!-- Orders Center (All-in-One) -->
+<router-link to="/orders-center" class="icon-link" title="My Orders">
+  <i class="fa-solid fa-receipt"></i>
+</router-link>
+
 
       <router-link to="/profile" class="icon-link">
         <i class="fa-regular fa-user"></i>
