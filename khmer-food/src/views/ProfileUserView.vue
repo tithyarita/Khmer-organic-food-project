@@ -1,5 +1,7 @@
 <template>
   <div class="profile-page">
+
+    <!-- LEFT PANEL -->
     <aside class="left-panel">
       <div class="avatar" @click="editing && fileInput.click()">
         <img :src="avatarPreview || defaultAvatar" alt="avatar" />
@@ -18,12 +20,12 @@
         {{ editing ? 'Cancel' : 'Edit' }}
       </button>
 
-      <!-- ✅ SAVE BUTTON MOVED HERE -->
       <button v-if="editing" class="btn save-btn" @click="saveChanges">
         Save
       </button>
     </aside>
 
+    <!-- RIGHT PANEL -->
     <main class="right-panel">
       <h1 class="title">My Profile</h1>
 
@@ -53,9 +55,9 @@
         </div>
       </form>
     </main>
+
   </div>
 </template>
-
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
@@ -130,7 +132,7 @@ const saveChanges = async () => {
   })
 
   editing.value = false
-  alert('Profile updated')
+  alert('Profile updated 💚')
 }
 
 const signOut = async () => {
@@ -153,11 +155,11 @@ const goToOrders = () => {
 .profile-page {
   display: flex;
   min-height: 90vh;
-  font-family: 'Baloo Tammudu 2', sans-serif;
+  font-family: 'Baloo Tammudu 2', cursive;
   background: linear-gradient(180deg, #f7fff0, #ffffff);
 }
 
-/* LEFT */
+/* LEFT PANEL */
 .left-panel {
   width: 32%;
   background: linear-gradient(180deg, #7ed957, #b7f397);
@@ -201,7 +203,12 @@ const goToOrders = () => {
   cursor: pointer;
 }
 
-/* RIGHT */
+.save-btn {
+  background: #4caf50;
+  color: white;
+}
+
+/* RIGHT PANEL */
 .right-panel {
   flex: 1;
   padding: 4rem;
@@ -213,6 +220,7 @@ const goToOrders = () => {
 .title {
   font-size: 2.6rem;
   color: #4caf50;
+  margin-bottom: 2rem;
 }
 
 .form {
@@ -246,8 +254,8 @@ input {
   justify-content: space-between;
 }
 
-.save {
-  background: #4caf50;
+.orders-btn {
+  background: #2196f3;
   color: white;
   border-radius: 999px;
   padding: 0.7rem 1.5rem;
@@ -256,14 +264,6 @@ input {
 
 .signout {
   background: #ff5252;
-  color: white;
-  border-radius: 999px;
-  padding: 0.7rem 1.5rem;
-  border: none;
-}
-
-.orders-btn {
-  background: #2196f3;
   color: white;
   border-radius: 999px;
   padding: 0.7rem 1.5rem;
