@@ -19,9 +19,19 @@
         <span>{{ step.label }}</span>
       </div>
     </div>
+    <!-- Loading -->
+<div v-if="loading" class="loading-wrapper">
+  <div class="loading-card">
+    <div class="spinner"></div>
+    <h3>Loading your orders…</h3>
+    <p>Please wait, we’re getting things ready 🥬🥩</p>
+  </div>
+</div>
+
 
     <!-- Content -->
-    <section class="content">
+    <section v-else class="content">
+
       <OrderList
         v-if="activeTab === 'paid'"
         :orders="paidOrders"
@@ -75,6 +85,18 @@ import OrderList from '../components/OrderList.vue'
 const router = useRouter()
 const orders = ref<any[]>([])
 const activeTab = ref('paid')
+const loading = ref(true)
+
+onMounted(async () => {
+  const user = auth.currentUser
+  if (!user) return
+
+  loading.value = true
+  await autoUpdateOrderStatuses()
+  orders.value = await getOrdersByUser(user.uid)
+  loading.value = false
+})
+
 
 /* =====================
    STEPS
@@ -236,5 +258,53 @@ const goHome = () => router.push('/')
   cursor: pointer;
   text-align: center;
 }
+/* Loading */
+.loading-wrapper {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-card {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.4s ease;
+}
+
+.loading-card h3 {
+  margin: 20px 0 6px;
+  font-size: 1.2rem;
+}
+
+.loading-card p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Spinner */
+.spinner {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 5px solid #e6e6e6;
+  border-top-color: #6dc007;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+/* Animations */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 
 </style>
