@@ -1,60 +1,62 @@
 <template>
   <div class="orders-page">
 
-    <!-- Page Header -->
+    <!-- Header -->
     <header class="page-header">
       <h1>🧾 My Orders</h1>
-      <p>Manage payments, delivery & order history</p>
+      <p>Track your order progress</p>
     </header>
 
-    <!-- Tabs -->
-    <div class="tabs">
-      <button
-        v-for="tab in tabs"
-        :key="tab.key"
-        :class="{ active: activeTab === tab.key }"
-        @click="activeTab = tab.key"
+    <!-- Progress Steps -->
+    <div class="progress-steps">
+      <div
+        v-for="step in steps"
+        :key="step.key"
+        :class="['step', { active: activeTab === step.key }]"
+        @click="activeTab = step.key"
       >
-        {{ tab.label }}
-        <span v-if="tabCount(tab.key)" class="badge">
-          {{ tabCount(tab.key) }}
-        </span>
-      </button>
+        <div class="circle">{{ step.icon }}</div>
+        <span>{{ step.label }}</span>
+      </div>
     </div>
 
     <!-- Content -->
     <section class="content">
-
-      <!-- PAID -->
       <OrderList
         v-if="activeTab === 'paid'"
         :orders="paidOrders"
         emptyText="No paid orders yet"
-        showProgress
       />
 
-      <!-- DELIVERY -->
+      <OrderList
+        v-if="activeTab === 'preparing'"
+        :orders="preparingOrders"
+        emptyText="No orders being prepared"
+      />
+
       <OrderList
         v-if="activeTab === 'delivery'"
         :orders="deliveryOrders"
         emptyText="No orders in delivery"
-        showProgress
       />
 
-      <!-- COMPLETED -->
       <OrderList
         v-if="activeTab === 'completed'"
         :orders="completedOrders"
-        emptyText="No completed orders yet"
+        emptyText="No completed orders"
       />
 
-      <!-- HISTORY -->
+      <OrderList
+        v-if="activeTab === 'rating'"
+        :orders="ratingOrders"
+        emptyText="No orders to rate"
+      />
+
       <OrderList
         v-if="activeTab === 'history'"
         :orders="orders"
         emptyText="You haven’t placed any orders yet 🥺"
       />
-
     </section>
 
     <button class="back-btn" @click="goHome">
@@ -63,61 +65,58 @@
 
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getOrdersByUser, autoUpdateOrderStatuses } from '../services/orderService'
 import { auth } from '../firebase'
+import { getOrdersByUser, autoUpdateOrderStatuses } from '../services/orderService'
 import OrderList from '../components/OrderList.vue'
 
 const router = useRouter()
 const orders = ref<any[]>([])
-const loading = ref(true)
 const activeTab = ref('paid')
 
-const tabs = [
-  { key: 'paid', label: '✅ Paid' },
-  { key: 'delivery', label: '🚚 Delivery' },
-  { key: 'completed', label: '🏁 Completed' },
-  { key: 'history', label: '📦 History' }
+/* =====================
+   STEPS
+   ===================== */
+
+const steps = [
+  { key: 'paid', label: 'Paid', icon: '💳' },
+  { key: 'preparing', label: 'Preparing', icon: '🥘' },
+  { key: 'delivery', label: 'Delivery', icon: '🚚' },
+  { key: 'completed', label: 'Completed', icon: '🏁' },
+  { key: 'rating', label: 'Rating', icon: '⭐' },
+  { key: 'history', label: 'History', icon: '📦' }
 ]
 
 onMounted(async () => {
-  try {
-    const user = auth.currentUser
-    if (!user) return
+  const user = auth.currentUser
+  if (!user) return
 
-    // Auto-update statuses based on time
-    await autoUpdateOrderStatuses()
-
-    orders.value = await getOrdersByUser(user.uid)
-
-    orders.value.forEach(order => {
-      order.items.forEach(item => {
-        if (!item.image) item.image = getItemImage(item)
-      })
-    })
-  } catch (e) {
-    console.error('Failed to load orders:', e)
-  } finally {
-    loading.value = false
-  }
+  await autoUpdateOrderStatuses()
+  orders.value = await getOrdersByUser(user.uid)
 })
 
-/* =========================
-   Order Filters
-   ========================= */
+/* =====================
+   PROGRESS LOGIC
+   ===================== */
 
-// Paid orders (checkout completed)
+// PAID (payment done, not started)
 const paidOrders = computed(() =>
   orders.value.filter(o =>
     (o.paymentStatus || '').toLowerCase() === 'paid' &&
-    ['paid', 'preparing'].includes((o.status || '').toLowerCase())
+    (o.status || '').toLowerCase() === 'paid'
   )
 )
 
-// Orders in delivery
+// PREPARING
+const preparingOrders = computed(() =>
+  orders.value.filter(o =>
+    (o.status || '').toLowerCase() === 'preparing'
+  )
+)
+
+// DELIVERY
 const deliveryOrders = computed(() =>
   orders.value.filter(o =>
     ['delivering', 'out_for_delivery', 'on_the_way']
@@ -125,197 +124,117 @@ const deliveryOrders = computed(() =>
   )
 )
 
-// Completed orders
+// COMPLETED (delivered but NOT rated)
 const completedOrders = computed(() =>
   orders.value.filter(o =>
-    (o.status || '').toLowerCase() === 'completed'
+    (o.status || '').toLowerCase() === 'completed' &&
+    !o.rated
   )
 )
 
-const tabCount = (tabKey: string) => {
-  switch (tabKey) {
-    case 'paid': return paidOrders.value.length
-    case 'delivery': return deliveryOrders.value.length
-    case 'completed': return completedOrders.value.length
-    case 'history': return orders.value.length
-    default: return 0
-  }
-}
+// RATING (completed & rated)
+const ratingOrders = computed(() =>
+  orders.value.filter(o =>
+    (o.status || '').toLowerCase() === 'completed' &&
+    o.rated === true
+  )
+)
 
-function goHome() {
-  router.push('/')
-}
-
-function getItemImage(item: any) {
-  if (item.image) return item.image
-  if (item.category === 'vegetables') return '/images/vegBanner.jpeg'
-  if (item.category === 'meats') return '/images/meatBanner.jpg'
-  if (item.category === 'sets') return '/images/setBanner.png'
-  return '/forProfile/profile.png'
-}
+const goHome = () => router.push('/')
 </script>
+
 
 <style scoped>
 .orders-page {
   min-height: 100vh;
-  background: #fff8f0;
   padding-top: 100px;
   font-family: 'Poppins', sans-serif;
 }
 
+/* Header */
 .page-header {
   text-align: center;
   margin-bottom: 30px;
 }
-.page-header h1 { color: #333; margin-bottom: 5px; }
-.page-header p { color: #666; font-size: 1rem; }
 
-.tabs {
+/* Progress Steps */
+.progress-steps {
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-}
-.tabs button {
-  padding: 10px 20px;
-  border-radius: 25px;
-  border: none;
-  background: #eee;
-  cursor: pointer;
-  font-weight: 600;
-  position: relative;
-  transition: 0.2s;
-}
-.tabs button:hover { background: #ddd; }
-.tabs button.active { background: #ff6f61; color: white; }
-.tabs .badge {
-  background: #333;
-  color: white;
-  font-size: 0.75rem;
-  padding: 2px 6px;
-  border-radius: 12px;
-  margin-left: 6px;
+  justify-content: space-between;
+  max-width: 900px;
+  margin: 0 auto 40px;
+  padding: 0 20px;
 }
 
+.step {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.step::after {
+  content: '';
+  position: absolute;
+  top: 16px;
+  right: -50%;
+  width: 100%;
+  height: 4px;
+  background: #ddd;
+}
+
+.step:last-child::after {
+  display: none;
+}
+
+.step.active::after {
+  background: #6dc007;
+}
+
+.circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #ddd;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.step.active .circle {
+  background: #6dc007;
+  color: white;
+}
+
+.step span {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Content */
 .content {
   max-width: 1200px;
   margin: auto;
   padding: 0 1rem 3rem;
 }
 
-.order-list {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-
-.order-card {
-  background: #fff7f2;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  border: 1px solid #ffe3d8;
-}
-
-.order-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.datetime {
-  font-size: 0.85rem;
-  color: #888;
-}
-
-.order-total {
-  font-weight: bold;
-  color: #ff6f61;
-  font-size: 1.1rem;
-}
-
-.order-items {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.order-item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: #fff3ea;
-  padding: 12px;
-  border-radius: 12px;
-}
-
-.item-image {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid #ffd8c2;
-}
-
-.item-info {
-  flex: 1;
-}
-
-.item-name {
-  font-weight: 600;
-  color: #333;
-  font-size: 1rem;
-}
-
-.item-qty {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.item-price {
-  font-weight: bold;
-  color: #ff6f61;
-  font-size: 1rem;
-}
-
-.order-summary {
-  margin-top: 15px;
-  font-size: 0.95rem;
-  color: #555;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.order-summary .total {
-  font-weight: bold;
-  color: #ff6f61;
-  margin-top: 5px;
-}
-
+/* Back Button */
 .back-btn {
-  margin-top: 25px;
-  width: 100%;
-  background: #ff6f61;
+  display: block;
+  margin: 0 auto 40px; /* center horizontally */
+  width: 260px;       /* fixed nice width */
+  background: #6dc007;
   color: white;
   border: none;
-  padding: 12px 0;
+  padding: 14px 0;
   border-radius: 12px;
   font-weight: 600;
-  font-size: 1rem;
   cursor: pointer;
-  transition: 0.2s;
-}
-.back-btn:hover {
-  background: #ff5a48;
+  text-align: center;
 }
 
-.empty {
-  text-align: center;
-  font-style: italic;
-  color: #888;
-  padding: 2rem 0;
-}
 </style>
