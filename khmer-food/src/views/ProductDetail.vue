@@ -507,19 +507,23 @@ async fetchReviews() {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
+  justify-content: center;
 }
 
 .left-section,
 .right-section {
-  flex: 1;
+  flex: 5;
   min-width: 280px;
+  margin-left: 5rem;
 }
 
 .dish-name {
   font-size: 2rem;
   color: #333;
   margin-bottom: 1rem;
+  font-weight: bold;
+  justify-content: center;
 }
 
 .image-gallery {
@@ -527,10 +531,11 @@ async fetchReviews() {
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
+  
 }
 
 .image-gallery img {
-  width: 150px;
+  width: 170px;
   border-radius: 0.5rem;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
@@ -564,6 +569,7 @@ async fetchReviews() {
   font-size: 1rem;
   border-radius: 0.25rem;
   cursor: pointer;
+  margin-top: 5rem;
 }
 
 .quantity-selector input {
@@ -571,11 +577,13 @@ async fetchReviews() {
   text-align: center;
   font-size: 1rem;
   padding: 0.3rem;
+  margin-top: 5rem;
 }
 
 .ingredients-title {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
+  margin-top: 5rem;
 }
 
 .ingredients-list {
