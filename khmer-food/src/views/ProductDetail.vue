@@ -111,6 +111,8 @@
           </div>
 
           <p>{{ r.comment }}</p>
+
+          <img v-if="r.photo" :src="r.photo" class="review-image" />
         </div>
       </div>
 
@@ -136,6 +138,7 @@ type Review = {
   userId: string
   userName?: string
   createdAt?: any
+  photo?: string
 }
 
 export default {
@@ -301,9 +304,9 @@ export default {
   },
 
   methods: {
-    async fetchRelatedSets() { const res = await fetch('http://localhost:3000/sets') 
+    async fetchRelatedSets() { const res = await fetch('http://localhost:3000/sets')
     const sets = await res.json()
-    const items = sets.flatMap((s: any) => s.items) 
+    const items = sets.flatMap((s: any) => s.items)
 
     this.relatedSets = items
       .filter((p: any) => String(p.id) != String(this.id))
@@ -365,36 +368,47 @@ export default {
       this.$router.push('/favorite')
     },
 
-    async fetchReviews() {
-      const snap = await getDocs(collection(db, 'reviews'))
-      let sum = 0
-      const list: Review[] = []
+async fetchReviews() {
+  const snap = await getDocs(collection(db, 'reviews'))
+  let sum = 0
+  const list: Review[] = []
 
-      snap.forEach(doc => {
-        const data = doc.data()
-        const review = data.products?.find(
-          (p: any) => String(p.productId) === String(this.id)
-        )
+  snap.forEach(doc => {
+    const data = doc.data()
+    const review = data.products?.find(
+      (p: any) => String(p.productId) === String(this.id)
+    )
 
-        if (review) {
-          list.push({
-            id: doc.id,
-            rating: review.rating,
-            comment: review.comment,
-            userId: data.userId,
-            userName: data.userName || 'Anonymous',
-            createdAt: data.createdAt
-          })
-          sum += review.rating
-        }
+    if (review) {
+      // Convert review photo to base64 if it exists
+      let photoBase64 = ''
+      if (review.photo) {
+        photoBase64 = review.photo.startsWith('data:image')
+          ? review.photo
+          : `data:image/jpeg;base64,${review.photo}`
+      }
+
+      list.push({
+        id: doc.id,
+        rating: review.rating,
+        comment: review.comment,
+        userId: data.userId,
+        userName: data.userName || 'Anonymous',
+        createdAt: data.createdAt,
+        photo: photoBase64 // add photo here
       })
 
-      this.reviews = list
-      this.totalReviews = list.length
-      this.averageRating = list.length
-        ? Number((sum / list.length).toFixed(1))
-        : 0
+      sum += review.rating
     }
+  })
+
+  this.reviews = list
+  this.totalReviews = list.length
+  this.averageRating = list.length
+    ? Number((sum / list.length).toFixed(1))
+    : 0
+}
+
   }
 }
 </script>
@@ -518,6 +532,14 @@ export default {
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 10px;
+}
+
+.review-image {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 
 .stars span {

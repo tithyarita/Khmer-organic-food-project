@@ -44,15 +44,24 @@
         <div class="total">Total Paid: ${{ formatPrice(order.total) }}</div>
       </div>
 
+      <!-- Rate Button for Completed Orders -->
+      <div v-if="order.status === 'completed'" class="rate-section">
+        <button @click="rateOrder(order)" class="rate-btn">Rate Order</button>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
 defineProps<{
   orders: any[]
   emptyText?: string
 }>()
+
+const router = useRouter()
 
 function getItemImage(item: any) {
   if (item.image) return item.image
@@ -73,6 +82,10 @@ const formatTime = (d: any) =>
 
 const formatPrice = (v: any) =>
   Number(v || 0).toFixed(2)
+
+function rateOrder(order: any) {
+  router.push(`/review/${order.id}`)
+}
 </script>
 
 <style scoped>
@@ -202,6 +215,30 @@ const formatPrice = (v: any) =>
   color: #888;
   padding: 2.5rem 0;
   font-size: 0.95rem;
+}
+
+/* ===== RATE SECTION ===== */
+.rate-section {
+  text-align: center;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed #cde6a5;
+}
+
+.rate-btn {
+  background: #6dc007;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.rate-btn:hover {
+  background: #5aa006;
 }
 
 </style>

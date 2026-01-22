@@ -89,15 +89,15 @@ export async function autoUpdateOrderStatuses() {
     if (order.paymentStatus !== 'paid' || !order.paymentDate) continue
 
     const paymentDate = new Date(order.paymentDate)
-    const daysSincePaid = (now.getTime() - paymentDate.getTime()) / (1000 * 60 * 60 * 24)
+    const daysSincePaid = (now.getTime() - paymentDate.getTime()) / (1000 * 60)
 
     let newStatus = order.status
 
-    if (daysSincePaid >= 1.5) {
+    if (daysSincePaid >= 5) {
       newStatus = 'completed'
-    } else if (daysSincePaid >= 1) {
+    } else if (daysSincePaid >= 3) {
       newStatus = 'delivering'
-    } else if (daysSincePaid >= 0.5) {
+    } else if (daysSincePaid >= 1) {
       newStatus = 'preparing'
     }
 
@@ -105,4 +105,9 @@ export async function autoUpdateOrderStatuses() {
       await updateOrderStatus(order.id, newStatus)
     }
   }
+}
+
+export async function updateOrderRated(orderId: string, rated: boolean) {
+  const ref = doc(db, 'orders', orderId)
+  await updateDoc(ref, { rated, updatedAt: new Date() })
 }
