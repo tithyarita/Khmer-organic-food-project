@@ -146,7 +146,7 @@ function handleShopNow() {
 
 .banner-image {
   width: 100%;
-  height: 57.5rem;
+  height: 92vh;
   background: url('/images/Food-banner.png') center / cover no-repeat;
   position: relative;
 }
