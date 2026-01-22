@@ -1,7 +1,8 @@
 <template>
   <div>
     <Banner />
-
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet"></link> -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"></link> -->
     <h1 class="Title">Feature Products</h1>
 
     <div class="products">
@@ -86,8 +87,9 @@ export default {
 
 .Title {
   text-align: center;
-  font-family: 'Roboto', sans-serif;
-  font-size: 2.5rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 750;
+  font-size: 3rem;
   margin-top: 2rem;
   color: #548D0C;
 }

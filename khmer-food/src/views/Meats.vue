@@ -78,8 +78,9 @@ function addToFavorite(product: any) {
 }
 .Title {
   text-align: center;
-  font-family: 'Roboto', sans-serif;
-  font-size: 2.5rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 750;
+  font-size: 3rem;
   margin-top: 2rem;
   color: #548D0C;
 }

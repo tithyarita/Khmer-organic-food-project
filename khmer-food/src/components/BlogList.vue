@@ -93,7 +93,6 @@ function closeFull() {
 <style scoped>
 .blog-cute {
   padding: 4rem 8%;
-  background: #f2fbf2;
 }
 
 /* Header */

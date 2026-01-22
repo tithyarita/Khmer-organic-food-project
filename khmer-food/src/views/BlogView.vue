@@ -12,7 +12,6 @@ import BlogList from "@/components/BlogList.vue"
 
 <style scoped>
 .blog-page{
-  background:#f3fbf2;
   min-height:100vh;
   padding-bottom:4rem;
 }

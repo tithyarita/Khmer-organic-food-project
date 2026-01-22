@@ -11,10 +11,6 @@
         <span class="label">Admins</span>
       </div>
       <div class="stat-box">
-        <span class="count">{{ totalManagers }}</span>
-        <span class="label">Managers</span>
-      </div>
-      <div class="stat-box">
         <span class="count">{{ totalCustomers }}</span>
         <span class="label">Customers</span>
       </div>
@@ -35,7 +31,6 @@
         <select v-model="filterRole" @change="applyFilters">
           <option value="">All Roles</option>
           <option value="admin">Admin</option>
-          <option value="manager">Manager</option>
           <option value="customer">Customer</option>
         </select>
         <select v-model="filterStatus" @change="applyFilters">
@@ -113,7 +108,6 @@
               <label>Role</label>
               <select v-model="userForm.role" :disabled="modalMode==='view'">
                 <option value="customer">Customer</option>
-                <option value="manager">Manager</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
@@ -147,7 +141,7 @@ interface User {
   name: string
   email: string
   phone: string
-  role: 'admin' | 'manager' | 'customer'
+  role: 'admin' | 'customer'
   status: 'active' | 'inactive'
   createdAt?: Timestamp
   password?: string
@@ -156,7 +150,6 @@ interface User {
 const users = ref<User[]>([])
 const totalUsers = ref(0)
 const totalAdmins = ref(0)
-const totalManagers = ref(0)
 const totalCustomers = ref(0)
 const showModal = ref(false)
 const modalMode = ref<'add' | 'edit' | 'view'>('add')
@@ -167,7 +160,7 @@ const searchTerm = ref('')
 const filterRole = ref('')
 const filterStatus = ref('')
 
-// --- Firestore ---
+// Firestore
 onMounted(()=>{
   const q=query(collection(db,'users'),orderBy('userId','desc'))
   onSnapshot(q,snapshot=>{
@@ -176,27 +169,27 @@ onMounted(()=>{
   })
 })
 
-// --- Filters & Sorting ---
+// Filters
 const filteredUsers = computed(()=>{
   return users.value.filter(u=>{
     if(filterRole.value && u.role!==filterRole.value) return false
     if(filterStatus.value && u.status!==filterStatus.value) return false
     if(searchTerm.value){
       const t=searchTerm.value.toLowerCase()
-      if(!u.name.toLowerCase().includes(t)&&!u.email.toLowerCase().includes(t)&&!u.phone.includes(t)) return false
+      if(!u.name.toLowerCase().includes(t) && !u.email.toLowerCase().includes(t) && !u.phone.includes(t)) return false
     }
     return true
   })
 })
 function applyFilters(){}
 
-// --- Modals ---
+// Modals
 function openAddUser(){modalMode.value='add';userForm.value={name:'',email:'',phone:'',role:'customer',status:'active',password:''};editingDocId.value=null;showModal.value=true}
 function openEditUser(user:User){modalMode.value='edit';userForm.value={name:user.name,email:user.email,phone:user.phone,role:user.role,status:user.status,password:''};editingDocId.value=user.docId;showModal.value=true}
 function openViewUser(user:User){modalMode.value='view';userForm.value={name:user.name,email:user.email,phone:user.phone,role:user.role,status:user.status,password:''};showModal.value=true}
 function closeModal(){showModal.value=false;userForm.value={name:'',email:'',phone:'',role:'customer',status:'active',password:''}}
 
-// --- Save User ---
+// Save
 async function saveUser(){
   loading.value=true
   try{
@@ -220,21 +213,20 @@ async function saveUser(){
   finally{loading.value=false}
 }
 
-// --- Stats ---
+// Stats
 function updateCounts(){
   totalUsers.value=users.value.length
   totalAdmins.value=users.value.filter(u=>u.role==='admin').length
-  totalManagers.value=users.value.filter(u=>u.role==='manager').length
   totalCustomers.value=users.value.filter(u=>u.role==='customer').length
 }
 
-// --- Utilities ---
+// Utils
 function formatDate(timestamp?:Timestamp){
   if(!timestamp?.seconds) return '-'
   return new Date(timestamp.seconds*1000).toLocaleDateString()
 }
 
-// --- CSV ---
+// CSV
 const fileInput = ref<HTMLInputElement|null>(null)
 function exportCSV(){
   const headers=['UserID','Name','Email','Phone','Role','Status','CreatedAt']
@@ -268,6 +260,11 @@ function handleFileUpload(e:Event){
   reader.readAsText(file)
 }
 </script>
+
+<style scoped>
+/* Keep previous styles as-is */
+</style>
+
 
 <style scoped>
 /* Styles same as previous, keep table scrollable */

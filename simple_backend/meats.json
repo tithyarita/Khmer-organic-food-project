@@ -91,5 +91,38 @@
     "stock": 86.5,
     "image": "http://localhost:3000/uploads/a99c4f04372f8ccd3065b9747f7a85e1",
     "discount": 8
+  },
+  {
+    "id": 10,
+    "name": "Pork Deep",
+    "category": "meats",
+    "price": 7.68,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 89,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/00ab4b153b84440b34dd88aadac1da0e"
+  },
+  {
+    "id": 11,
+    "name": "Crab",
+    "category": "meats",
+    "price": 9.7,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 45,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/3ee630d83fb5fe65140525da804a620f"
+  },
+  {
+    "id": 12,
+    "name": "Shrimp",
+    "category": "meats",
+    "price": 9.05,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 37,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/344239dc85ee4ff84ead1d86685ffb45"
   }
 ]

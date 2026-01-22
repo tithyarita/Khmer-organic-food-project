@@ -46,15 +46,26 @@
         "discount": 10
       },
       {
-        "id": 11,
-        "name": "Soup",
+        "id": 13,
+        "name": "Mju Yun",
         "category": "Soup",
-        "price": 8,
+        "price": 9.78,
         "unit": "set",
-        "rating": null,
-        "stock": 99,
-        "image": "http://localhost:3000/uploads/9aaf1b0bf0aa25e68d8c1794ef7aaa16",
-        "discount": 20
+        "rating": 0,
+        "stock": 34,
+        "discount": 0,
+        "image": "http://localhost:3000/uploads/102009ea2b55699363c4af0baa32b428"
+      },
+      {
+        "id": 14,
+        "name": "Jab Chay",
+        "category": "Soup",
+        "price": 8.77,
+        "unit": "set",
+        "rating": 0,
+        "stock": 25,
+        "discount": 0,
+        "image": "http://localhost:3000/uploads/c951336bd0bdc26bb220819cf4151da4"
       }
     ]
   },
@@ -100,6 +111,28 @@
         "rating": 0,
         "stock": 0,
         "image": "http://localhost:3000/uploads/8592bdf5f9f06fbd1e982c52327f1e57"
+      },
+      {
+        "id": 15,
+        "name": "Chha Spei",
+        "category": "Fried (Chha)",
+        "price": 7.89,
+        "unit": "set",
+        "rating": 0,
+        "stock": 23,
+        "discount": 5,
+        "image": "http://localhost:3000/uploads/1e4bb2baa2d55ffd50ffd17e6f702e9e"
+      },
+      {
+        "id": 16,
+        "name": "Fish Fried",
+        "category": "Fried (Chha)",
+        "price": 6.99,
+        "unit": "set",
+        "rating": 0,
+        "stock": 34,
+        "discount": 0,
+        "image": "http://localhost:3000/uploads/67209473e60813717da8928b4794a046"
       }
     ]
   },
@@ -126,6 +159,28 @@
         "rating": null,
         "stock": 86,
         "image": "http://localhost:3000/uploads/a7b56512df34b5c6ff67abd28ac4dcab"
+      },
+      {
+        "id": 11,
+        "name": "Brhok Kit",
+        "category": "Steamed",
+        "price": 8.89,
+        "unit": "set",
+        "rating": 0,
+        "stock": 23,
+        "discount": 5,
+        "image": "http://localhost:3000/uploads/017d5679b8109bb0aecf05180b82042c"
+      },
+      {
+        "id": 12,
+        "name": "Steamed Fish",
+        "category": "Steamed",
+        "price": 9.12,
+        "unit": "set",
+        "rating": 0,
+        "stock": 89,
+        "discount": 0,
+        "image": "http://localhost:3000/uploads/36a7a18309cc0bd47de67e77ff84730c"
       }
     ]
   }

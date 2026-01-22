@@ -37,7 +37,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/category/sets', name: 'sets', component: Sets, meta: { title: 'KHMER SETS FOOD', image: '/images/setBanner.png', bg: '#0a0a0aff' } },
   { path: '/cart', name: 'Cart', component: CartView },
   { path: '/favorite', name: 'FavoritePage', component: FavoritePage },
-  { path: '/product/:id', name: 'ProductDetail', component: ProductDetail, props: true, meta: { title: 'KHMER DETAIL FOOD', image: '/images/detailbanner.jpg', bg: '#0a0a0aff' } },
+  { path: '/detail/:id', name: 'ProductDetail', component: ProductDetail, props: true, meta: { title: 'KHMER DETAIL FOOD', image: '/images/detailbanner.jpg', bg: '#0a0a0aff' } },
   { path: '/checkout', name: 'Checkout', component: Checkout },
   { path: '/about', name: 'About', component: AboutView },
   { path: '/contact', name: 'Contact', component: ContactView },

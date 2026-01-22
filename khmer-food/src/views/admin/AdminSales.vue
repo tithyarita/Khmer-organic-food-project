@@ -376,9 +376,9 @@ h2 { margin-bottom: 20px; }
 .stat-content h3 { margin:0 0 5px; font-size:16px; color:#2c3e50; }
 .stat-value { font-size:20px; font-weight:bold; color:#53b400; }
 .section { margin-top:40px; }
-.chart-container { width:100%; height:300px; margin-bottom:20px; }
+.chart-container { width:100%; height:300px; margin-bottom:20px; gap: 40px; margin-left: 40px; }
 .charts-row { display:flex; gap:20px; }
-.chart-col { flex:1; }
+.chart-col { width: 500px; margin-left: 20px;}
 table { width:100%; border-collapse:collapse; background:white; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-top:20px; }
 th,td{padding:15px;text-align:left;border-bottom:1px solid #ecf0f1;}
 th{background:#f5f5f5;font-weight:600;}

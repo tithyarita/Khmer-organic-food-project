@@ -108,8 +108,63 @@
     "price": 9,
     "unit": "kg",
     "rating": null,
-    "stock": 3,
+    "stock": 2,
     "discount": 0,
     "image": "http://localhost:3000/uploads/1ae882b242cbf87982a01bb7f1eafca3"
+  },
+  {
+    "id": 12,
+    "name": "Tomato",
+    "category": "vegetables",
+    "price": 4.67,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 12,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/6e0020bde1194c181d69e35d6672ff5e"
+  },
+  {
+    "id": 13,
+    "name": "Water spinach Leaf",
+    "category": "vegetables",
+    "price": 3.02,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 26,
+    "discount": 7,
+    "image": "http://localhost:3000/uploads/abd642a2541b4a5e605ba1e4c886692a"
+  },
+  {
+    "id": 14,
+    "name": "Lemon",
+    "category": "vegetables",
+    "price": 5.07,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 34,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/410343d81116ee5960fa4fb58d9958fd"
+  },
+  {
+    "id": 15,
+    "name": "Radish",
+    "category": "vegetables",
+    "price": 3.99,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 89,
+    "discount": 10,
+    "image": "http://localhost:3000/uploads/b508ae61d6ffc761949083b9b8e30b2f"
+  },
+  {
+    "id": 16,
+    "name": "Papaya",
+    "category": "vegetables",
+    "price": 3.45,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 17,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/74a29b1f8aab711fe58cd5166760aaa7"
   }
 ]
