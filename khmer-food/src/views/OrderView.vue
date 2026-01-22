@@ -254,14 +254,16 @@ const goBack = () => {
 
 .back-btn {
   display: block;
-  margin: 2rem auto 0;
-  padding: 0.75rem 1.5rem;
-  background: #ff6f61;
+  margin: 0 auto 40px; /* center horizontally */
+  width: 260px;       /* fixed nice width */
+  background: #6dc007;
   color: white;
   border: none;
-  border-radius: 20px;
-  cursor: pointer;
+  padding: 14px 0;
+  border-radius: 12px;
   font-weight: 600;
+  cursor: pointer;
+  text-align: center;
 }
 
 .back-btn:hover {
