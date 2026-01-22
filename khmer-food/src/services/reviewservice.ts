@@ -7,7 +7,8 @@ export async function addOrderReview({
   productId,
   productName,
   rating,
-  comment
+  comment,
+  photo
 }: {
   userId: string
   orderId: string
@@ -15,6 +16,7 @@ export async function addOrderReview({
   productName?: string
   rating: number
   comment: string
+  photo?: string
 }) {
   const reviewRef = doc(db, 'reviews', orderId)
 
@@ -26,9 +28,9 @@ export async function addOrderReview({
 
     const existingIndex = products.findIndex((p: any) => p.productId === productId)
     if (existingIndex !== -1) {
-      products[existingIndex] = { productId, productName, rating, comment }
+      products[existingIndex] = { productId, productName, rating, comment, photo }
     } else {
-      products.push({ productId, productName, rating, comment })
+      products.push({ productId, productName, rating, comment, photo })
     }
 
     await setDoc(reviewRef, { ...data, products }, { merge: true })
@@ -36,7 +38,7 @@ export async function addOrderReview({
     await setDoc(reviewRef, {
       orderId,
       userId,
-      products: [{ productId, productName, rating, comment }],
+      products: [{ productId, productName, rating, comment, photo }],
       createdAt: new Date()
     })
   }

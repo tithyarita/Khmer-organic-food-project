@@ -1,9 +1,12 @@
 <template>
   <div class="review-page">
-    <h2>Review Your Order</h2>
+    <h2 class="page-title">💖 Review Your Order</h2>
 
     <div v-for="item in order?.items" :key="item.id" class="review-item">
-      <h3>{{ item.name }}</h3>
+      <div class="item-header">
+        <img :src="item.image || '/default-product.jpg'" class="item-image" />
+        <h3>{{ item.name }}</h3>
+      </div>
 
       <!-- Star Rating -->
       <div class="stars">
@@ -11,7 +14,12 @@
           v-for="star in 5"
           :key="star"
           @click="!isReviewed(item.id) && setRating(item.id, star)"
-          :class="{ active: ratings[item.id] >= star, disabled: isReviewed(item.id) }"
+          @mouseover="hoverRating[item.id] = star"
+          @mouseleave="hoverRating[item.id] = 0"
+          :class="{
+            active: (hoverRating[item.id] || ratings[item.id]) >= star,
+            disabled: isReviewed(item.id)
+          }"
         >
           ★
         </span>
@@ -23,6 +31,13 @@
         :disabled="isReviewed(item.id)"
         placeholder="Write your review..."
       ></textarea>
+
+      <!-- Photo Upload -->
+      <div class="photo-upload" v-if="!isReviewed(item.id)">
+        <label for="photo">Upload a photo (optional):</label>
+        <input type="file" accept="image/*" @change="handleFileUpload($event, item.id)" />
+        <img v-if="photos[item.id]" :src="photos[item.id]" class="preview-image" />
+      </div>
 
       <p v-if="isReviewed(item.id)" class="already-reviewed">
         ✔ Already reviewed
@@ -40,24 +55,25 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getOrderById } from '@/services/orderService'
+import { getOrderById, updateOrderRated } from '@/services/orderService'
 import { addOrderReview, getReviewsByOrder } from '@/services/reviewService'
 import { getUserStorage } from '@/loginstorage'
 
 const route = useRoute()
 const router = useRouter()
-
 const orderId = route.params.orderId as string
+
 const order = ref<any>(null)
 const user = getUserStorage()
 
 const ratings = ref<Record<string, number>>({})
 const comments = ref<Record<string, string>>({})
+const hoverRating = ref<Record<string, number>>({})
 const reviewedProducts = ref<Record<string, any>>({})
+const photos = ref<Record<string, string>>({}) // base64 photos
 
 const submitting = ref(false)
 
-// Load order and existing reviews
 onMounted(async () => {
   if (!user) {
     alert('Please login first!')
@@ -68,13 +84,14 @@ onMounted(async () => {
   // Load order items
   order.value = await getOrderById(orderId)
 
-  // Load existing reviews for this order
+  // Load existing reviews
   const reviewDoc = await getReviewsByOrder(orderId)
-  if (reviewDoc && reviewDoc.products) {
+  if (reviewDoc?.products) {
     for (const p of reviewDoc.products) {
       reviewedProducts.value[p.productId] = p
       ratings.value[p.productId] = p.rating
       comments.value[p.productId] = p.comment
+      if (p.photo) photos.value[p.productId] = p.photo
     }
   }
 })
@@ -89,7 +106,19 @@ function setRating(productId: string | number, star: number) {
   ratings.value[productId] = star
 }
 
-// Submit all reviews in one document
+// Handle photo upload
+function handleFileUpload(e: Event, productId: string) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    photos.value[productId] = reader.result as string
+  }
+  reader.readAsDataURL(file)
+}
+
+// Submit all reviews
 async function submitAllReviews() {
   if (!user) return
 
@@ -119,10 +148,13 @@ async function submitAllReviews() {
         productName: item.name,
         rating: ratings.value[item.id],
         comment: comments.value[item.id] || '',
+        photo: photos.value[item.id] || ''
       })
     }
 
-    alert('Reviews submitted successfully!')
+    await updateOrderRated(orderId, true)
+
+    alert('Reviews submitted successfully! 💖')
     router.push('/')
   } catch (error) {
     console.error(error)
@@ -132,29 +164,54 @@ async function submitAllReviews() {
   }
 }
 
-// Disable button if all products already reviewed
+// Disable button if all reviewed
 const allReviewed = computed(() => {
   return order.value?.items.every((item: any) => isReviewed(item.id))
 })
-
-function goHome() {
-  router.push('/')
-}
 </script>
 
 <style scoped>
 .review-page {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 32px 16px;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #ff6b81;
+  margin-bottom: 32px;
 }
 
 .review-item {
   background: #fff;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 20px;
+  padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.review-item:hover {
+  transform: translateY(-2px);
+}
+
+.item-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(109, 192, 7, 0.378);
 }
 
 .stars {
@@ -167,10 +224,12 @@ function goHome() {
   font-size: 28px;
   cursor: pointer;
   color: #ddd;
+  transition: transform 0.2s, color 0.2s;
 }
 
 .stars span.active {
   color: #f5b301;
+  transform: scale(1.2);
 }
 
 .stars span.disabled {
@@ -182,16 +241,37 @@ textarea {
   width: 100%;
   min-height: 90px;
   padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 12px;
+  border: 1px solid #eee;
   resize: vertical;
   font-size: 14px;
   margin-top: 8px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
 textarea:disabled {
   background: #f5f5f5;
   color: #888;
+}
+
+.photo-upload {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.photo-upload input {
+  padding: 4px;
+}
+
+.preview-image {
+  max-width: 120px;
+  border-radius: 12px;
+  margin-top: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .already-reviewed {
@@ -202,18 +282,23 @@ textarea:disabled {
 
 button {
   margin-top: 20px;
-  padding: 12px 20px;
-  background: #4f46e5;
+  padding: 14px 20px;
+  background: linear-gradient(135deg,#ff6b81,#ff9f1c);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover:enabled {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255,107,129,0.4);
 }
 
 button:disabled {
-  background: #ccc;
   cursor: not-allowed;
 }
 </style>
