@@ -587,12 +587,8 @@ async fetchReviews() {
 
 /* ===== Another set section ===== */
 .another-set {
-<<<<<<< HEAD
   margin-top: 60px;
   font-family: 'Quicksand', sans-serif;
-=======
-  margin-top: 40px;
->>>>>>> 90e3271a0c5ccc5eee8a1a97c211110d6521ac5c
 }
 
 .another-set h3 {

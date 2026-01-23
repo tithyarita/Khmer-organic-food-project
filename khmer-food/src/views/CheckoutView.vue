@@ -64,9 +64,38 @@
   <div class="payment-details" v-if="selectedPayment">
 
     <!-- CARD -->
-    <div v-if="selectedPayment === 'card'">
-      <input type="text" placeholder="Card Number" v-model="paymentDetails.cardNumber" />
-    </div>
+<div v-if="selectedPayment === 'card'" class="card-form">
+
+  <input
+    type="text"
+    placeholder="Cardholder Name"
+    v-model="paymentDetails.cardHolderName"
+  />
+
+  <input
+    type="text"
+    placeholder="Card Number"
+    v-model="paymentDetails.cardNumber"
+    maxlength="19"
+  />
+
+  <div class="card-row">
+    <input
+      type="text"
+      placeholder="MM / YY"
+      v-model="paymentDetails.expiry"
+      maxlength="5"
+    />
+
+    <input
+      type="password"
+      placeholder="CVV"
+      v-model="paymentDetails.cvv"
+      maxlength="3"
+    />
+  </div>
+
+</div>
 
     <!-- ABA QR -->
     <div v-else-if="selectedPayment === 'aba'" class="qr-box">
@@ -189,8 +218,15 @@ const selectedItems = computed(() =>
 )
 
 /* Totals based on selected items */
+// const subtotal = computed(() =>
+//   selectedItems.value.reduce((sum, item) => sum + item.price * item.qty, 0)
+// )
+
 const subtotal = computed(() =>
-  selectedItems.value.reduce((sum, item) => sum + item.price * item.qty, 0)
+  selectedItems.value.reduce(
+    (sum, item) => sum + getDiscountedPrice(item) * item.qty,
+    0
+  )
 )
 
 const DELIVERY_FEE = 1.06
@@ -213,7 +249,7 @@ const discount = computed(() =>
 
 // const delivery = computed(() => (subtotal.value > 0 ? 1.06 : 0))
 // const total = computed(() => subtotal.value + delivery.value - discount.value)
-const total = computed(() => subtotal.value + delivery.value - discount.value)
+const total = computed(() => subtotal.value + delivery.value)
 
 // Payment state
 const selectedPayment = ref('')
@@ -223,6 +259,8 @@ const paymentDetails = ref({
   cvv: '',
   accountNumber: '',
   qrImage: '',
+  cardHolderName: '',
+  
 })
 function handleQRUpload(event: Event) {
   const target = event.target as HTMLInputElement
@@ -608,5 +646,22 @@ h1 {
 .discount {
   color: #6ec007;
 }
+.card-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.card-row {
+  display: flex;
+  gap: 12px;
+}
+
+.card-row input {
+  flex: 1;
+}
+
 </style>
 

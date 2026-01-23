@@ -87,14 +87,9 @@ export default {
 
 .Title {
   text-align: center;
-<<<<<<< HEAD
-  font-family: 'Quicksand', sans-serif;
-  font-size: 2.5rem;
-=======
   font-family: 'Bebas Neue', sans-serif;
   font-weight: 750;
   font-size: 3rem;
->>>>>>> 90e3271a0c5ccc5eee8a1a97c211110d6521ac5c
   margin-top: 2rem;
   color: #548D0C;
 }
