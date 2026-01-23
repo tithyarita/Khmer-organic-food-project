@@ -48,8 +48,9 @@
     "price": 7.13,
     "unit": "kg",
     "rating": 2,
-    "stock": 75,
-    "image": "http://localhost:3000/uploads/75d1cc4a02146db60a437e75c282249a"
+    "stock": 70,
+    "image": "http://localhost:3000/uploads/75d1cc4a02146db60a437e75c282249a",
+    "discount": null
   },
   {
     "id": 6,
@@ -88,7 +89,7 @@
     "price": 8.99,
     "unit": "kg",
     "rating": 3,
-    "stock": 86.5,
+    "stock": 80,
     "image": "http://localhost:3000/uploads/a99c4f04372f8ccd3065b9747f7a85e1",
     "discount": 8
   },
@@ -118,11 +119,14 @@
     "id": 12,
     "name": "Shrimp",
     "category": "meats",
-    "price": 9.05,
+    "price": 8.77,
     "unit": "kg",
     "rating": 0,
-    "stock": 37,
+    "stock": 23,
     "discount": 0,
-    "image": "http://localhost:3000/uploads/344239dc85ee4ff84ead1d86685ffb45"
+    "images": [
+      "http://localhost:3000/uploads/8544578ec3c5a85682150a420a115678"
+    ],
+    "image": "http://localhost:3000/uploads/c5e8d9a1fc4c800632135e0e80c03530"
   }
 ]

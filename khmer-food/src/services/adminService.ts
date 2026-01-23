@@ -77,7 +77,16 @@ export const addProduct = (data: any) => {
   fd.append('rating', String(data.rating))
   fd.append('discount', String(data.discount))
   fd.append('stock', String(data.stock))
-  fd.append('image', data.imageFile)
+  if (data.ingredients) {
+    fd.append('ingredients', JSON.stringify(data.ingredients.split(',').map((ing: string) => ing.trim())))
+  }
+
+  if (data.imageFiles && data.imageFiles.length > 0) {
+    for (const file of data.imageFiles) {
+      fd.append('images', file) // ✅ append each file under the "images" key
+    }
+  }
+  // fd.append('images', data.imageFiles[0]) // Only first image
 
   if (data.category === 'Vegetables') {
     return api.post('/vegetables', fd)
@@ -95,6 +104,7 @@ export const addProduct = (data: any) => {
 // =====================
 // UPDATE (FIXED)
 // =====================
+
 export const updateProduct = (data: any) => {
   const fd = new FormData()
 
@@ -104,9 +114,18 @@ export const updateProduct = (data: any) => {
   fd.append('rating', String(data.rating))
   fd.append('discount', String(data.discount))
   fd.append('stock', String(data.stock))
+  if (data.ingredients) {
+    fd.append('ingredients', JSON.stringify(data.ingredients.split(',').map((ing: string) => ing.trim())))
+  }
 
-  if (data.imageFile) {
-    fd.append('image', data.imageFile)
+  // if (data.imageFiles) {
+  //   fd.append('images', data.imageFiles[0]) // Only first image
+  // }
+
+  if (data.imageFiles && data.imageFiles.length > 0) {
+    for (const file of data.imageFiles) {
+      fd.append('images', file) // ✅ append each file under the "images" key
+    }
   }
 
   if (data.category === 'Vegetables') {
@@ -120,9 +139,47 @@ export const updateProduct = (data: any) => {
   return api.patch(`/sets/${data.category}/${data.id}`, fd)
 }
 
+// export const updateProduct = (data: any) => {
+//   const fd = new FormData()
+
+//   fd.append('name', data.name)
+//   fd.append('price', String(data.price))
+//   fd.append('unit', data.unit)
+//   fd.append('rating', String(data.rating))
+//   fd.append('discount', String(data.discount))
+//   fd.append('stock', String(data.stock))
+
+//   if (data.ingredients) {
+//     fd.append(
+//       'ingredients',
+//       JSON.stringify(
+//         data.ingredients.split(',').map((ing: string) => ing.trim())
+//       )
+//     )
+//   }
+
+//   // ✅ Multiple images
+//   if (data.imageFiles && data.imageFiles.length > 0) {
+//     for (const file of data.imageFiles) {
+//       fd.append('images', file) // backend expects "images"
+//     }
+//   }
+
+//   if (data.category === 'Vegetables') {
+//     return api.patch(`/vegetables/${data.id}`, fd)
+//   }
+
+//   if (data.category === 'Meats') {
+//     return api.patch(`/meats/${data.id}`, fd)
+//   }
+
+//   return api.patch(`/sets/${data.category}/${data.id}`, fd)
+// }
+
 // =====================
 // DELETE
 // =====================
+
 export const deleteVegetable = (id: number) =>
   api.delete(`/vegetables/${id}`)
 

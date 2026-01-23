@@ -11,7 +11,7 @@
           <div class="main-image">
             <img :src="selectedImage" :alt="product.name" />
           </div>
-
+          <!-- 
           <div class="thumbnail-row">
             <img
               v-for="(img, index) in product.images"
@@ -20,7 +20,7 @@
               :class="{ active: selectedImage === img }"
               @click="selectedImage = img"
             />
-          </div>
+          </div> -->
         </div>
 
         <!-- RIGHT : PRODUCT INFO + INGREDIENTS -->
@@ -156,136 +156,136 @@ export default {
       totalReviews: 0,
       relatedSets: [],
 
-      mockProducts: [
-        {
-          id: '1',
-          images: ['/images/brher1.png', '/images/brher2.png', '/images/brher3.png'],
-          ingredients: ['Fish: 1kg', 'Pumpkin: 200g', 'Mushroom: 200g', 'Truffle: 100g (sliced)', 'Bass leaves: 100g']
-        },
-        {
-          id: '2',
-          images: ['/images/korko1.png', '/images/korko2.png', '/images/korko3.png'],
-          ingredients: [
-            'Fish or Pork: 1 kg',
-            'Papaya: 300 g',
-            'Moringa leaves: 200 g',
-            'Pumpkin: 100 g',
-            'Eggplant: 100 g'
-          ]
-        },
-         {
-          id: '3',
-          images: ['/images/mju1.png', '/images/mju2.png', '/images/mju3.png'],
-          ingredients: [
-            'Beef: 0.5 kg',
-            'Scallions: 300 g',
-            'Peppers: 0.05 g ',
-            'Lemongrass: 100 g',
-            'Garlic: 50 g',
-            'Fennel: 50 g',
-            'Ripe tamarind: 50 g'
-          ]
-        },
-         {
-          id: '4',
-          images: ['/images/sour1.png', '/images/sour2.png', '/images/sour3.png'],
-          ingredients: [
-            'Chicken: 0.5 kg',
-            'Lemongrass: 3 stalks',
-            'Ginger: 3 slices',
-            'Garlic: 5 cloves',
-            'Lemon: 1 piece'
-          ]
-        },
-        {
-          id: '5',
-          images: ['/images/trakuon1.png', '/images/trakuon2.png', '/images/trakuon3.png'],
-          ingredients: [
-            'Chicken: 0.4 kg',
-            'Garlic: 5 cloves',
-            'Trakuon: 500 g'
-          ]
-        },
-        {
-          id: '6',
-          images: ['/images/vegetables1.png', '/images/vegetables2.png', '/images/vegetables3.png'],
-          ingredients: [
-            'Pork: 0.5 kg',
-            'Carrot: 200 g',
-            'Cauliflower: 200 g',
-            'Broccoli: 200 g',
-            'Bell pepper: 100 g',
-            'Onion: 100 g',
-            'Garlic: 5 cloves'
-          ]
-        },
-        {
-          id: '7',
-          images: ['/images/chicken1.png', '/images/chicken2.png', '/images/chicken3.png'],
-          ingredients: [
-            'Chicken: 1 kg (cut into pieces)',
-            'Garlic: 5 cloves',
-            'Peppers: 0.05 g',
-            'Lemongrass: 100 g',
-            'Fennel: 50 g',
-            'Ripe tamarind: 50 g'
-          ]
-        },
-        {
-          id: '8',
-          images: ['/images/khgey1.png', '/images/khgey2.png', '/images/khgey3.png'],
-          ingredients: [
-            'Chicken: 1 kg',
-            'Garlic: 5 cloves',
-            'Ginger: 3 silces',
-            'Garlic leaves: 10 g'
-          ]
-        },
-        {
-          id: '9',
-          images: ['/images/ahmok1.png', '/images/ahmok2.png', '/images/ahmok3.png'],
-          ingredients: [
-            'Fish: 500 g',
-            'Coconut milk: 200 ml',
-            'Kroeung paste: 50 g',
-            'Egg: 1',
-            'Banana leaves for steaming'
-          ]
-        },
-         {
-          id: '10',
-          images: ['/images/brhok1.png', '/images/brhok2.png', '/images/brhok3.png'],
-          ingredients: [
-            'Brhok: 200 g',
-            'Pork: 0.5 kg',
-            'Garlic: 5 cloves',
-            'Peppers: 0.05 g',
-            'Egg: 3 pieces'
-          ]
-        },
-        {
-          id: '11',
-          images: ['/images/brhokktis1.png', '/images/brhokktis2.png', '/images/brhokktis3.png'],
-          ingredients: [
-            'Pork: 0.5 kg',
-            'Brhok: 200 g',
-            'Coconut milk: 200 ml',
-            'Garlic: 5 cloves',
-            'Peppers: 0.05 g',
-            'Peanut: 100 g'
-          ]
-        },
-         {
-          id: '12',
-          images: ['/images/streamfish1.png', '/images/streamfish2.png', '/images/streamfish3.png'],
-          ingredients: [
-            'Fish: 1 kg',
-            'Garlic leaves: 10 g',
-            'Carrot: 200 g',
-            'Peppers: 0.05 g'
-          ]
-        }
-      ]
+      // mockProducts: [
+      //   {
+      //     id: '1',
+      //     images: ['/images/brher1.png', '/images/brher2.png', '/images/brher3.png'],
+      //     ingredients: ['Fish: 1kg', 'Pumpkin: 200g', 'Mushroom: 200g', 'Truffle: 100g (sliced)', 'Bass leaves: 100g']
+      //   },
+      //   {
+      //     id: '2',
+      //     images: ['/images/korko1.png', '/images/korko2.png', '/images/korko3.png'],
+      //     ingredients: [
+      //       'Fish or Pork: 1 kg',
+      //       'Papaya: 300 g',
+      //       'Moringa leaves: 200 g',
+      //       'Pumpkin: 100 g',
+      //       'Eggplant: 100 g'
+      //     ]
+      //   },
+      //    {
+      //     id: '3',
+      //     images: ['/images/mju1.png', '/images/mju2.png', '/images/mju3.png'],
+      //     ingredients: [
+      //       'Beef: 0.5 kg',
+      //       'Scallions: 300 g',
+      //       'Peppers: 0.05 g ',
+      //       'Lemongrass: 100 g',
+      //       'Garlic: 50 g',
+      //       'Fennel: 50 g',
+      //       'Ripe tamarind: 50 g'
+      //     ]
+      //   },
+      //    {
+      //     id: '4',
+      //     images: ['/images/sour1.png', '/images/sour2.png', '/images/sour3.png'],
+      //     ingredients: [
+      //       'Chicken: 0.5 kg',
+      //       'Lemongrass: 3 stalks',
+      //       'Ginger: 3 slices',
+      //       'Garlic: 5 cloves',
+      //       'Lemon: 1 piece'
+      //     ]
+      //   },
+      //   {
+      //     id: '5',
+      //     images: ['/images/trakuon1.png', '/images/trakuon2.png', '/images/trakuon3.png'],
+      //     ingredients: [
+      //       'Chicken: 0.4 kg',
+      //       'Garlic: 5 cloves',
+      //       'Trakuon: 500 g'
+      //     ]
+      //   },
+      //   {
+      //     id: '6',
+      //     images: ['/images/vegetables1.png', '/images/vegetables2.png', '/images/vegetables3.png'],
+      //     ingredients: [
+      //       'Pork: 0.5 kg',
+      //       'Carrot: 200 g',
+      //       'Cauliflower: 200 g',
+      //       'Broccoli: 200 g',
+      //       'Bell pepper: 100 g',
+      //       'Onion: 100 g',
+      //       'Garlic: 5 cloves'
+      //     ]
+      //   },
+      //   {
+      //     id: '7',
+      //     images: ['/images/chicken1.png', '/images/chicken2.png', '/images/chicken3.png'],
+      //     ingredients: [
+      //       'Chicken: 1 kg (cut into pieces)',
+      //       'Garlic: 5 cloves',
+      //       'Peppers: 0.05 g',
+      //       'Lemongrass: 100 g',
+      //       'Fennel: 50 g',
+      //       'Ripe tamarind: 50 g'
+      //     ]
+      //   },
+      //   {
+      //     id: '8',
+      //     images: ['/images/khgey1.png', '/images/khgey2.png', '/images/khgey3.png'],
+      //     ingredients: [
+      //       'Chicken: 1 kg',
+      //       'Garlic: 5 cloves',
+      //       'Ginger: 3 silces',
+      //       'Garlic leaves: 10 g'
+      //     ]
+      //   },
+      //   {
+      //     id: '9',
+      //     images: ['/images/ahmok1.png', '/images/ahmok2.png', '/images/ahmok3.png'],
+      //     ingredients: [
+      //       'Fish: 500 g',
+      //       'Coconut milk: 200 ml',
+      //       'Kroeung paste: 50 g',
+      //       'Egg: 1',
+      //       'Banana leaves for steaming'
+      //     ]
+      //   },
+      //    {
+      //     id: '10',
+      //     images: ['/images/brhok1.png', '/images/brhok2.png', '/images/brhok3.png'],
+      //     ingredients: [
+      //       'Brhok: 200 g',
+      //       'Pork: 0.5 kg',
+      //       'Garlic: 5 cloves',
+      //       'Peppers: 0.05 g',
+      //       'Egg: 3 pieces'
+      //     ]
+      //   },
+      //   {
+      //     id: '11',
+      //     images: ['/images/brhokktis1.png', '/images/brhokktis2.png', '/images/brhokktis3.png'],
+      //     ingredients: [
+      //       'Pork: 0.5 kg',
+      //       'Brhok: 200 g',
+      //       'Coconut milk: 200 ml',
+      //       'Garlic: 5 cloves',
+      //       'Peppers: 0.05 g',
+      //       'Peanut: 100 g'
+      //     ]
+      //   },
+      //    {
+      //     id: '12',
+      //     images: ['/images/streamfish1.png', '/images/streamfish2.png', '/images/streamfish3.png'],
+      //     ingredients: [
+      //       'Fish: 1 kg',
+      //       'Garlic leaves: 10 g',
+      //       'Carrot: 200 g',
+      //       'Peppers: 0.05 g'
+      //     ]
+      //   }
+      // ]
     }
   },
 
@@ -319,6 +319,28 @@ export default {
   })
 },
 
+    // async loadProduct() {
+    //   const res = await fetch('http://localhost:3000/sets')
+    //   const sets = await res.json()
+    //   const items = sets.flatMap((s: any) => s.items)
+
+    //   const backendProduct = items.find(
+    //     (p: any) => String(p.id) === String(this.id)
+    //   )
+
+    //   if (!backendProduct) return
+
+    //   const mock = this.mockProducts.find(p => p.id === this.id)
+
+    //   this.product = {
+    //     ...backendProduct,
+    //     images: mock?.images || [backendProduct.image],
+    //     ingredients: mock?.ingredients || []
+    //   }
+
+    //   this.selectedImage = this.product.images[0]
+    // },
+
     async loadProduct() {
       const res = await fetch('http://localhost:3000/sets')
       const sets = await res.json()
@@ -330,12 +352,10 @@ export default {
 
       if (!backendProduct) return
 
-      const mock = this.mockProducts.find(p => p.id === this.id)
-
       this.product = {
         ...backendProduct,
-        images: mock?.images || [backendProduct.image],
-        ingredients: mock?.ingredients || []
+        images: backendProduct.images || [backendProduct.image], // ✅ use backend images
+        ingredients: backendProduct.ingredients || []            // ✅ use backend ingredients
       }
 
       this.selectedImage = this.product.images[0]
@@ -559,7 +579,7 @@ async fetchReviews() {
 
 /* ===== Another set section ===== */
 .another-set {
-  margin-top: 60px;
+  margin-top: 40px;
 }
 
 .another-set h3 {
@@ -574,6 +594,7 @@ async fetchReviews() {
 .scroll-container {
   overflow-x: auto;
   padding-bottom: 15px;
+  
 }
 
 .scroll-row {
@@ -600,7 +621,7 @@ async fetchReviews() {
 /* ===== Image ===== */
 .set-card img {
   width: 170px;
-  height: 150px;
+  height: 120px;
   object-fit: contain;
   border-radius: 16px;
   background: #f3f3f3;
