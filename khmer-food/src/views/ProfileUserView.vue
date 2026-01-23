@@ -267,7 +267,7 @@ const goToOrders = () => {
 <style scoped>
 .profile-page {
   display: flex;
-  min-height: 100vh;
+  min-height: 94vh;
   gap: 2.5rem;
   font-family: 'Quicksand', sans-serif;
   padding: 3rem;
@@ -328,7 +328,7 @@ const goToOrders = () => {
   font-size: 0.85rem;
   cursor: pointer;
   white-space: nowrap;
-  
+
 }
 
 .btn {
@@ -351,7 +351,7 @@ const goToOrders = () => {
   flex: 1;
   background: white;
   border-radius: 22px;
-  padding: 3rem;
+  padding: 0.5rem;
   box-shadow: 0 12px 28px rgba(0,0,0,0.07);
 }
 
@@ -370,7 +370,7 @@ const goToOrders = () => {
 
 .label-text {
   display: block;
-  font-weight: 600; 
+  font-weight: 600;
   margin: 0.7rem 0.2rem;
 }
 

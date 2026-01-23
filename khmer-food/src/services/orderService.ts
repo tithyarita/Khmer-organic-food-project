@@ -112,7 +112,7 @@ export async function updateOrderRated(orderId: string, rated: boolean) {
   await updateDoc(ref, { rated, updatedAt: new Date() })
 }
 
-export async function getTopProducts(limit: number = 4, dateRange: 'today' | 'all' = 'today') {
+export async function getTopProducts(limit: number = 4, dateRange: 'today' | 'week' | 'all' = 'today') {
   const allOrders = await getAllOrders()
   console.log('All orders:', allOrders.length)
 
@@ -126,6 +126,17 @@ export async function getTopProducts(limit: number = 4, dateRange: 'today' | 'al
     startDate = today
     endDate = new Date(today)
     endDate.setDate(endDate.getDate() + 1)
+    console.log('Filtering orders from:', startDate.toISOString(), 'to:', endDate.toISOString())
+  } else if (dateRange === 'week') {
+    // Get this week's date (Monday to Sunday)
+    const today = new Date()
+    const dayOfWeek = today.getDay() // 0 = Sunday, 1 = Monday, etc.
+    const monday = new Date(today)
+    monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)) // Go back to Monday
+    monday.setHours(0, 0, 0, 0)
+    startDate = monday
+    endDate = new Date(monday)
+    endDate.setDate(endDate.getDate() + 7) // Next Monday
     console.log('Filtering orders from:', startDate.toISOString(), 'to:', endDate.toISOString())
   } else {
     // All time - no date filter

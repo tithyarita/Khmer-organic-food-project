@@ -121,7 +121,7 @@ onMounted(async () => {
   if (props.showPopular) {
     console.log('Loading top products...')
     try {
-      const topProducts = await getTopProducts(4, 'today')
+      const topProducts = await getTopProducts(4, 'week')
       console.log('Top products loaded:', topProducts)
       if (topProducts.length > 0) {
         products.splice(0, products.length, ...topProducts)
@@ -376,11 +376,14 @@ function handleShopNow() {
 
 .stars {
   color: #f5a623;
+  font-size: 30px;
 }
 
 .price {
   color: red;
   font-weight: bold;
+  font-size: 20px;
+  margin: 10px;
 }
 
 .add-btn {
@@ -388,8 +391,13 @@ function handleShopNow() {
   color: white;
   border: none;
   border-radius: 0.875rem;
-  padding: 0.5rem 0.875rem;
+  font-size: 16px;
+  padding: 10px 20px;
   cursor: pointer;
+}
+.add-btn:hover {
+  background-color: #57a600;
+  transition: background-color 0.3s ease;
 }
 
 </style>
