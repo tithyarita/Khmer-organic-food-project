@@ -16,16 +16,14 @@
     </section>
 
     <section ref="columnSection" class="content-section column-section">
-      <h1>Promotion</h1>
-      <div class="column-banner-wrapper">
-        <BannerHomePage :showColumnOnly="true" />
-      </div>
+      <FarmGallery />
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import BannerHomePage from '@/components/Homepage-banner.vue'
+import FarmGallery from '@/components/FarmGallery.vue'
 import { ref, onMounted } from 'vue'
 
 const mainBanner = ref<HTMLElement | null>(null)
