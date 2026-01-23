@@ -323,6 +323,20 @@
         "discount": 0,
         "ingredients": [],
         "image": "http://localhost:3000/uploads/091fb60548dc025e602f678c37ff61ba"
+      },
+      {
+        "id": 19,
+        "name": "ggge",
+        "category": "Steamed",
+        "price": 44,
+        "unit": "kg",
+        "rating": 0,
+        "stock": 5,
+        "discount": 0,
+        "ingredients": [
+          "ggg"
+        ],
+        "image": "http://localhost:3000/uploads/c18c5a258fdfd490a45efe6165187798"
       }
     ]
   }

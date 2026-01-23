@@ -212,6 +212,7 @@ app.patch('/meats/:id', upload.single('image'), (req, res) => {
     stock: stock !== undefined ? Number(stock) : meats[index].stock,
     discount: discount ? Number(discount) : meats[index].discount,
     image: imageFile ? `http://localhost:3000/uploads/${imageFile.filename}` : meats[index].image
+      
   }
   saveMeats()
   res.json(meats[index])
