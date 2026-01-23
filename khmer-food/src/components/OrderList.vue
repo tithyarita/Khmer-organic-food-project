@@ -94,6 +94,7 @@ function rateOrder(order: any) {
   display: flex;
   flex-direction: column;
   gap: 28px;
+  font-family:  'quicksand', sans-serif;
 }
 
 /* ===== ORDER CARD ===== */
@@ -103,7 +104,7 @@ function rateOrder(order: any) {
   border-radius: 18px;
   border: 1px solid rgba(109, 192, 7, 0.25);
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.05);
-  font-family: 'Poppins', sans-serif;
+  font-family:  'quicksand', sans-serif;
 }
 
 /* ===== HEADER ===== */
@@ -222,6 +223,7 @@ function rateOrder(order: any) {
   text-align: center;
   margin-top: 14px;
   padding-top: 10px;
+  font-family: 'Quicksand', sans-serif;
   border-top: 1px dashed #cde6a5;
 }
 

@@ -86,7 +86,7 @@ export default {
 
 .Title {
   text-align: center;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 2.5rem;
   margin-top: 2rem;
   color: #548D0C;

@@ -422,10 +422,11 @@ async fetchReviews() {
 /* Layout */
 .product-layout {
   display: flex;
-  gap: 60px;
+  gap: 100px;
   background: #fff;
   padding: 40px;
   border-radius: 20px;
+  font-family: 'Quicksand', sans-serif;
 }
 
 /* LEFT */
@@ -507,7 +508,7 @@ async fetchReviews() {
 /* Buttons */
 .actions {
   display: flex;
-  gap: 15px;
+  gap: 40px;
 }
 
 .cart-btn {
@@ -525,6 +526,13 @@ async fetchReviews() {
   padding: 10px 20px;
   border-radius: 20px;
 }
+.favorite-btn:hover,
+.cart-btn:hover {
+  background: #5aa005;
+  cursor: pointer;
+
+}
+
 
 /* Reviews */
 .review-item {
@@ -552,7 +560,7 @@ async fetchReviews() {
 .right-wrapper {
   display: flex;
   flex-direction: row;
-  gap: 30px;
+  gap: 100px;
   flex: 1;
 }
 
@@ -560,6 +568,7 @@ async fetchReviews() {
 /* ===== Another set section ===== */
 .another-set {
   margin-top: 60px;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .another-set h3 {
@@ -649,6 +658,10 @@ async fetchReviews() {
 .scroll-container::-webkit-scrollbar-thumb {
   background: #ccc;
   border-radius: 10px;
+}
+.review-section{
+  margin-top: 50px;
+  font-family: 'Quicksand', sans-serif;
 }
 
 

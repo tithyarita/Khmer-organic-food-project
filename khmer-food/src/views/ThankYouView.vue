@@ -136,7 +136,8 @@ function goToOrders() {
 }
 
 .receipt {
-  width: 380px;
+  width: 500px;
+  height: auto;
   background: #fff;
   padding: 1.5rem;
   border-radius: 10px;
@@ -222,6 +223,7 @@ function goToOrders() {
   display: flex;
   gap: 0.5rem;
   margin-top: 1rem;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .actions button {
@@ -231,6 +233,7 @@ function goToOrders() {
   border-radius: 6px;
   background: #4caf50;
   color: white;
+  font-family: 'Quicksand', sans-serif;
   cursor: pointer;
 }
 

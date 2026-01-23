@@ -178,7 +178,8 @@ h1{
   color: #6dc007;
 }
 p{
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Quicksand', sans-serif;
+  color: #555;
 
 }
 
@@ -267,6 +268,7 @@ p{
   font-weight: 600;
   cursor: pointer;
   text-align: center;
+  font-family: 'Quicksand', sans-serif;
 }
 /* Loading */
 .loading-wrapper {

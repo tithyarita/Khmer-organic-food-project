@@ -41,7 +41,7 @@ function removeFromFavorite(product: any) {
 <style scoped>
 /* Page */
 .favorite-page {
-  padding: 2rem 1rem;
+  padding: 20px;
   font-family: 'Quicksand', sans-serif;
   overflow-x: hidden; /* 🔥 prevent side scroll */
 }
@@ -71,6 +71,7 @@ function removeFromFavorite(product: any) {
   max-width: 1200px;
   margin: auto;
   align-items: start;
+  font-family: 'Quicksand', sans-serif;
 }
 
 /* Card wrapper */
@@ -79,6 +80,7 @@ function removeFromFavorite(product: any) {
   width: 100%;
   display: flex;
   justify-content: center;
+  font-family: 'Quicksand', sans-serif;
 }
 
 /* 🔥 MAKE ProductCard SMALL (REAL SIZE, NOT SCALE) */

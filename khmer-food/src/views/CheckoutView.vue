@@ -383,7 +383,7 @@ function goHome() {
   background: #ffffff;
   border-radius: 14px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Quicksand', sans-serif;
 }
 
 /* ===== TITLE ===== */
@@ -402,6 +402,7 @@ h1 {
   border-radius: 12px;
   margin-bottom: 1.8rem;
   border: 1px solid #e5e5e5;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .box h3 {
@@ -409,6 +410,7 @@ h1 {
   margin-bottom: 1.2rem;
   color: #6ec007;
   font-weight: 600;
+  font-family: 'Quicksand', sans-serif;
 }
 
 /* ===== ADDRESS ===== */
@@ -421,6 +423,7 @@ h1 {
   background: #ffffff;
   border-radius: 10px;
   border: 1px solid #ddd;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .address .name {
@@ -457,6 +460,7 @@ h1 {
   color: #555;
   margin-bottom: 0.3rem;
   display: block;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .address-edit input,
@@ -464,6 +468,7 @@ h1 {
   width: 100%;
   padding: 0.7rem 0.9rem;
   border-radius: 8px;
+  font-family: 'Quicksand', sans-serif;
   border: 1px solid #ccc;
   font-size: 0.95rem;
 }
@@ -561,6 +566,7 @@ h1 {
   border: none;
   font-size: 1.05rem;
   font-weight: 600;
+  font-family: 'Quicksand', sans-serif;
   cursor: pointer;
 }
 

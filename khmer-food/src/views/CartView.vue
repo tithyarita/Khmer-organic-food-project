@@ -97,7 +97,7 @@
         </div>
         <button class="checkout-btn" @click="goToCheckout"> Checkout</button>
 
-        
+
       </div>
     </div>
 
@@ -185,6 +185,9 @@ const goToCheckout = () => {
   color: #6ec007;
   margin-bottom: 30px;
   font-size: 2rem;
+}
+p{
+  color :#666;
 }
 
 .cart-item {
@@ -314,6 +317,7 @@ const goToCheckout = () => {
   cursor: pointer;
   margin: 20px auto 0 auto;  /* top margin 20px, horizontally centered */
   transition: background 0.3s;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .checkout-btn:hover {

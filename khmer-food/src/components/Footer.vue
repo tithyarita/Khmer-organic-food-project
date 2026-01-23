@@ -78,7 +78,10 @@ export default {
   background-color: #6ec007;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
-  padding: 2rem 2.5rem 1rem 2.5rem;
+  /* padding: 2rem 2.5rem 1rem 2.5rem; */
+  padding: 1.2rem;
+  font-family: 'Baloo 2', cursive;
+
 }
 
 

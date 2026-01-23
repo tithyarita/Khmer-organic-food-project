@@ -203,7 +203,7 @@ function scrollToPage(page: number) {
   width: 300px;
   height: 400px;
   box-shadow: 0 0.25rem 0.5rem rgba(133, 237, 121, 0.1);
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -323,7 +323,7 @@ function scrollToPage(page: number) {
   font-size: 1.6rem;
   font-weight: 700;
   color: #548D0C;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   background: #CCDEB6;
   padding: 10px 16px;
   display: inline-block;

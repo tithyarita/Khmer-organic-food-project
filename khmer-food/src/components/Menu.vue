@@ -133,7 +133,10 @@ export default defineComponent({
   align-items: center;
   background: #6ec007;
   padding: 0.5rem 3rem;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Baloo 2', cursive;
+
+
+
   width: 100%;
   height: 3rem;
 }

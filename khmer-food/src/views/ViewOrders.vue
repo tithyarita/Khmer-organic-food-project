@@ -137,6 +137,7 @@ function formatTime(date: any) {
 .orders-header {
   text-align: center;
   margin-bottom: 30px;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .orders-header h1 {
@@ -174,6 +175,7 @@ function formatTime(date: any) {
   padding: 20px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
   border: 1px solid #d9f0b9;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .order-header {
@@ -267,6 +269,7 @@ function formatTime(date: any) {
   text-align: center;
   top: 30px;
   position: relative;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .back-btn:hover {

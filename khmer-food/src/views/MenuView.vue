@@ -24,11 +24,14 @@ export default {
   gap: 4rem;
   height: 10vh;
   background-color: #6ec007;
+  font-family: 'Quicksand', sans-serif;
 }
+
 .menu a {
   color: white;
   font-weight: bold;
   text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
 }
 .router-link-active {
   border-bottom: 2px solid white;

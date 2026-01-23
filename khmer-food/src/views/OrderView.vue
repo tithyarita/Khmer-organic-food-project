@@ -173,6 +173,7 @@ const goBack = () => {
   margin: auto;
   padding: 2rem;
   font-family: 'Poppins', sans-serif;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .order-container {
@@ -180,11 +181,13 @@ const goBack = () => {
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  font-family: 'Quicksand', sans-serif;
 }
 
 .order-header {
   text-align: center;
   margin-bottom: 2rem;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .order-info {
