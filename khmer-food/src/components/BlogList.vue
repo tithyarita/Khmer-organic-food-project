@@ -1,7 +1,7 @@
 <template>
   <section class="blog-cute">
     <div class="cute-header">
-      <h2>Our Lovely Blog</h2>
+      <h2>Our Blog Can Help You </h2>
       <p>Sweet recipes, farm stories & fresh Khmer food 🌱</p>
     </div>
 
@@ -82,7 +82,9 @@ function excerpt(text = "") {
 }
 
 function openFull(b: BlogItem) {
+  console.log("Opening blog post:", b)
   active.value = b
+  console.log("Active blog post:", active.value)
 }
 
 function closeFull() {
@@ -211,6 +213,7 @@ p {
   margin-top: 1rem;
   line-height: 1.8;
   color: #355e3b;
+  white-space: pre-wrap;
 }
 
 .cute-close {
