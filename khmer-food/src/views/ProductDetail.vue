@@ -11,7 +11,7 @@
           <div class="main-image">
             <img :src="selectedImage" :alt="product.name" />
           </div>
-          
+
           <!-- <div class="thumbnail-row">
             <img
               v-for="(img, index) in product.images"
@@ -587,12 +587,8 @@ async fetchReviews() {
 
 /* ===== Another set section ===== */
 .another-set {
-<<<<<<< HEAD
   margin-top: 60px;
   font-family: 'Quicksand', sans-serif;
-=======
-  margin-top: 40px;
->>>>>>> 90e3271a0c5ccc5eee8a1a97c211110d6521ac5c
 }
 
 .another-set h3 {
@@ -607,7 +603,7 @@ async fetchReviews() {
 .scroll-container {
   overflow-x: auto;
   padding-bottom: 15px;
-  
+
 }
 
 .scroll-row {

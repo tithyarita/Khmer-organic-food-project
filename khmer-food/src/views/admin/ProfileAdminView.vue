@@ -133,123 +133,150 @@ const signOut = async () => {
 </script>
 
 <style scoped>
-/* PAGE LAYOUT */
+/* 🌿 PAGE BACKGROUND */
 .profile-page {
   min-height: 100vh;
-  padding: 6rem 4rem 2rem;
+  padding: 5rem 3rem;
   display: flex;
-  gap: 3rem;
-  background: #f9fff3;
-  font-family: 'Baloo Tammudu 2', cursive;
+  gap: 2.5rem;
+  font-family: 'Quicksand', sans-serif;
 }
 
-/* LEFT PANEL */
+/* 🌿 LEFT CARD */
 .left-panel {
-  width: 280px;
-  background: white;
-  border-radius: 1.5rem;
-  padding: 2rem 1.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  width: 300px;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.07);
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
+/* 🌿 AVATAR */
 .avatar-upload {
   position: relative;
-  cursor: pointer;
 }
 
 .avatar-upload img {
-  width: 160px;
-  height: 160px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  border: 5px solid #6ec007;
   object-fit: cover;
+  background: #f4ffe9;
+  border: 5px dashed #8bdc65;
+  padding: 6px;
 }
 
 .upload-text {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: rgba(110,192,7,0.85);
-  color: white;
-  text-align: center;
-  font-size: 0.9rem;
-  padding: 0.3rem 0;
-  border-radius: 0 0 50% 50%;
-}
-
-.role {
-  margin: 1rem 0;
+  margin-top: 10px;
+  font-size: 0.85rem;
   color: #6ec007;
-  font-size: 1.4rem;
+  text-align: center;
 }
 
-/* BUTTONS */
+/* 🌿 ROLE */
+.role {
+  margin: 1.2rem 0 1.6rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #7dbb4a;
+}
+
+/* 🌿 BUTTON GROUP */
 .btn {
   width: 100%;
-  margin-top: 0.7rem;
-  padding: 0.7rem;
-  border-radius: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
   border: none;
-  font-size: 1.1rem;
-  font-weight: bold;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
+  margin-bottom: 0.8rem;
+  transition: all 0.25s ease;
 }
 
+/* BUTTON STYLES */
 .edit {
-  background: #ffd54f;
+  background: #fdf1c7;
+  color: #7a6400;
 }
 
 .save {
-  background: #6ec007;
-  color: white;
+  background: #7dbb4a;
+  color: #ffffff;
 }
 
 .save:disabled {
-  opacity: 0.5;
+  background: #d9efc8;
+  cursor: not-allowed;
 }
 
 .logout {
-  background: #e53935;
-  color: white;
+  background: #ffd2d2;
+  color: #b80000;
 }
 
-/* RIGHT PANEL */
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+/* 🌿 RIGHT PANEL */
 .right-panel {
   flex: 1;
-  background: white;
-  border-radius: 1.5rem;
+  background: #ffffff;
+  border-radius: 22px;
   padding: 3rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.07);
 }
 
+/* 🌿 TITLE */
 .title {
-  color: #6ec007;
-  font-size: 2.6rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #7dbb4a;
   margin-bottom: 2rem;
 }
 
-/* FORM */
+/* 🌿 FORM */
 .form {
-  max-width: 500px;
+  max-width: 460px;
 }
 
 .field {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.4rem;
 }
 
 .field label {
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #777;
+  margin-bottom: 0.3rem;
+  display: block;
 }
 
 .field input {
   width: 100%;
-  padding: 0.8rem;
-  border-radius: 1rem;
-  border: 1px solid #6ec007;
-  font-size: 1.1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid #e0f2d5;
+  font-size: 0.95rem;
+  background: #fbfff7;
+  transition: all 0.25s ease;
 }
+
+.field input:focus {
+  outline: none;
+  border-color: #7dbb4a;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(125, 187, 74, 0.2);
+}
+
+.field input:disabled {
+  background: #f5f5f5;
+  color: #aaa;
+}
+
 </style>

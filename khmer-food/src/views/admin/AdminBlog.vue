@@ -157,7 +157,7 @@ function formatDate(ts?: Timestamp) {
 
 <style scoped>
 .admin-blog{
-  max-width: 900px;
+  max-width: 1200px;
   margin:0 auto;
   padding:20px;
   background:white;
@@ -177,6 +177,9 @@ tr:hover{background:#f9f9f9;}
 .btn-edit, .btn-delete{padding:5px 10px; border:none; border-radius:4px; color:white; cursor:pointer; margin-right:5px;}
 .btn-edit{background:#3498db;} .btn-edit:hover{background:#2980b9;}
 .btn-delete{background:#e74c3c;} .btn-delete:hover{background:#c0392b;}
+tbody{
+  text-align: center;
+}
 
 /* Modal */
 .modal-overlay{position:fixed; inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center; z-index:2000; padding:1rem; overflow-y:auto;}

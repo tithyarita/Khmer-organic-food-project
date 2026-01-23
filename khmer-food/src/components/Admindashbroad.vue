@@ -214,7 +214,7 @@ const isActive = (path: string) => route.path.startsWith(path)
    Content Area
 ================================ */
 .content {
-  padding: 40px;
+  padding: 15px 20px;
   min-height: 100vh;
   overflow-y: auto;
 }

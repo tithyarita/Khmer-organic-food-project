@@ -128,7 +128,7 @@ function rateOrder(order: any) {
 }
 
 .order-total {
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #6dc007;
 }
@@ -237,6 +237,7 @@ function rateOrder(order: any) {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .rate-btn:hover {

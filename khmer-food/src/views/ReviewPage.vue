@@ -181,8 +181,9 @@ const allReviewed = computed(() => {
 
 .page-title {
   text-align: center;
-  font-size: 2rem;
-  color: #ff6b81;
+  font-size: 1.5rem;
+  color: #6ec007;
+  font-family: 'Quicksand', sans-serif;
   margin-bottom: 32px;
 }
 
@@ -190,6 +191,7 @@ const allReviewed = computed(() => {
   background: #fff;
   border-radius: 20px;
   padding: 24px;
+  font-family: 'Quicksand', sans-serif;
   margin-bottom: 24px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.08);
   transition: transform 0.2s;
@@ -202,6 +204,7 @@ const allReviewed = computed(() => {
 .item-header {
   display: flex;
   align-items: center;
+  font-family: 'Quicksand', sans-serif;
   gap: 16px;
   margin-bottom: 16px;
 }
@@ -246,6 +249,7 @@ textarea {
   resize: vertical;
   font-size: 14px;
   margin-top: 8px;
+  font-family: 'Quicksand', sans-serif;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
@@ -259,6 +263,7 @@ textarea:disabled {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  font-family: 'Quicksand', sans-serif;
   font-size: 14px;
   color: #555;
 }
@@ -291,6 +296,7 @@ button {
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  font-family: 'Quicksand', sans-serif;
 }
 
 button:hover:enabled {
