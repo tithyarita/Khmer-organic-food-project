@@ -1,26 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "Fish",
-    "category": "meats",
-    "price": 8.76,
-    "unit": "Kg",
-    "rating": 5,
-    "stock": 3,
-    "image": "http://localhost:3000/uploads/c4afdeadf0d6ef0e99051ea82010bdc3"
-  },
-  {
-    "id": 2,
-    "name": "Beef",
-    "category": "meats",
-    "price": 9.89,
-    "unit": "kg",
-    "rating": 4,
-    "stock": 53,
-    "image": "http://localhost:3000/uploads/5b2255c5cb64262461caeeb68a3bf754",
-    "discount": 20
-  },
-  {
     "id": 3,
     "name": "Pork",
     "category": "meats",
@@ -48,8 +27,9 @@
     "price": 7.13,
     "unit": "kg",
     "rating": 2,
-    "stock": 75,
-    "image": "http://localhost:3000/uploads/75d1cc4a02146db60a437e75c282249a"
+    "stock": 70,
+    "image": "http://localhost:3000/uploads/75d1cc4a02146db60a437e75c282249a",
+    "discount": null
   },
   {
     "id": 6,
@@ -88,8 +68,66 @@
     "price": 8.99,
     "unit": "kg",
     "rating": 3,
-    "stock": 86.5,
+    "stock": 80,
     "image": "http://localhost:3000/uploads/a99c4f04372f8ccd3065b9747f7a85e1",
     "discount": 8
+  },
+  {
+    "id": 10,
+    "name": "Pork Deep",
+    "category": "meats",
+    "price": 7.68,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 89,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/00ab4b153b84440b34dd88aadac1da0e"
+  },
+  {
+    "id": 11,
+    "name": "Crab",
+    "category": "meats",
+    "price": 9.7,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 45,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/3ee630d83fb5fe65140525da804a620f"
+  },
+  {
+    "id": 12,
+    "name": "Shrimp",
+    "category": "meats",
+    "price": 8.77,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 23,
+    "discount": 0,
+    "images": [
+      "http://localhost:3000/uploads/8544578ec3c5a85682150a420a115678"
+    ],
+    "image": "http://localhost:3000/uploads/c5e8d9a1fc4c800632135e0e80c03530"
+  },
+  {
+    "id": 11,
+    "name": "Fish",
+    "category": "meats",
+    "price": 7.89,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 23,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/fbaede15e87302d803fc34367dad36cb"
+  },
+  {
+    "id": 12,
+    "name": "Beef",
+    "category": "meats",
+    "price": 8.78,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 45,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/45fdf6a4fbbac95d68a2825726084c0a"
   }
 ]

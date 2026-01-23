@@ -321,7 +321,7 @@ function scrollToPage(page: number) {
 
 .category-title {
   font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 750;
   color: #548D0C;
   font-family: 'Quicksand', sans-serif;
   background: #CCDEB6;

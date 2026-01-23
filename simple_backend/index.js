@@ -103,7 +103,9 @@ const newItem = {
   rating: Number(rating),
   stock: stock !== undefined ? Number(stock) : 0,
   discount: discount ? Number(discount) : 0, 
-  image: `http://localhost:3000/uploads/${req.file.filename}`
+  // image: `http://localhost:3000/uploads/${req.file.filename}`
+  image: imageFile ? `http://localhost:3000/uploads/${imageFile.filename}` : null
+
 }
 
 
@@ -147,9 +149,7 @@ app.patch('/vegetables/:id', upload.single('image'), (req, res) => {
     rating: rating ? Number(rating) : vegetables[index].rating,
     stock: stock !== undefined ? Number(stock) : vegetables[index].stock,
     discount: discount ? Number(discount) : vegetables[index].discount, 
-    image: imageFile
-      ? `http://localhost:3000/uploads/${imageFile.filename}`
-      : vegetables[index].image
+    image: imageFile ? `http://localhost:3000/uploads/${imageFile.filename}` : vegetables[index].image
   }
 
   saveVegetables()
@@ -174,7 +174,8 @@ app.post('/meats', upload.single('image'), (req, res) => {
     rating: Number(rating),
     stock: stock !== undefined ? Number(stock) : 0,
     discount: discount ? Number(discount) : 0,
-    image: `http://localhost:3000/uploads/${imageFile.filename}`
+    // image: `http://localhost:3000/uploads/${imageFile.filename}`
+    image: imageFile ? `http://localhost:3000/uploads/${imageFile.filename}` : null
   }
 
   meats.push(newItem)
@@ -210,9 +211,8 @@ app.patch('/meats/:id', upload.single('image'), (req, res) => {
     rating: rating ? Number(rating) : meats[index].rating,
     stock: stock !== undefined ? Number(stock) : meats[index].stock,
     discount: discount ? Number(discount) : meats[index].discount,
-    image: imageFile
-      ? `http://localhost:3000/uploads/${imageFile.filename}`
-      : meats[index].image
+    image: imageFile ? `http://localhost:3000/uploads/${imageFile.filename}` : meats[index].image
+      
   }
   saveMeats()
   res.json(meats[index])
@@ -221,7 +221,7 @@ app.patch('/meats/:id', upload.single('image'), (req, res) => {
 // 🔹 POST API with image upload for sets
 // let globalId =1;
 app.post('/sets', upload.single('image'), (req, res) => {
-  const { name, price, unit, rating, stock, category, discount } = req.body
+  const { name, price, unit, rating, stock, category, discount, ingredients } = req.body
   const imageFile = req.file
 
   if (!imageFile) {
@@ -244,7 +244,9 @@ app.post('/sets', upload.single('image'), (req, res) => {
     rating: Number(rating),
     stock: stock !== undefined ? Number(stock) : 0,
     discount: discount ? Number(discount) : 0,
-    image: `http://localhost:3000/uploads/${imageFile.filename}`
+    ingredients: ingredients ? JSON.parse(ingredients) : [],
+    // image: `http://localhost:3000/uploads/${imageFile.filename}`
+    image: imageFile ? `http://localhost:3000/uploads/${imageFile.filename}` : null
   }
 
   // Push into the right category
@@ -286,7 +288,7 @@ app.patch('/sets/:category/:id', upload.single('image'), (req, res) => {
     return res.status(404).json({ message: 'Item not found' })
   }
 
-  const { name, price, unit, rating, stock, discount } = req.body
+  const { name, price, unit, rating, stock, discount, ingredients } = req.body
   const imageFile = req.file
 
   sets[categoryIndex].items[itemIndex] = {
@@ -295,11 +297,10 @@ app.patch('/sets/:category/:id', upload.single('image'), (req, res) => {
     price: price ? Number(price) : sets[categoryIndex].items[itemIndex].price,
     unit: unit ?? sets[categoryIndex].items[itemIndex].unit,
     rating: rating ? Number(rating) : sets[categoryIndex].items[itemIndex].rating,
-    stock: stock !== undefined ? Number(stock) : sets[categoryIndex].items[itemIndex].Stock,
+    stock: stock !== undefined ? Number(stock) : sets[categoryIndex].items[itemIndex].stock,
     discount: discount ? Number(discount) : sets[categoryIndex].items[itemIndex].discount,
-    image: imageFile
-      ? `http://localhost:3000/uploads/${imageFile.filename}`
-      : sets[categoryIndex].items[itemIndex].image
+    ingredients: ingredients ? JSON.parse(ingredients) : sets[categoryIndex].items[itemIndex].ingredients,
+    image: imageFile ? `http://localhost:3000/uploads/${imageFile.filename}` : sets[categoryIndex].items[itemIndex].image
   }
   saveSets()
   res.json(sets[categoryIndex].items[itemIndex])

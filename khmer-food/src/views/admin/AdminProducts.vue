@@ -137,11 +137,16 @@
         <label>Stock</label>
         <input type="number" v-model.number="form.stock" min="0" />
 
+        <label>Ingredients</label>
+        <input type="text" v-model="form.ingredients" placeholder='Comma separated (e.g. "salt, sugar, water")' />
+
+
         <label>Image</label>
         <input type="file" @change="onFileChange" />
-        <div v-if="form.imageFile">
-          <img :src="URL.createObjectURL(form.imageFile)" class="preview-img" />
+        <div v-if="form.imageFiles">
+          <img :src="URL.createObjectURL(form.imageFiles[0])" class="preview-img" />
         </div>
+
 
         <div class="modal-actions">
           <button class="btn-save" @click="saveProduct">Save</button>
@@ -185,10 +190,13 @@
         <label>Stock</label>
         <input type="number" v-model.number="form.stock" min="0" />
 
+        <label>Ingredients</label>
+        <input type="text" v-model="form.ingredients" placeholder='Comma separated (e.g. "salt, sugar, water")' />
+
         <label>Image</label>
         <input type="file" @change="onFileChange" />
-        <div v-if="form.imageFile">
-          <img :src="URL.createObjectURL(form.imageFile)" class="preview-img" />
+        <div v-if="form.imageFiles">
+          <img :src="URL.createObjectURL(form.imageFiles[0])" class="preview-img" />
         </div>
 
         <div class="modal-actions">
@@ -227,7 +235,8 @@ const form = ref({
   stock: 0,
   category: 'Vegetables',
   discount: 0,
-  imageFile: null as File | null
+  ingredients: '',
+  imageFiles: null as File[] | null
 })
 
 const vegetables = ref<any[]>([])
@@ -274,12 +283,12 @@ const toggleSelectAll = () => {
 
 // ---------------- Add/Edit ----------------
 const openAddModal = () => {
-  form.value = { id: null, name: '', price: 0, unit: 'kg', discount: 0, rating: 0, stock: 0, category: 'Vegetables', imageFile: null }
+  form.value = { id: null, name: '', price: 0, unit: 'kg', discount: 0, rating: 0, stock: 0, category: 'Vegetables', ingredients: '', imageFiles: null }
   showAddModal.value = true
 }
 
 const openEdit = (item: any) => {
-  form.value = { ...item, imageFile: null }
+  form.value = { ...item, imageFiles: null }
   showEditModal.value = true
 }
 
@@ -288,12 +297,13 @@ const closeEdit = () => { showEditModal.value = false }
 const onFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement
   if (target.files && target.files.length > 0) {
-    form.value.imageFile = target.files[0]
+    form.value.imageFiles = target.files
   }
 }
 
+
 const saveProduct = async () => {
-  if (!form.value.imageFile) {
+  if (!form.value.imageFiles || form.value.imageFiles.length === 0) {
     alert('Please select an image')
     return
   }
@@ -333,7 +343,7 @@ const placeholderImg = '/placeholder.png'
 /* Keeping your original design */
 .admin-inventory { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-.actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 20px; margin-bottom: 20px; }
+.actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 10px; margin-bottom: 10px; }
 .action-box { padding: 20px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-radius: 6px; cursor: pointer; }
 .action-box.add { background: linear-gradient(125deg, #53b400, #4a9a00); }
 .action-box.update { background: linear-gradient(135deg, #3498db, #2980b9); }
@@ -359,13 +369,12 @@ tr:hover { background-color: #f9f9f9; }
 .badge.warning { background-color: #f93535; color: white; }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.modal { background: white; padding: 25px; border-radius: 8px; width: 400px; display: flex; flex-direction: column; gap: 0px; }
-.modal input, .modal select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+.modal { background: white; padding: 15px; border-radius: 8px; width: 400px; display: flex; flex-direction: column; gap: 0px; }
+.modal input, .modal select { padding: 5px; border: 1px solid #ccc; border-radius: 4px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .btn-save { background: #53b400; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin-top: 5px; }
 .btn-cancel { background: #e74c3c; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin-top: 5px; }
 .bulk-actions { margin-top: 10px; }
-
 .old-price {
   text-decoration: line-through;
   color: #999;

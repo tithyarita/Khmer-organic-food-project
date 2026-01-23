@@ -10,7 +10,15 @@
         "rating": 3,
         "inStock": false,
         "image": "http://localhost:3000/uploads/fcba8899b257a4b88b6261a3c51012c7",
-        "stock": 86
+        "stock": 86,
+        "discount": null,
+        "ingredients": [
+          "Fish: 1kg",
+          "Pumpkin: 200g",
+          "Mushroom: 200g",
+          "Truffle: 100g (sliced)",
+          "Bass leaves: 100g"
+        ]
       },
       {
         "id": 2,
@@ -20,8 +28,16 @@
         "unit": "set",
         "rating": 0,
         "inStock": false,
-        "image": "http://localhost:3000/uploads/db3718ec67368f02bf53727907d1ea24",
-        "stock": 85
+        "image": "http://localhost:3000/uploads/6318cdf86ec2cfefa2a1ad5d56d0ee1f",
+        "stock": 88,
+        "discount": null,
+        "ingredients": [
+          "Fish or Pork: 1 kg",
+          "Papaya: 300 g",
+          "Moringa leaves: 200 g",
+          "Pumpkin: 100 g",
+          "Eggplant: 100 g"
+        ]
       },
       {
         "id": 3,
@@ -31,8 +47,18 @@
         "unit": "set",
         "rating": 0,
         "inStock": true,
-        "image": "http://localhost:3000/uploads/6082ec152b3e83f4ec5d80b81bc7135c",
-        "stock": 8
+        "image": "http://localhost:3000/uploads/ad88dc241cc65e2e17e0af38e26ff04f",
+        "stock": 8,
+        "discount": null,
+        "ingredients": [
+          "Beef: 0.5 kg",
+          "Scallions: 300 g",
+          "Peppers: 0.05 g",
+          "Lemongrass: 100 g",
+          "Garlic: 50 g",
+          "Fennel: 50 g",
+          "Ripe tamarind: 50 g"
+        ]
       },
       {
         "id": 4,
@@ -42,19 +68,51 @@
         "unit": "set",
         "rating": 0,
         "stock": 20,
-        "image": "http://localhost:3000/uploads/98807b9ff0a87dffb73760489ee90851",
-        "discount": 10
+        "image": "http://localhost:3000/uploads/d38560b8abae8901df40227747dde0d8",
+        "discount": 10,
+        "ingredients": [
+          "Chicken: 0.5 kg",
+          "Lemongrass: 3 stalks",
+          "Ginger: 3 slices",
+          "Garlic: 5 cloves",
+          "Lemon: 1 piece"
+        ]
       },
       {
-        "id": 11,
-        "name": "Soup",
+        "id": 13,
+        "name": "Mju Yun",
         "category": "Soup",
-        "price": 8,
+        "price": 9.78,
         "unit": "set",
-        "rating": null,
-        "stock": 98,
-        "image": "http://localhost:3000/uploads/9aaf1b0bf0aa25e68d8c1794ef7aaa16",
-        "discount": 20
+        "rating": 0,
+        "stock": 34,
+        "discount": 0,
+        "image": "http://localhost:3000/uploads/102009ea2b55699363c4af0baa32b428",
+        "ingredients": [
+          "Fish: 1Kg",
+          "Tomato: 2",
+          "Pineapple: 1",
+          "Onion: 1",
+          "Bottle gourd: 1"
+        ]
+      },
+      {
+        "id": 14,
+        "name": "Jab Chay",
+        "category": "Soup",
+        "price": 8.77,
+        "unit": "set",
+        "rating": 0,
+        "stock": 25,
+        "discount": 0,
+        "image": "http://localhost:3000/uploads/c951336bd0bdc26bb220819cf4151da4",
+        "ingredients": [
+          "Pork: 1Kg",
+          "Carrot: 2",
+          "Radish: 2",
+          "Cabbage: 1",
+          "Ear mouse: 200g"
+        ]
       }
     ]
   },
@@ -69,7 +127,13 @@
         "unit": "kg",
         "rating": 3,
         "stock": 76,
-        "image": "http://localhost:3000/uploads/21cb7dc29c979f8f549de6c08f8155aa"
+        "image": "http://localhost:3000/uploads/d7ec6be5c081414b25d557a9f1526ee1",
+        "discount": null,
+        "ingredients": [
+          "Chicken: 0.4 kg",
+          "Garlic: 5 cloves",
+          "Trakuon: 500 g"
+        ]
       },
       {
         "id": 6,
@@ -79,7 +143,17 @@
         "unit": "set",
         "rating": 0,
         "stock": 21,
-        "image": "http://localhost:3000/uploads/2a7d2ab2feb070b0f2ce225acac62914"
+        "image": "http://localhost:3000/uploads/2a7d2ab2feb070b0f2ce225acac62914",
+        "discount": null,
+        "ingredients": [
+          "Pork: 0.5 kg",
+          "Carrot: 200 g",
+          "Cauliflower: 200 g",
+          "Broccoli: 200 g",
+          "Bell pepper: 100 g",
+          "Onion: 100 g",
+          "Garlic: 5 cloves"
+        ]
       },
       {
         "id": 7,
@@ -88,8 +162,17 @@
         "price": 7.99,
         "unit": "set",
         "rating": 0,
-        "stock": 11,
-        "image": "http://localhost:3000/uploads/3780098978aaed387761a6e94d4c1304"
+        "stock": 13,
+        "image": "http://localhost:3000/uploads/3780098978aaed387761a6e94d4c1304",
+        "discount": null,
+        "ingredients": [
+          "Chicken: 1 kg (cut into pieces)",
+          "Garlic: 5 cloves",
+          "Peppers: 0.05 g",
+          "Lemongrass: 100 g",
+          "Fennel: 50 g",
+          "Ripe tamarind: 50 g"
+        ]
       },
       {
         "id": 8,
@@ -98,8 +181,45 @@
         "price": 7.89,
         "unit": "set",
         "rating": 0,
-        "stock": 0,
-        "image": "http://localhost:3000/uploads/8592bdf5f9f06fbd1e982c52327f1e57"
+        "stock": 6,
+        "image": "http://localhost:3000/uploads/8592bdf5f9f06fbd1e982c52327f1e57",
+        "discount": null,
+        "ingredients": [
+          "Chicken: 1 kg",
+          "Garlic: 5 cloves",
+          "Ginger: 3 silces",
+          "Garlic leaves: 10 g"
+        ]
+      },
+      {
+        "id": 15,
+        "name": "Chha Spei",
+        "category": "Fried (Chha)",
+        "price": 7.89,
+        "unit": "set",
+        "rating": 0,
+        "stock": 24,
+        "discount": 5,
+        "image": "http://localhost:3000/uploads/1c109375afdf1b7e068e2739c81db40f",
+        "ingredients": [
+          "Pork: 500g",
+          "Spei: 500g"
+        ]
+      },
+      {
+        "id": 16,
+        "name": "Fish Fried",
+        "category": "Fried (Chha)",
+        "price": 6.99,
+        "unit": "set",
+        "rating": 0,
+        "stock": 34,
+        "discount": 0,
+        "image": "http://localhost:3000/uploads/67209473e60813717da8928b4794a046",
+        "ingredients": [
+          "Fish: 500g",
+          "Onion: 2"
+        ]
       }
     ]
   },
@@ -115,7 +235,14 @@
         "rating": 0,
         "stock": 16,
         "image": "http://localhost:3000/uploads/9abc4c7775bbe3b756307802ad09f335",
-        "discount": 5
+        "discount": 5,
+        "ingredients": [
+          "Fish: 500 g",
+          "Coconut milk: 200 ml",
+          "Kroeung paste: 50 g",
+          "Egg: 1",
+          "Banana leaves for steaming"
+        ]
       },
       {
         "id": 10,
@@ -124,8 +251,92 @@
         "price": 9,
         "unit": "kg",
         "rating": null,
-        "stock": 86,
-        "image": "http://localhost:3000/uploads/a7b56512df34b5c6ff67abd28ac4dcab"
+        "stock": 80,
+        "image": "http://localhost:3000/uploads/9cb47f70b214b824fe830b5d53904758",
+        "discount": null,
+        "ingredients": [
+          "Brhok: 200 g",
+          "Pork: 0.5 kg",
+          "Garlic: 5 cloves",
+          "Peppers: 0.05 g",
+          "Egg: 3 pieces"
+        ]
+      },
+      {
+        "id": 11,
+        "name": "Brhok Kit",
+        "category": "Steamed",
+        "price": 8.89,
+        "unit": "set",
+        "rating": 0,
+        "stock": 23,
+        "discount": 5,
+        "image": "http://localhost:3000/uploads/dcc66102f5349d8775a7452674aa5027",
+        "ingredients": [
+          "Pork: 0.5 kg",
+          "Brhok: 200 g",
+          "Coconut milk: 200 ml",
+          "Garlic: 5 cloves",
+          "Peppers: 0.05 g",
+          "Peanut: 100 g"
+        ]
+      },
+      {
+        "id": 12,
+        "name": "Steamed Fish",
+        "category": "Steamed",
+        "price": 9.12,
+        "unit": "set",
+        "rating": 0,
+        "stock": 89,
+        "discount": 0,
+        "image": "http://localhost:3000/uploads/e36602dc7ed53d973c3eccd378a7e4a4",
+        "ingredients": [
+          "Fish: 1 kg",
+          "Garlic leaves: 10 g",
+          "Carrot: 200 g",
+          "Peppers: 0.05 g"
+        ]
+      },
+      {
+        "id": 17,
+        "name": "aaa",
+        "category": "Steamed",
+        "price": 2,
+        "unit": "set",
+        "rating": 0,
+        "stock": 5,
+        "discount": 0,
+        "ingredients": [
+          "fff"
+        ],
+        "image": "http://localhost:3000/uploads/f83ebbaf6d8696c057689fe28ae3fde7"
+      },
+      {
+        "id": 18,
+        "name": "dd",
+        "category": "Steamed",
+        "price": 22,
+        "unit": "set",
+        "rating": 0,
+        "stock": 5,
+        "discount": 0,
+        "ingredients": [],
+        "image": "http://localhost:3000/uploads/091fb60548dc025e602f678c37ff61ba"
+      },
+      {
+        "id": 19,
+        "name": "ggge",
+        "category": "Steamed",
+        "price": 44,
+        "unit": "kg",
+        "rating": 0,
+        "stock": 5,
+        "discount": 0,
+        "ingredients": [
+          "ggg"
+        ],
+        "image": "http://localhost:3000/uploads/c18c5a258fdfd490a45efe6165187798"
       }
     ]
   }

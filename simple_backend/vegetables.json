@@ -1,16 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "Onion",
-    "category": "vegetables",
-    "price": 6.55,
-    "unit": "Kg",
-    "rating": 4,
-    "stock": 73,
-    "image": "http://localhost:3000/uploads/9067101aa4e9a78a20c2af48cbb41397",
-    "discount": 12
-  },
-  {
     "id": 2,
     "name": "Cucumber",
     "category": "vegetables",
@@ -38,8 +27,9 @@
     "price": 5.89,
     "unit": "kg",
     "rating": 2,
-    "stock": 83,
-    "image": "http://localhost:3000/uploads/197c12b76eaa834d5af4dbedf62c44d4"
+    "stock": 8,
+    "image": "http://localhost:3000/uploads/197c12b76eaa834d5af4dbedf62c44d4",
+    "discount": null
   },
   {
     "id": 5,
@@ -108,8 +98,74 @@
     "price": 9,
     "unit": "kg",
     "rating": null,
-    "stock": 3,
+    "stock": 2,
     "discount": 0,
     "image": "http://localhost:3000/uploads/1ae882b242cbf87982a01bb7f1eafca3"
+  },
+  {
+    "id": 12,
+    "name": "Tomato",
+    "category": "vegetables",
+    "price": 4.67,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 12,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/6e0020bde1194c181d69e35d6672ff5e"
+  },
+  {
+    "id": 13,
+    "name": "Water spinach Leaf",
+    "category": "vegetables",
+    "price": 3.02,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 26,
+    "discount": 7,
+    "image": "http://localhost:3000/uploads/abd642a2541b4a5e605ba1e4c886692a"
+  },
+  {
+    "id": 14,
+    "name": "Lemon",
+    "category": "vegetables",
+    "price": 5.07,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 34,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/b08cc39c51ef108d37eb91e716195b79"
+  },
+  {
+    "id": 15,
+    "name": "Radish",
+    "category": "vegetables",
+    "price": 3.99,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 89,
+    "discount": 10,
+    "image": "http://localhost:3000/uploads/06cb8ccf367e1138dc05fbd974258a52"
+  },
+  {
+    "id": 16,
+    "name": "Papaya",
+    "category": "vegetables",
+    "price": 3.45,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 17,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/d48bb677e45eab653d6d5ddf3cfda522"
+  },
+  {
+    "id": 16,
+    "name": "Onion",
+    "category": "vegetables",
+    "price": 4.56,
+    "unit": "kg",
+    "rating": 0,
+    "stock": 45,
+    "discount": 0,
+    "image": "http://localhost:3000/uploads/c81aa52a87c3c43b613a17bea95799ff"
   }
 ]

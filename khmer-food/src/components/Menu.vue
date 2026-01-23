@@ -183,7 +183,7 @@ export default defineComponent({
   top: 100%;
   left: 0;
   background: white;
-  min-width: 10rem;
+  min-width: 0rem;
   border-radius: 0.6rem;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   opacity: 0;
