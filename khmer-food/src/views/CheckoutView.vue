@@ -260,7 +260,7 @@ const paymentDetails = ref({
   accountNumber: '',
   qrImage: '',
   cardHolderName: '',
-  
+
 })
 function handleQRUpload(event: Event) {
   const target = event.target as HTMLInputElement
@@ -383,7 +383,8 @@ async function placeOrder() {
       total: total.value,
       paymentMethod: selectedPayment.value,
       qrImage: paymentDetails.value.qrImage, // Save uploaded QR screenshot
-      status: selectedPayment.value === 'card' ? 'paid' : 'pending' // optional
+      status: 'paid', // All successful orders start as paid
+      paymentStatus: 'paid' // All successful orders are considered paid
     })
 
     cart.clear()

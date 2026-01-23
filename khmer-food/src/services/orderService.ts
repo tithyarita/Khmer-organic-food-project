@@ -1,9 +1,5 @@
-import { collection, addDoc, getDocs, query, orderBy, where, updateDoc, doc } from 'firebase/firestore'
+import { collection, addDoc, getDocs, query, orderBy, where, updateDoc, doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase.js'
-import { doc as docRef, getDoc } from 'firebase/firestore'
-import { getProducts as getMeats } from './meatService'
-import { getProducts as getVegs } from './vegService'
-import api from './api'
 
 type OrderItem = {
   id: number | string
@@ -92,20 +88,21 @@ export async function autoUpdateOrderStatuses() {
     if (order.paymentStatus !== 'paid' || !order.paymentDate) continue
 
     const paymentDate = new Date(order.paymentDate)
-    const daysSincePaid = (now.getTime() - paymentDate.getTime()) / (1000 * 60)
+    const minutesSincePaid = (now.getTime() - paymentDate.getTime()) / (1000 * 60) // Convert to minutes
 
     let newStatus = order.status
 
-    if (daysSincePaid >= 5) {
+    if (minutesSincePaid >= 5) { // 5 minutes -> completed
       newStatus = 'completed'
-    } else if (daysSincePaid >= 3) {
+    } else if (minutesSincePaid >= 3) { // 3 minutes -> delivering
       newStatus = 'delivering'
-    } else if (daysSincePaid >= 1) {
+    } else if (minutesSincePaid >= 1) { // 1 minute -> preparing
       newStatus = 'preparing'
     }
 
     if (newStatus !== order.status) {
       await updateOrderStatus(order.id, newStatus)
+      console.log(`Order ${order.id} status updated to ${newStatus} (${minutesSincePaid.toFixed(1)} minutes since payment)`)
     }
   }
 }
@@ -163,40 +160,7 @@ export async function getTopProducts(limit: number = 4, dateRange: 'today' | 'al
 
   console.log('Product map after filtering:', Object.keys(productMap).length)
 
-  // Try to get all products to map images and ensure data consistency
-  try {
-    const [meatsRes, vegsRes, setsRes] = await Promise.all([
-      getMeats(),
-      getVegs(),
-      api.get('/sets')
-    ])
-
-    const allProducts = [
-      ...meatsRes.data,
-      ...vegsRes.data,
-      ...setsRes.data.flatMap((category: any) => category.items || [])
-    ]
-
-    console.log('All products from API:', allProducts.length)
-
-    // Update productMap with full product data
-    Object.keys(productMap).forEach(key => {
-      const fullProduct = allProducts.find((p: any) => p.id == key)
-      if (fullProduct) {
-        productMap[key].image = fullProduct.image
-        productMap[key].name = fullProduct.name
-        productMap[key].price = fullProduct.price
-      }
-    })
-  } catch (error) {
-    console.error('Failed to fetch product details from API:', error)
-    console.log('Using order data only')
-  }
-
-  const topProducts = Object.values(productMap)
+  return Object.values(productMap)
     .sort((a, b) => b.qty - a.qty)
     .slice(0, limit)
-
-  console.log('Top products:', topProducts)
-  return topProducts
 }
