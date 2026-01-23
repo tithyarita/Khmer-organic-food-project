@@ -21,7 +21,7 @@
         "rating": 0,
         "inStock": false,
         "image": "http://localhost:3000/uploads/db3718ec67368f02bf53727907d1ea24",
-        "stock": 86
+        "stock": 85
       },
       {
         "id": 3,
@@ -52,7 +52,7 @@
         "price": 8,
         "unit": "set",
         "rating": null,
-        "stock": 99,
+        "stock": 98,
         "image": "http://localhost:3000/uploads/9aaf1b0bf0aa25e68d8c1794ef7aaa16",
         "discount": 20
       }
@@ -88,7 +88,7 @@
         "price": 7.99,
         "unit": "set",
         "rating": 0,
-        "stock": 13,
+        "stock": 11,
         "image": "http://localhost:3000/uploads/3780098978aaed387761a6e94d4c1304"
       },
       {

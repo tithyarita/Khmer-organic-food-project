@@ -104,11 +104,11 @@ onMounted(async () => {
 
 const steps = [
   { key: 'paid', label: 'Paid', icon: '💳' },
-  { key: 'preparing', label: 'Preparing', icon: '🥘' },
+  { key: 'preparing', label: 'Preparing', icon: '📦' },
   { key: 'delivery', label: 'Delivery', icon: '🚚' },
   { key: 'completed', label: 'Completed', icon: '🏁' },
   { key: 'rating', label: 'Rating', icon: '⭐' },
-  { key: 'history', label: 'History', icon: '📦' }
+  { key: 'history', label: 'History', icon: '📋' }
 ]
 
 onMounted(async () => {
@@ -169,8 +169,17 @@ const goHome = () => router.push('/')
 <style scoped>
 .orders-page {
   min-height: 100vh;
-  padding-top: 100px;
+  padding-top: 30px;
   font-family: 'Poppins', sans-serif;
+}
+h1{
+  font-family: 'Quicksand', sans-serif;
+  font-size: 2.5rem;
+  color: #6dc007;
+}
+p{
+  font-family: 'Poppins', sans-serif;
+
 }
 
 /* Header */
@@ -182,6 +191,7 @@ const goHome = () => router.push('/')
 /* Progress Steps */
 .progress-steps {
   display: flex;
+  font-family: 'Quicksand', sans-serif;
   justify-content: space-between;
   max-width: 900px;
   margin: 0 auto 40px;
