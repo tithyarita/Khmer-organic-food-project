@@ -522,6 +522,7 @@ async fetchReviews() {
 .total {
   font-size: 18px;
   font-weight: bold;
+  color: red;
   margin-bottom: 20px;
 }
 

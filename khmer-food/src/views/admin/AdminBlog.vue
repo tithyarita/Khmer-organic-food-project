@@ -151,9 +151,197 @@ function formatDate(ts?: Timestamp) {
 </script>
 
 <style scoped>
-.thumb { width:50px; border-radius:6px }
-.preview { width:200px; margin-top:10px }
+/* ================= ADMIN BLOG ================= */
+.admin-blog{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fffde7; /* soft cozy cream */
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  font-family: 'Baloo 2', cursive;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #48742C; /* friendly green */
+  margin-bottom: 1.5rem;
+}
+
+/* ================= ACTIONS ================= */
+.actions{
+  margin-bottom: 20px;
+  text-align: right;
+}
+.btn-add{
+  padding: 10px 18px;
+  background: #6ec007;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+.btn-add:hover{
+  background: #57a500;
+  transform: translateY(-2px);
+}
+
+/* ================= BLOG TABLE ================= */
+.blogs-table{
+  overflow-x:auto;
+  max-height:500px;
+  overflow-y:auto;
+  border-radius: 12px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th, td{
+  padding:12px 10px;
+  border-bottom:1px solid #e0e0e0;
+  text-align: center;
+}
+th{
+  background: #f9fbe7; /* soft green header */
+  color: #48742C;
+  font-weight: 600;
+}
+tr:hover{
+  background: #f1f8e9; /* soft hover */
+}
+
+.btn-edit, .btn-delete{
+  padding:6px 12px;
+  border:none;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+  margin-right:5px;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+.btn-edit{
+  background:#42a5f5;
+}
+.btn-edit:hover{
+  background:#1e88e5;
+  transform: translateY(-2px);
+}
+.btn-delete{
+  background:#ef5350;
+}
+.btn-delete:hover{
+  background:#e53935;
+  transform: translateY(-2px);
+}
+
+.thumb {
+  width: 50px;
+  border-radius: 8px;
+}
+.preview {
+  width: 200px;
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ================= MODAL ================= */
+.modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.modal-card{
+  background: #fffde7;
+  padding: 25px;
+  border-radius: 20px;
+  width: 95%;
+  max-width: 600px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.modal-card h3{
+  text-align: center;
+  color: #48742C;
+  margin-bottom: 1.5rem;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.8rem;
+}
+
+form input, form textarea{
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px solid #cddc39;
+  font-size: 1rem;
+  font-family: 'Baloo 2', cursive;
+  background: #f9fff3;
+  transition: border 0.25s ease, box-shadow 0.25s ease;
+}
+form input:focus, form textarea:focus{
+  outline: none;
+  border-color: #6ec007;
+  box-shadow: 0 0 8px rgba(110,192,7,0.3);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ================= MODAL ACTIONS ================= */
+.modal-actions{
+  display:flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+.modal-actions button{
+  padding: 10px 18px;
+  border:none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.modal-actions .btn-cancel{
+  background:#efefef;
+  color:#7f8c8d;
+}
+.modal-actions .btn-cancel:hover{
+  background:#e0e0e0;
+  transform: translateY(-2px);
+}
+.modal-actions .btn-save{
+  background:#6ec007;
+  color:white;
+}
+.modal-actions .btn-save:hover{
+  background:#57a500;
+  transform: translateY(-2px);
+}
+
+/* ================= ANIMATION ================= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
+
 
 <style scoped>
 .admin-blog{

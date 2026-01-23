@@ -181,7 +181,7 @@ const allReviewed = computed(() => {
 
 .page-title {
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: #6ec007;
   font-family: 'Quicksand', sans-serif;
   margin-bottom: 32px;
@@ -237,7 +237,6 @@ const allReviewed = computed(() => {
 
 .stars span.disabled {
   cursor: not-allowed;
-  color: #ccc;
 }
 
 textarea {

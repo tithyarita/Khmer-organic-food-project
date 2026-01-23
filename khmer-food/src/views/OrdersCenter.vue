@@ -174,7 +174,7 @@ const goHome = () => router.push('/')
 }
 h1{
   font-family: 'Quicksand', sans-serif;
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: #6dc007;
 }
 p{
