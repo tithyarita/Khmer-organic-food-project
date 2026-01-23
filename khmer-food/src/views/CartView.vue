@@ -95,7 +95,9 @@
           <span>Total</span>
           <span class="total">${{ total.toFixed(2) }}</span>
         </div>
-        <button class="checkout-btn" @click="goToCheckout">Checkout</button>
+        <button class="checkout-btn" @click="goToCheckout"> Checkout</button>
+
+        
       </div>
     </div>
 
@@ -126,9 +128,17 @@ const getDiscountedPrice = (item: CartItem) =>
     ? item.price - (item.price * item.discount) / 100
     : item.price
 
+// const subtotal = computed(() =>
+//   selectedItems.value.reduce(
+//     (sum, item) => sum + getDiscountedPrice(item) * item.qty,
+//     0
+//   )
+// )
+
 const subtotal = computed(() =>
   selectedItems.value.reduce((sum, item) => sum + item.price * item.qty, 0)
 )
+
 
 const discount = computed(() =>
   selectedItems.value.reduce((sum, item) => {
@@ -151,12 +161,15 @@ const updateQty = (index: number, value: number) => {
 }
 
 const goToCheckout = () => {
-  if (cart.items.length > 0) {
-    router.push({ name: 'Checkout' })
-  } else {
-    alert('Your cart is empty!')
+  if (selectedItems.value.length === 0) {
+    alert('You need to select the product')
+    return
   }
+
+  router.push({ name: 'Checkout' })
 }
+
+
 </script>
 
 <style scoped>
@@ -169,7 +182,7 @@ const goToCheckout = () => {
 
 .title {
   text-align: center;
-  color: #4aa016;
+  color: #6ec007;
   margin-bottom: 30px;
   font-size: 2rem;
 }
@@ -243,7 +256,7 @@ const goToCheckout = () => {
 
 .total-price {
   font-weight: bold;
-  color: #4aa016;
+  color: #6ec007;
 }
 
 .remove-btn {
@@ -267,7 +280,7 @@ const goToCheckout = () => {
 .summary-box h2 {
   margin-top: 0;
   margin-bottom: 20px;
-  color: #4aa016;
+  color: #6ec007;
 }
 
 .row {
@@ -286,14 +299,14 @@ const goToCheckout = () => {
 }
 
 .discount {
-  color: #548d0c;
+  color: #6ec007;
 }
 
 .checkout-btn {
   display: block;             /* allow horizontal centering */
   width: 200px;               /* fixed width, adjust as needed */
   padding: 12px;
-  background: #4aa016;
+  background: #6ec007;
   color: white;
   font-size: 18px;
   border-radius: 10px;
@@ -304,7 +317,7 @@ const goToCheckout = () => {
 }
 
 .checkout-btn:hover {
-  background: #3a8410;
+  background: #6ec007;
 }
 
 .empty-cart {
@@ -316,7 +329,7 @@ const goToCheckout = () => {
   display: inline-block;
   margin-top: 20px;
   padding: 12px 25px;
-  background: #4aa016;
+  background: #6ec007;
   color: white;
   border-radius: 10px;
   text-decoration: none;
@@ -325,7 +338,7 @@ const goToCheckout = () => {
 }
 
 .shop-now-btn:hover {
-  background: #3a8410;
+  background: #6ec007;
 }
 
 .old-price {
@@ -336,7 +349,7 @@ const goToCheckout = () => {
 }
 
 .new-price {
-  color: #6EC007;
+  color: #6ec007;
   font-weight: bold;
   font-size: 1rem;
 }
@@ -346,4 +359,6 @@ const goToCheckout = () => {
   font-weight: bold;
   margin-left: 0.3rem;
 }
+
+
 </style>

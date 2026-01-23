@@ -1,12 +1,13 @@
 <template>
   <div class="homepage-container">
-
-    <!-- Main banner -->
     <section ref="mainBanner" class="content-section main-banner-wrapper">
-      <BannerHomePage class="main-banner" />
+      <BannerHomePage class="main-banner" @shop-now="goToProducts" />
     </section>
 
-    <!-- Grid banners section -->
+    <section ref="popularSection" class="content-section popular-section">
+      <BannerHomePage :showPopular="true" />
+    </section>
+
     <section ref="gridSection" class="content-section grid-section">
       <h1>Our Product</h1>
       <div class="grid-banner-wrapper">
@@ -14,24 +15,31 @@
       </div>
     </section>
 
-    <!-- Column banners section -->
     <section ref="columnSection" class="content-section column-section">
       <h1>Promotion</h1>
       <div class="column-banner-wrapper">
         <BannerHomePage :showColumnOnly="true" />
       </div>
     </section>
-
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import BannerHomePage from '@/components/Homepage-banner.vue'
 import { ref, onMounted } from 'vue'
 
-const mainBanner = ref(null)
-const gridSection = ref(null)
-const columnSection = ref(null)
+const mainBanner = ref<HTMLElement | null>(null)
+const gridSection = ref<HTMLElement | null>(null)
+const columnSection = ref<HTMLElement | null>(null)
+const popularSection = ref<HTMLElement | null>(null)
+
+function goToProducts() {
+  if (gridSection.value) {
+    const offset = 6.25 * 16
+    const top = gridSection.value.getBoundingClientRect().top + window.scrollY - offset
+    window.scrollTo({ top, behavior: 'smooth' })
+  }
+}
 
 onMounted(() => {
   const observer = new IntersectionObserver(
@@ -43,9 +51,10 @@ onMounted(() => {
     { threshold: 0.3 }
   )
 
-  observer.observe(mainBanner.value)
-  observer.observe(gridSection.value)
-  observer.observe(columnSection.value)
+  observer.observe(mainBanner.value!)
+  observer.observe(popularSection.value!)
+  observer.observe(gridSection.value!)
+  observer.observe(columnSection.value!)
 })
 </script>
 
@@ -56,32 +65,29 @@ onMounted(() => {
   font-family: 'Baloo Da', cursive;
 }
 
-/* ================= CONTENT SECTIONS ================= */
 .content-section {
   text-align: center;
-  margin: 80px 0;
+  margin: 0;
   opacity: 1;
 }
-.main-banner-wrapper{
+
+.main-banner-wrapper {
   margin-top: 0;
 }
 
 .content-section h1 {
-  font-size: 64px;
+  font-size: 3rem;
   font-family: 'Baloo Tamma 2', cursive;
   color: #6ec007;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(1.875rem);
 }
 
-/* ================= SIMPLE ABSTRACT ANIMATIONS ================= */
-/* Main banner */
 .main-banner-wrapper.animate .main-banner {
   animation: floatFade 1.5s ease-out forwards;
 }
 
-/* Grid section */
 .grid-section.animate h1 {
   animation: floatFade 1.3s ease-out forwards;
   animation-delay: 0.2s;
@@ -91,7 +97,6 @@ onMounted(() => {
   animation-delay: 0.35s;
 }
 
-/* Column section */
 .column-section.animate h1 {
   animation: floatFade 1.3s ease-out forwards;
   animation-delay: 0.2s;
@@ -101,14 +106,13 @@ onMounted(() => {
   animation-delay: 0.35s;
 }
 
-/* ================= KEYFRAMES ================= */
 @keyframes floatFade {
   0% {
     opacity: 0;
-    transform: translateY(30px) scale(0.95);
+    transform: translateY(1.875rem) scale(0.95);
   }
   50% {
-    transform: translateY(-10px) scale(1.02);
+    transform: translateY(-0.625rem) scale(1.02);
     opacity: 0.8;
   }
   100% {
@@ -117,7 +121,6 @@ onMounted(() => {
   }
 }
 
-/* ================= HOVER EFFECTS ================= */
 .bannerhome-container .grid-item img,
 .bannerhome-container .grid-item1 img {
   transition: transform 0.5s ease, box-shadow 0.5s ease;
@@ -126,6 +129,27 @@ onMounted(() => {
 .bannerhome-container .grid-item:hover img,
 .bannerhome-container .grid-item1:hover img {
   transform: scale(1.05);
-  box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 0.9375rem 1.5625rem rgba(0,0,0,0.15);
+}
+
+.shop-now {
+  position: absolute;
+  bottom: 3.125rem;
+  left: 9.375rem;
+  padding: 0.75rem 1.5625rem;
+  background: #6ec007;
+  color: white;
+  font-size: 1.25rem;
+  border-radius: 1.875rem;
+  border: none;
+  cursor: pointer;
+  font-family: 'Baloo Da', cursive;
+  transition: all 0.3s ease;
+}
+
+.shop-now:hover {
+  background-color: white;
+  color: #57a600;
+  transform: scale(1.05);
 }
 </style>
