@@ -1,16 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "Onion",
-    "category": "vegetables",
-    "price": 6.55,
-    "unit": "Kg",
-    "rating": 4,
-    "stock": 76,
-    "image": "http://localhost:3000/uploads/9067101aa4e9a78a20c2af48cbb41397",
-    "discount": 10
-  },
-  {
     "id": 2,
     "name": "Cucumber",
     "category": "vegetables",
@@ -27,7 +16,7 @@
     "price": 1.98,
     "unit": "kg",
     "rating": 1,
-    "stock": 80,
+    "stock": 78,
     "image": "http://localhost:3000/uploads/d46100bfeab7e48e21c37c5f58fdf461",
     "discount": 15
   },
@@ -38,8 +27,9 @@
     "price": 5.89,
     "unit": "kg",
     "rating": 2,
-    "stock": 83,
-    "image": "http://localhost:3000/uploads/197c12b76eaa834d5af4dbedf62c44d4"
+    "stock": 8,
+    "image": "http://localhost:3000/uploads/197c12b76eaa834d5af4dbedf62c44d4",
+    "discount": null
   },
   {
     "id": 5,
@@ -68,7 +58,7 @@
     "price": 5.12,
     "unit": "kg",
     "rating": 3,
-    "stock": 95.5,
+    "stock": 93.5,
     "image": "http://localhost:3000/uploads/e72a661d51e9fc144c607fd3e4993cfb"
   },
   {
@@ -168,16 +158,14 @@
     "image": "http://localhost:3000/uploads/d48bb677e45eab653d6d5ddf3cfda522"
   },
   {
-    "id": 17,
-    "name": "ss",
+    "id": 16,
+    "name": "Onion",
     "category": "vegetables",
-    "price": 3,
+    "price": 4.56,
     "unit": "kg",
     "rating": 0,
-    "stock": 26,
+    "stock": 45,
     "discount": 0,
-    "image": [
-      "http://localhost:3000/uploads/c671368a9fe717035adde3a17375d207"
-    ]
+    "image": "http://localhost:3000/uploads/c81aa52a87c3c43b613a17bea95799ff"
   }
 ]

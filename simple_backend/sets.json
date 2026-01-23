@@ -181,7 +181,7 @@
         "price": 7.89,
         "unit": "set",
         "rating": 0,
-        "stock": 0,
+        "stock": 6,
         "image": "http://localhost:3000/uploads/8592bdf5f9f06fbd1e982c52327f1e57",
         "discount": null,
         "ingredients": [

@@ -1,60 +1,3 @@
-// import api from './api'
-
-// // =====================
-// // GET
-// // =====================
-// export const getVegetables = () => api.get('/vegetables')
-// export const getMeats = () => api.get('/meats')
-// export const getSets = () => api.get('/sets')
-
-// // =====================
-// // ADD
-// // =====================
-// export const addProduct = (data: any) => {
-//   if (data.category === 'Vegetables') {
-//     return api.post('/vegetables', data)
-//   }
-
-//   if (data.category === 'Meats') {
-//     return api.post('/meats', data)
-//   }
-
-//   // Set food: Soup / Fried (Chha) / Steamed
-//   return api.post(`/sets/${data.category}`, data)
-// }
-
-// // =====================
-// // UPDATE
-// // =====================
-// export const updateProduct = (data: any) => {
-//   if (data.category === 'Vegetables') {
-//     return api.patch(`/vegetables/${data.id}`, data)
-//   }
-
-//   if (data.category === 'Meats') {
-//     return api.patch(`/meats/${data.id}`, data)
-//   }
-
-//   return api.patch(`/sets/${data.category}/${data.id}`, data)
-// }
-
-// // =====================
-// // DELETE
-// // =====================
-// // Vegetables
-// export const deleteVegetable = (id: number) =>
-//   api.delete(`/vegetables/${id}`)
-
-// // Meats
-// export const deleteMeat = (id: number) =>
-//   api.delete(`/meats/${id}`)
-
-// // Set food
-// export const deleteSetItem = (category: string, id: number) =>
-//   api.delete(`/sets/${category}/${id}`)
-
-
-
 
 import api from './api'
 
@@ -81,10 +24,9 @@ export const addProduct = (data: any) => {
     fd.append('ingredients', JSON.stringify(data.ingredients.split(',').map((ing: string) => ing.trim())))
   }
 
+  // ✅ Single image
   if (data.imageFiles && data.imageFiles.length > 0) {
-    for (const file of data.imageFiles) {
-      fd.append('images', file) // ✅ append each file under the "images" key
-    }
+    fd.append('image', data.imageFiles[0]) // backend expects "image"
   }
   // fd.append('images', data.imageFiles[0]) // Only first image
 
@@ -122,11 +64,12 @@ export const updateProduct = (data: any) => {
   //   fd.append('images', data.imageFiles[0]) // Only first image
   // }
 
+  // ✅ Single image
   if (data.imageFiles && data.imageFiles.length > 0) {
-    for (const file of data.imageFiles) {
-      fd.append('images', file) // ✅ append each file under the "images" key
-    }
+    fd.append('image', data.imageFiles[0]) // backend expects "image"
   }
+
+
 
   if (data.category === 'Vegetables') {
     return api.patch(`/vegetables/${data.id}`, fd)

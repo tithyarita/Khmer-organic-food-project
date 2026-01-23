@@ -143,20 +143,8 @@
 
         <label>Image</label>
         <input type="file" @change="onFileChange" />
-        <!-- <div v-if="form.imageFiles">
+        <div v-if="form.imageFiles">
           <img :src="URL.createObjectURL(form.imageFiles[0])" class="preview-img" />
-        </div> -->
-
-        <!-- Preview all selected images -->
-        <div v-if="form.imageFiles && form.imageFiles.length">
-          <div class="preview-row">
-            <img
-              v-for="(file, index) in form.imageFiles"
-              :key="index"
-              :src="URL.createObjectURL(file)"
-              class="preview-img"
-            />
-          </div>
         </div>
 
 
@@ -207,22 +195,9 @@
 
         <label>Image</label>
         <input type="file" @change="onFileChange" />
-        <!-- <div v-if="form.imageFiles">
+        <div v-if="form.imageFiles">
           <img :src="URL.createObjectURL(form.imageFiles[0])" class="preview-img" />
-        </div> -->
-
-        <!-- Preview all selected images -->
-        <div v-if="form.imageFiles && form.imageFiles.length">
-          <div class="preview-row">
-            <img
-              v-for="(file, index) in form.imageFiles"
-              :key="index"
-              :src="URL.createObjectURL(file)"
-              class="preview-img"
-            />
-          </div>
         </div>
-
 
         <div class="modal-actions">
           <button class="btn-save" @click="updateProductAction">Save</button>
@@ -319,19 +294,13 @@ const openEdit = (item: any) => {
 
 const closeEdit = () => { showEditModal.value = false }
 
-// const onFileChange = (e: Event) => {
-//   const target = e.target as HTMLInputElement
-//   if (target.files && target.files.length > 0) {
-//     form.value.imageFiles = target.files
-//   }
-// }
-
 const onFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement
   if (target.files && target.files.length > 0) {
-    form.value.imageFiles = Array.from(target.files) // ✅ real array of File objects
+    form.value.imageFiles = target.files
   }
 }
+
 
 const saveProduct = async () => {
   if (!form.value.imageFiles || form.value.imageFiles.length === 0) {

@@ -42,7 +42,7 @@ function removeFromFavorite(product: any) {
 /* Page */
 .favorite-page {
   padding: 2rem 1rem;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   overflow-x: hidden; /* 🔥 prevent side scroll */
 }
 
@@ -51,13 +51,15 @@ function removeFromFavorite(product: any) {
   text-align: center;
   font-size: 2.5rem;
   color: #e91e63;
+  font-family: 'Quicksand', sans-serif;
   margin: 2rem 0;
+  font-size: 2rem;
+  color: #6dc007;
 }
 
 /* Empty */
 .empty {
   text-align: center;
-  font-size: 1.2rem;
   color: #666;
 }
 
@@ -115,10 +117,10 @@ function removeFromFavorite(product: any) {
   color: red;
   font-size: 14px;
   cursor: pointer;
-  
+
   display: flex;              /* ✅ IMPORTANT */
   align-items: center;        /* ✅ vertical center */
-  justify-content: center; 
+  justify-content: center;
   z-index: 10;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }

@@ -11,8 +11,8 @@
           <div class="main-image">
             <img :src="selectedImage" :alt="product.name" />
           </div>
-          <!-- 
-          <div class="thumbnail-row">
+          
+          <!-- <div class="thumbnail-row">
             <img
               v-for="(img, index) in product.images"
               :key="index"

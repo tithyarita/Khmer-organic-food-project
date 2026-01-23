@@ -1,6 +1,6 @@
 <template>
   <div class="cart-page">
-    <h1 class="title">MY CART</h1>
+    <h1 class="title">My Cart</h1>
 
     <div v-if="cart.items.length > 0">
       <!-- CART ITEMS -->
@@ -25,7 +25,7 @@
           <div class="name-price">
             <h3 class="item-name">{{ item.name }}</h3>
             <!-- <p class="unit-price">${{ item.price.toFixed(1) }} per {{ item.unit }}</p> -->
-          
+
             <p class="unit-price">
               <template v-if="item.discount && item.discount > 0">
                 <span class="old-price">${{ item.price.toFixed(2) }}/{{ item.unit }}</span>
@@ -43,13 +43,13 @@
 
           <div class="quantity-row">
             <label>Quantity:</label>
-            <select 
-              v-model="item.qty" 
+            <select
+              v-model="item.qty"
               @change="updateQty(index, item.qty)"
             >
-              <option 
-                v-for="q in item.unit === 'kg' ? weights : sets" 
-                :key="q" 
+              <option
+                v-for="q in item.unit === 'kg' ? weights : sets"
+                :key="q"
                 :value="q"
               >
                 {{ q }} {{ item.unit }}
@@ -58,7 +58,7 @@
           </div>
 
           <!-- <p class="total-price">Total: ${{ (item.price * item.qty).toFixed(1) }}</p> -->
-          
+
           <p class="total-price">
             Total:
             <template v-if="item.discount && item.discount > 0">
@@ -68,7 +68,7 @@
               ${{ (item.price * item.qty).toFixed(2) }}
             </template>
           </p>
-        
+
         </div>
       </div>
 
@@ -176,7 +176,7 @@ const goToCheckout = () => {
 .cart-page {
   max-width: 800px;
   margin: 0 auto;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   padding: 20px;
 }
 
