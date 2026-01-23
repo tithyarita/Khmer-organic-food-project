@@ -1,6 +1,9 @@
 import { collection, addDoc, getDocs, query, orderBy, where, updateDoc, doc } from 'firebase/firestore'
 import { db } from '../firebase.js'
 import { doc as docRef, getDoc } from 'firebase/firestore'
+import { getProducts as getMeats } from './meatService'
+import { getProducts as getVegs } from './vegService'
+import api from './api'
 
 type OrderItem = {
   id: number | string
@@ -110,4 +113,90 @@ export async function autoUpdateOrderStatuses() {
 export async function updateOrderRated(orderId: string, rated: boolean) {
   const ref = doc(db, 'orders', orderId)
   await updateDoc(ref, { rated, updatedAt: new Date() })
+}
+
+export async function getTopProducts(limit: number = 4, dateRange: 'today' | 'all' = 'today') {
+  const allOrders = await getAllOrders()
+  console.log('All orders:', allOrders.length)
+
+  let startDate: Date | null = null
+  let endDate: Date | null = null
+
+  if (dateRange === 'today') {
+    // Get today's date (start of day)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    startDate = today
+    endDate = new Date(today)
+    endDate.setDate(endDate.getDate() + 1)
+    console.log('Filtering orders from:', startDate.toISOString(), 'to:', endDate.toISOString())
+  } else {
+    // All time - no date filter
+    console.log('No date filter - using all orders')
+  }
+
+  const productMap: Record<string, { id: string | number, name: string, qty: number, revenue: number, image?: string, price: number }> = {}
+
+  allOrders.forEach(order => {
+    // Apply date filter if specified
+    const orderDate = new Date(order.createdAt)
+    const dateMatches = !startDate || !endDate || (orderDate >= startDate && orderDate < endDate)
+
+    if (dateMatches && order.items) {
+      order.items.forEach((item: any) => {
+        const key = item.id
+        if (!productMap[key]) {
+          productMap[key] = {
+            id: item.id,
+            name: item.name || 'Unknown Product',
+            qty: 0,
+            revenue: 0,
+            image: item.image || '',
+            price: item.price || 0
+          }
+        }
+        productMap[key].qty += item.qty || 0
+        productMap[key].revenue += (item.qty || 0) * (item.price || 0)
+      })
+    }
+  })
+
+  console.log('Product map after filtering:', Object.keys(productMap).length)
+
+  // Try to get all products to map images and ensure data consistency
+  try {
+    const [meatsRes, vegsRes, setsRes] = await Promise.all([
+      getMeats(),
+      getVegs(),
+      api.get('/sets')
+    ])
+
+    const allProducts = [
+      ...meatsRes.data,
+      ...vegsRes.data,
+      ...setsRes.data.flatMap((category: any) => category.items || [])
+    ]
+
+    console.log('All products from API:', allProducts.length)
+
+    // Update productMap with full product data
+    Object.keys(productMap).forEach(key => {
+      const fullProduct = allProducts.find((p: any) => p.id == key)
+      if (fullProduct) {
+        productMap[key].image = fullProduct.image
+        productMap[key].name = fullProduct.name
+        productMap[key].price = fullProduct.price
+      }
+    })
+  } catch (error) {
+    console.error('Failed to fetch product details from API:', error)
+    console.log('Using order data only')
+  }
+
+  const topProducts = Object.values(productMap)
+    .sort((a, b) => b.qty - a.qty)
+    .slice(0, limit)
+
+  console.log('Top products:', topProducts)
+  return topProducts
 }

@@ -88,6 +88,11 @@ onMounted(() => {
   animation: floatFade 1.5s ease-out forwards;
 }
 
+.popular-section.animate {
+  animation: floatFade 1.5s ease-out forwards;
+  animation-delay: 0.1s;
+}
+
 .grid-section.animate h1 {
   animation: floatFade 1.3s ease-out forwards;
   animation-delay: 0.2s;

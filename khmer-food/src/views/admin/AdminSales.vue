@@ -143,7 +143,7 @@ const filteredOrders = ref<any[]>([])
 const loading = ref(true)
 
 // Date filter
-const selectedRange = ref('all')
+const selectedRange = ref('today')
 const customStart = ref('')
 const customEnd = ref('')
 

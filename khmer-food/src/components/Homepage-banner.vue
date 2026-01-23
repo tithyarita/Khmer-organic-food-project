@@ -23,7 +23,7 @@
         {{ product.badge }}
       </div>
 
-      <img :src="product.image" :alt="product.name" />
+      <img :src="product.image || '/images/default-product.png'" :alt="product.name" />
 
       <h3>{{ product.name }}</h3>
 
@@ -31,7 +31,7 @@
         <span v-for="n in 5" :key="n" class="star">&#9733;</span>
       </div>
 
-      <p class="price">{{ product.price }} $</p>
+      <p class="price">{{ product.price ? '$' + product.price.toFixed(2) : 'Price TBA' }}</p>
 
       <button class="add-btn" @click="addToCart(product)">
         Add to cart
@@ -97,23 +97,58 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
+import { getTopProducts } from '../services/orderService'
 
 const cart = useCartStore()
 
-defineProps({
+const props = defineProps({
   showGridOnly: { type: Boolean, default: false },
   showColumnOnly: { type: Boolean, default: false },
   showPopular: { type: Boolean, default: false },
 })
 
-const products = reactive([
-  { id: 1, name: "Amok", price: 11.9, badge: "BESTSELLER", image: "/images/amok.png" },
-  { id: 2, name: "Beef", price: 9.89, badge: "BESTSELLER", image: "/images/beef.png" },
-  { id: 3, name: "Broccoli", price: 5.89, badge: "BESTSELLER", image: "/images/broccoli.png" },
-  { id: 4, name: "Stream Fish", price: 10, badge: "SALE", image: "/images/streamFish.png" },
+const products = reactive<any[]>([
+  { id: 1, name: "Loading...", price: 0, image: "/images/default-product.png" },
+  { id: 2, name: "Loading...", price: 0, image: "/images/default-product.png" },
+  { id: 3, name: "Loading...", price: 0, image: "/images/default-product.png" },
+  { id: 4, name: "Loading...", price: 0, image: "/images/default-product.png" },
 ])
+
+onMounted(async () => {
+  console.log('BannerHomePage onMounted, showPopular:', props.showPopular)
+  if (props.showPopular) {
+    console.log('Loading top products...')
+    try {
+      const topProducts = await getTopProducts(4, 'today')
+      console.log('Top products loaded:', topProducts)
+      if (topProducts.length > 0) {
+        products.splice(0, products.length, ...topProducts)
+      } else {
+        console.log('No orders found, using default products')
+        // No orders yet, show default products
+        products.splice(0, products.length, [
+          { id: 1, name: "Amok", price: 11.9, badge: "BESTSELLER", image: "/images/amok.png" },
+          { id: 2, name: "Beef", price: 9.89, badge: "BESTSELLER", image: "/images/beef.png" },
+          { id: 3, name: "Broccoli", price: 5.89, badge: "BESTSELLER", image: "/images/broccoli.png" },
+          { id: 4, name: "Stream Fish", price: 10, badge: "SALE", image: "/images/streamFish.png" },
+        ])
+      }
+    } catch (error) {
+      console.error('Failed to load top products:', error)
+      // Fallback to hardcoded products if needed
+      products.splice(0, products.length, [
+        { id: 1, name: "Amok", price: 11.9, badge: "BESTSELLER", image: "/images/amok.png" },
+        { id: 2, name: "Beef", price: 9.89, badge: "BESTSELLER", image: "/images/beef.png" },
+        { id: 3, name: "Broccoli", price: 5.89, badge: "BESTSELLER", image: "/images/broccoli.png" },
+        { id: 4, name: "Stream Fish", price: 10, badge: "SALE", image: "/images/streamFish.png" },
+      ])
+    }
+  } else {
+    console.log('showPopular is false')
+  }
+})
 
 function addToCart(product: any) {
   cart.addItem({
