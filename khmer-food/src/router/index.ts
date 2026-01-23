@@ -32,9 +32,52 @@ import { getUserStorage } from '../loginstorage'
 const routes: RouteRecordRaw[] = [
   // ---------------- USER ROUTES ----------------
   { path: '/', component: HomeView },
-  { path: '/category/vegetables', name: 'vegetables', component: Vegetables, meta: { title: 'KHMER VEGETABLES FOOD', image: '/images/vegBanner.jpeg', bg: '#0a0a0aff' } },
-  { path: '/category/meats', name: 'meats', component: Meats, meta: { title: 'KHMER MEATS FOOD', image: '/images/meatBanner.jpg', bg: '#0a0a0aff' } },
-  { path: '/category/sets', name: 'sets', component: Sets, meta: { title: 'KHMER SETS FOOD', image: '/images/setBanner.png', bg: '#0a0a0aff' } },
+{
+  path: '/category/vegetables',
+  name: 'vegetables',
+  component: Vegetables,
+  meta: {
+    title: 'KHMER VEGETABLES FOOD',
+    images: [
+      '/images/Veg17.png',
+      '/images/Veg5.png',
+      '/images/banner3-home.png'
+    ],
+    bg: '#0a0a0aff'
+  }
+}
+,
+
+{
+  path: '/category/meats',
+  name: 'meats',
+  component: Meats,
+  meta: {
+    title: 'KHMER MEATS FOOD',
+    images: [
+      '/images/meatBanner.jpg',
+      '/images/meatbanner2.png',
+      '/images/meatbanner4.jpg'
+    ],
+    bg: '#0a0a0aff'
+  }
+},
+  {
+    path: '/category/sets',
+    name: 'sets',
+    component: Sets,
+    meta: {
+      title: 'KHMER SETS FOOD',
+      images: [
+        '/images/Set14.png',
+        '/images/Set16.png',
+        '/images/Set15.png'
+
+      ],
+      bg: '#0a0a0aff'
+    }
+  }
+  ,
   { path: '/cart', name: 'Cart', component: CartView },
   { path: '/favorite', name: 'FavoritePage', component: FavoritePage },
   { path: '/detail/:id', name: 'ProductDetail', component: ProductDetail, props: true, meta: { title: 'KHMER DETAIL FOOD', image: '/images/detailbanner.jpg', bg: '#0a0a0aff' } },
@@ -52,12 +95,12 @@ const routes: RouteRecordRaw[] = [
 
 
   // Login / Signup
-  { path: '/loginSignup', name: 'LoginSignUp', component: LoginSignUpView, meta: { hideLayout: true } },
-  { path: '/login', name: 'Login', component: LoginView, meta: { hideLayout: true } },
-  { path: '/signup', name: 'SignUp', component: SignUpView, meta: { hideLayout: true } },
+  { path: '/loginSignup', name: 'LoginSignUp', component: LoginSignUpView, meta: { hideLayout: true, hideFooter: true } },
+  { path: '/login', name: 'Login', component: LoginView, meta: { hideLayout: true, hideFooter: true } },
+  { path: '/signup', name: 'SignUp', component: SignUpView, meta: { hideLayout: true, hideFooter: true } },
 
   // Profile (protected)
-  { path: '/profile', name: 'Profile', component: ProfileView, meta: { requiresAuth: true } },
+  { path: '/profile', name: 'Profile', component: ProfileView, meta: { requiresAuth: true, hideFooter: true } },
 
   // ---------------- ADMIN ROUTES ----------------
   {
@@ -82,7 +125,7 @@ const routes: RouteRecordRaw[] = [
   path: '/admin/login',
   name: 'AdminLogin',
   component: () => import('../views/admin/AdminLogin.vue'),
-  meta: { hideLayout: true }
+  meta: { hideLayout: true, hideFooter: true }
 }
 
 

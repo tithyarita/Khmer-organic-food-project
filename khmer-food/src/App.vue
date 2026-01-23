@@ -8,7 +8,7 @@
     </main>
 
     <!-- Footer only if showLayout is true -->
-    <Footer v-if="showLayout" class="footer" />
+    <Footer v-if="showFooter" class="footer" />
   </div>
 </template>
 
@@ -35,7 +35,15 @@ export default defineComponent({
       )
     })
 
-    return { showLayout }
+    // Footer visible (hide for profile page)
+    const showFooter = computed(() => {
+      return !(
+        route.meta.hideFooter ||
+        route.path.startsWith('/profile')
+      )
+    })
+
+    return { showLayout, showFooter }
   },
 })
 </script>
