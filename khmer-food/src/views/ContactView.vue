@@ -50,7 +50,7 @@
           referrerpolicy="no-referrer-when-downgrade"
         ></iframe>
         <a
-          href="https://www.google.com/maps/place/Institute+of+Technology+of+Cambodia/@11.5685269,104.9182919,17z"
+          href="https://www.google.com/maps/dir/?api=1&destination=11.570402744050202,104.89551077356433"
           target="_blank"
           rel="noopener noreferrer"
           class="map-overlay"
