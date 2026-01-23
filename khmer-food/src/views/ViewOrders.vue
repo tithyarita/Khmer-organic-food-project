@@ -125,7 +125,6 @@ function formatTime(date: any) {
 <style scoped>
 .orders-page {
   min-height: 100vh;
-  background: #fff8f0;
   font-family: 'Poppins', sans-serif;
   padding: 2rem;
 }
@@ -141,7 +140,7 @@ function formatTime(date: any) {
 }
 
 .orders-header h1 {
-  color: #ff6f61;
+  color: #6ec007;
   margin-bottom: 5px;
 }
 
@@ -154,7 +153,7 @@ function formatTime(date: any) {
 .total-summary {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #ff6f61;
+  color: #6ec007;
 }
 
 .loading, .empty {
@@ -171,11 +170,10 @@ function formatTime(date: any) {
 }
 
 .order-card {
-  background: #fff7f2;
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  border: 1px solid #ffe3d8;
+  border: 1px solid #d9f0b9;
 }
 
 .order-header {
@@ -192,7 +190,7 @@ function formatTime(date: any) {
 
 .order-total {
   font-weight: bold;
-  color: #ff6f61;
+  color: #6ec007;
   font-size: 1.1rem;
 }
 
@@ -206,7 +204,7 @@ function formatTime(date: any) {
   display: flex;
   align-items: center;
   gap: 15px;
-  background: #fff3ea;
+  background: #f7fde9;
   padding: 12px;
   border-radius: 12px;
 }
@@ -216,7 +214,7 @@ function formatTime(date: any) {
   height: 80px;
   object-fit: cover;
   border-radius: 12px;
-  border: 1px solid #ffd8c2;
+  border: 1px solid #d9f0b9;
 }
 
 .item-info {
@@ -236,7 +234,7 @@ function formatTime(date: any) {
 
 .item-price {
   font-weight: bold;
-  color: #ff6f61;
+  color: #6ec007;
   font-size: 1rem;
 }
 
@@ -251,22 +249,24 @@ function formatTime(date: any) {
 
 .order-summary .total {
   font-weight: bold;
-  color: #ff6f61;
+  color: #6ec007;
   margin-top: 5px;
 }
 
 .back-btn {
-  margin-top: 25px;
-  width: 100%;
-  background: #ff6f61;
+  display: block;
+  margin: 0 auto 40px; /* center horizontally */
+  width: 260px;       /* fixed nice width */
+  background: #6dc007;
   color: white;
   border: none;
-  padding: 12px 0;
+  padding: 14px 0;
   border-radius: 12px;
   font-weight: 600;
-  font-size: 1rem;
   cursor: pointer;
-  transition: 0.2s;
+  text-align: center;
+  top: 30px;
+  position: relative;
 }
 
 .back-btn:hover {

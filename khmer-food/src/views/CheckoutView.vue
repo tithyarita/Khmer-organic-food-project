@@ -38,41 +38,79 @@
 
     </section>
 
-    <!-- Payment Method -->
-    <section class="box">
-      <h3>Payment Method</h3>
-      <div class="payment-options">
-        <label class="payment-item">
-          <input type="radio" value="card" v-model="selectedPayment" />
-          💳 Visa / MasterCard
-        </label>
-        <label class="payment-item">
-          <input type="radio" value="aba" v-model="selectedPayment" />
-          ABA
-        </label>
-        <label class="payment-item">
-          <input type="radio" value="acleda" v-model="selectedPayment" />
-          Acleda
-        </label>
-        <label class="payment-item">
-          <input type="radio" value="wing" v-model="selectedPayment" />
-          Wing
-        </label>
-      </div>
+<!-- Payment Method -->
+<section class="box">
+  <h3>Payment Method</h3>
+  <div class="payment-options">
+    <label class="payment-item">
+      <input type="radio" value="card" v-model="selectedPayment" />
+      💳 Visa / MasterCard
+    </label>
+    <label class="payment-item">
+      <input type="radio" value="aba" v-model="selectedPayment" />
+      ABA
+    </label>
+    <label class="payment-item">
+      <input type="radio" value="acleda" v-model="selectedPayment" />
+      Acleda
+    </label>
+    <label class="payment-item">
+      <input type="radio" value="wing" v-model="selectedPayment" />
+      Wing
+    </label>
+  </div>
 
-      <!-- Payment Details Form -->
-      <div class="payment-details" v-if="selectedPayment">
-        <!-- Card Payment -->
-        <div v-if="selectedPayment === 'card'">
-          <input type="text" placeholder="Card Number" v-model="paymentDetails.cardNumber" />
-        </div>
+  <!-- Payment Details -->
+  <div class="payment-details" v-if="selectedPayment">
 
-        <!-- ABA / Acleda / Wing Payment -->
-        <div v-else>
-          <input type="text" :placeholder="`${selectedPayment.toUpperCase()} Account Number`" v-model="paymentDetails.accountNumber" />
-        </div>
+    <!-- CARD -->
+    <div v-if="selectedPayment === 'card'">
+      <input type="text" placeholder="Card Number" v-model="paymentDetails.cardNumber" />
+    </div>
+
+    <!-- ABA QR -->
+    <div v-else-if="selectedPayment === 'aba'" class="qr-box">
+      <img src="/images/aba-qr.png" alt="ABA QR Code" />
+      <p class="qr-text">Scan with ABA Mobile to pay</p>
+
+      <!-- Upload Screenshot -->
+      <label class="upload-label">
+        Upload Payment Screenshot:
+        <input type="file" accept="image/*" @change="handleQRUpload($event)" />
+      </label>
+
+      <div v-if="paymentDetails.qrImage">
+        <p>Preview:</p>
+        <img :src="paymentDetails.qrImage" class="qr-preview" />
       </div>
-    </section>
+    </div>
+
+    <!-- ACLEDA QR -->
+    <div v-else-if="selectedPayment === 'acleda'" class="qr-box">
+      <img src="/images/acleda-qr.png" alt="ACLEDA QR Code" />
+      <p class="qr-text">Scan with ACLEDA Mobile to pay</p>
+
+      <!-- Upload Screenshot -->
+      <label class="upload-label">
+        Upload Payment Screenshot:
+        <input type="file" accept="image/*" @change="handleQRUpload($event)" />
+      </label>
+
+      <div v-if="paymentDetails.qrImage">
+        <p>Preview:</p>
+        <img :src="paymentDetails.qrImage" class="qr-preview" />
+      </div>
+    </div>
+
+    <!-- WING -->
+    <div v-else-if="selectedPayment === 'wing'">
+      <input type="text" placeholder="Wing Account Number" v-model="paymentDetails.accountNumber" />
+    </div>
+
+  </div>
+</section>
+
+
 
     <!-- Price Summary -->
     <section class="summary">
@@ -184,8 +222,20 @@ const paymentDetails = ref({
   expiry: '',
   cvv: '',
   accountNumber: '',
+  qrImage: '',
 })
+function handleQRUpload(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
 
+  // Preview image
+  const reader = new FileReader()
+  reader.onload = e => {
+    paymentDetails.value.qrImage = e.target?.result as string
+  }
+  reader.readAsDataURL(file)
+}
 // UI and order state
 const isProcessing = ref(false)
 const orderSuccess = ref(false)
@@ -241,145 +291,73 @@ async function saveShipping() {
   }
 }
 
-// Place order
 async function placeOrder() {
+  // 1️⃣ Must select items
+  if (selectedItems.value.length === 0) {
+    alert('You need to select the product')
+    return
+  }
+
+  // 2️⃣ Must select payment method
   if (!selectedPayment.value) {
     alert('Please select a payment method.')
     return
   }
 
-  if (cart.items.length === 0) {
-    alert('Your cart is empty.')
+  // 3️⃣ QR payment must have uploaded screenshot
+  if (
+    (selectedPayment.value === 'aba' || selectedPayment.value === 'acleda') &&
+    !paymentDetails.value.qrImage
+  ) {
+    alert('Please Pay Money and Upload your payment screenshot')
     return
   }
 
+  // 4️⃣ Card or Wing payment validations (optional)
+  if (selectedPayment.value === 'card' && !paymentDetails.value.cardNumber) {
+    alert('Please enter your card number')
+    return
+  }
+
+  if (selectedPayment.value === 'wing' && !paymentDetails.value.accountNumber) {
+    alert('Please enter your Wing account number')
+    return
+  }
+
+  // 5️⃣ Continue normal order flow
   const user = auth.currentUser
   if (!user) {
-    errorMessage.value = 'Please log in to place an order.'
+    alert('Please log in to place an order.')
     return
   }
 
-  // Get user name from users collection
-  let userName = user.displayName || user.email
-  try {
-    const userRef = doc(db, 'users', user.uid)
-    const userSnap = await getDoc(userRef)
-    if (userSnap.exists()) {
-      const userData = userSnap.data()
-      userName = userData.name || userName
-    }
-  } catch (e) {
-    console.warn('Failed to get user name:', e)
-  }
-
-  const orderUser = { uid: user.uid, email: user.email, name: userName }
-
-  // Check if user is admin
-  try {
-    const adminRef = doc(db, 'admin', user.uid)
-    const adminSnap = await getDoc(adminRef)
-    if (adminSnap.exists()) {
-      errorMessage.value = 'Admins cannot place orders.'
-      return
-    }
-  } catch (e) {
-    console.error('Error checking admin status:', e)
-    errorMessage.value = 'Error processing order. Please try again.'
-    return
-  }
-
+  // Proceed with processing...
   isProcessing.value = true
-  errorMessage.value = ''
-
   try {
-    // Normalize cart items for backend (ensure numeric id, clear category for sets)
-    const normalizedItems = cart.items.map((item: any) => {
-      const idNum = Number(item.id)
-      const category = item.category
-        ? String(item.category).toLowerCase()
-        : (item.unit === 'set' ? 'sets' : undefined)
-
-      return {
-        id: Number.isNaN(idNum) ? item.id : idNum,
-        category,
-        quantity: item.qty,
-        name: item.name || item.title || '',
-        price: item.price,
-        image: item.image // include image
-      }
+    // Your existing order logic here...
+    // e.g., send paymentDetails.qrImage to backend or save in Firestore
+    const order = await createOrder({
+      user: { uid: user.uid, email: user.email, name: user.displayName },
+      items: selectedItems.value,
+      subtotal: subtotal.value,
+      delivery: delivery.value,
+      discount: discount.value,
+      total: total.value,
+      paymentMethod: selectedPayment.value,
+      qrImage: paymentDetails.value.qrImage, // Save uploaded QR screenshot
+      status: selectedPayment.value === 'card' ? 'paid' : 'pending' // optional
     })
 
-    // Call backend payment endpoint (best-effort)
-    await axios.post('http://localhost:3000/payment-success', {
-      items: normalizedItems.map(i => ({ id: i.id, category: i.category, quantity: i.quantity }))
-    }).catch((e) => {
-      // don't fail entire flow if local backend is down; log and continue
-      console.warn('Payment backend call failed, continuing:', e.message || e)
-    })
+    cart.clear()
+    router.push(`/thankyou/${order.id}`)
 
-    // Persist order to Firestore (with basic user info if available)
-    try {
-      const user = auth.currentUser ? { uid: auth.currentUser.uid, email: auth.currentUser.email, name: auth.currentUser.displayName } : undefined
-      // await createOrder({
-      //   user,
-      //   items: cart.items.map(i => ({ id: i.id, name: i.name || i.title || '', price: i.price, qty: i.qty, category: i.category })),
-      //   subtotal: subtotal.value,
-      //   delivery: delivery.value,
-      //   discount: discount.value,
-      //   total: total.value,
-      //   paymentMethod: selectedPayment.value,
-      //   status: 'paid'
-      // })
-
-      // Convert item images to base64
-    const itemsWithImages = normalizedItems.map(i => {
-      return {
-        id: i.id,
-        name: i.name,
-        price: i.price,
-        qty: i.quantity,
-        category: i.category,
-        image: i.image // store the filename
-      }
-    })
-      const order = await createOrder({
-        user: orderUser,
-        items: itemsWithImages,
-        subtotal: subtotal.value,
-        delivery: delivery.value,
-        discount: discount.value,
-        total: total.value,
-        paymentMethod: selectedPayment.value,
-        status: 'paid',
-        paymentStatus: 'paid'
-      })
-
-
-      // Clear cart AFTER saved successfully
-      cart.clear()
-
-      // show success
-      // orderSuccess.value = true
-
-      // redirect to thank you page with orderId
-      router.push(`/thankyou/${order.id}`)
-
-
-    } catch (e) {
-      console.error('Failed to save order to Firestore', e)
-      errorMessage.value = 'Could not save order. Please contact support.'
-    }
-  }
-  catch (error) {
-    console.error('Payment failed:', error)
-    errorMessage.value = 'Payment processing failed. Please try again.'
-  }
-  finally {
+  } catch (e) {
+    console.error('Order failed', e)
+    alert('Failed to place the order. Try again.')
+  } finally {
     isProcessing.value = false
   }
 }
-
-
 
 function closeSuccess() {
   orderSuccess.value = false
@@ -395,274 +373,234 @@ function goHome() {
   router.push('/')
 }
 
-
-
 </script>
-
 <style scoped>
+/* ===== PAGE ===== */
 .checkout-page {
-  max-width: 720px;
+  max-width: 1200px;
   margin: 2rem auto;
-  padding: 2.5rem;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   font-family: 'Roboto', sans-serif;
-  background: #fff8f0; /* soft pastel background */
-  border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 
-/* Title */
+/* ===== TITLE ===== */
 h1 {
   text-align: center;
-  color: #ff6f61;
-  font-family: 'Roboto', sans-serif;
-  font-size: 3rem;
-  margin-bottom: 2.5rem;
-  line-height: 1.2;
+  font-size: 2.4rem;
+  margin-bottom: 2rem;
+  color: #6ec007;
+  font-weight: 700;
 }
 
-/* Box Sections */
+/* ===== SECTION BOX ===== */
 .box {
-  margin-bottom: 3rem;
-  background: #fff3e6;
-  padding: 2.5rem 2rem;
-  border-radius: 18px;
-  box-shadow: 0 6px 20px rgba(255,111,97,0.08);
-  transition: all 0.3s ease;
+  background: #fafafa;
+  padding: 1.6rem;
+  border-radius: 12px;
+  margin-bottom: 1.8rem;
+  border: 1px solid #e5e5e5;
 }
 
 .box h3 {
-  margin-bottom: 1.5rem;
-  font-size: 1.6rem;
-  color: #ff6f61;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  font-size: 1.3rem;
+  margin-bottom: 1.2rem;
+  color: #6ec007;
+  font-weight: 600;
 }
 
-/* Address */
+/* ===== ADDRESS ===== */
 .address {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1.2rem;
-  background: #fff7f0;
-  border-radius: 15px;
-  cursor: pointer;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #ddd;
 }
 
 .address .name {
-  font-size: 1.2rem;
   font-weight: 600;
-  color: #ff6f61;
+  font-size: 1.05rem;
+  color: #222;
 }
 
 .address .contact,
 .address .location {
   font-size: 0.95rem;
-  color: #555;
+  color: #666;
 }
 
-/* Edit Button */
+/* Edit button */
 .address .order-btn {
-  background: #ffaf91;
-  border-radius: 12px;
-  padding: 8px 16px;
-  color: #fff;
+  background: transparent;
+  color: #007bff;
   font-weight: 600;
-  transition: 0.3s;
+  padding: 0;
 }
 .address .order-btn:hover {
-  background: #ff6f61;
+  text-decoration: underline;
 }
 
-/* Editable Fields */
+/* ===== ADDRESS FORM ===== */
 .address-edit .field {
-  display: flex;
-  flex-direction: column;
   margin-bottom: 1rem;
 }
 
-.address-edit .label-text {
-  font-weight: 600;
+.address-edit label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
   margin-bottom: 0.3rem;
-  color: #ff6f61;
+  display: block;
 }
 
 .address-edit input,
 .address-edit textarea {
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  border: 1px solid #ffc1b0;
-  outline: none;
-  font-size: 1rem;
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
 }
+
 .address-edit input:focus,
 .address-edit textarea:focus {
-  border-color: #ff6f61;
-  box-shadow: 0 0 8px rgba(255,111,97,0.2);
+  border-color: #007bff;
+  outline: none;
 }
 
-/* Edit Actions */
-.address-edit button.order-btn {
-  border-radius: 12px;
-  font-weight: 600;
-  transition: 0.3s;
-}
-
-.address-edit button[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Payment Options */
+/* ===== PAYMENT ===== */
 .payment-options {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.6rem;
 }
+
 .payment-item {
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  background: #fff2e6;
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
   cursor: pointer;
-  transition: 0.2s;
-}
-.payment-item:hover {
-  background: #ffdac9;
 }
 
-/* Payment Input Fields */
+.payment-item:hover {
+  background: #f5f7fa;
+}
+
+/* Payment inputs */
 .payment-details input {
   width: 100%;
-  padding: 1rem;
-  margin-top: 0.8rem;
-  font-size: 1rem;
-  border-radius: 12px;
-  border: 1px solid #ffc1b0;
-}
-.payment-details input:focus {
-  border-color: #ff6f61;
-  box-shadow: 0 0 8px rgba(255,111,97,0.2);
+  padding: 0.8rem;
+  margin-top: 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
-/* Price Summary */
+/* ===== QR ===== */
+.qr-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px dashed #ccc;
+  text-align: center;
+}
+
+.qr-box img {
+  max-width: 200px;
+}
+
+.qr-text {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ===== SUMMARY ===== */
 .summary {
-  background: #fff5ed;
-  padding: 2rem 1.8rem;
-  border-radius: 18px;
-  box-shadow: 0 4px 15px rgba(255,111,97,0.08);
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #ddd;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  font-size: 1.05rem;
-  color: #555;
-}
-
-.discount {
-  color: #ff6f61;
+  margin-bottom: 0.8rem;
+  color: #222;
 }
 
 .total {
   display: flex;
   justify-content: space-between;
-  font-size: 1.45rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: #ff4a3a;
-  margin-top: 1.2rem;
+  color: #ff0000;
+  margin-top: 1rem;
 }
 
-/* Place Order Button */
+/* ===== PLACE ORDER ===== */
 .order-btn {
   display: block;
-  width: 220px;
-  padding: 1.1rem;
-  margin: 2.5rem auto 0 auto;
-  background: #ff6f61;
-  color: white;
+  width: 20%;
+  padding: 1rem;
+  margin: 2rem auto 0; /* center horizontally */
+  border-radius: 10px;
+  background: #6ec007;
+  color: #fff;
   border: none;
-  border-radius: 20px;
-  font-size: 18.5px;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
+
 
 .order-btn:hover {
-  background: #ff4a3a;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(255,111,97,0.15);
+  background: #0069d9;
 }
 
-/* Spinner */
-.spinner {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 3px solid rgba(255,111,97,0.3);
-  border-top-color: #ff6f61;
-  animation: spin 1s linear infinite;
-  vertical-align: middle;
+.order-btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
 }
 
-.spinner.large {
-  width: 56px;
-  height: 56px;
-  border-width: 5px;
-  margin-bottom: 1rem;
-}
-
-@keyframes spin { to { transform: rotate(360deg) } }
-
-/* Modal */
+/* ===== MODAL ===== */
 .modal-overlay {
   position: fixed;
   inset: 0;
+  background: rgba(0,0,0,0.45);
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.35);
-  z-index: 2000;
-  padding: 1.5rem;
+  align-items: center;
 }
 
 .modal-card {
   background: #fff;
   padding: 2rem;
-  border-radius: 18px;
-  text-align: center;
+  border-radius: 14px;
   max-width: 420px;
   width: 100%;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  text-align: center;
 }
 
-.modal-card.success { border-top: 6px solid #4BB543; }
-
-.modal-card .check {
-  font-size: 3.2rem;
-  color: #4BB543;
-  margin-bottom: 0.6rem;
-}
-
-.modal-actions button.order-btn {
-  background: #4BB543;
-}
-
-/* Responsive */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
   .checkout-page {
-    padding: 1.5rem;
-  }
-  .order-btn {
-    width: 100%;
+    padding: 1.2rem;
   }
 }
-
+.discount {
+  color: #6ec007;
+}
 </style>
+
