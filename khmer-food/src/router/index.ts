@@ -52,12 +52,12 @@ const routes: RouteRecordRaw[] = [
 
 
   // Login / Signup
-  { path: '/loginSignup', name: 'LoginSignUp', component: LoginSignUpView, meta: { hideLayout: true } },
-  { path: '/login', name: 'Login', component: LoginView, meta: { hideLayout: true } },
-  { path: '/signup', name: 'SignUp', component: SignUpView, meta: { hideLayout: true } },
+  { path: '/loginSignup', name: 'LoginSignUp', component: LoginSignUpView, meta: { hideLayout: true, hideFooter: true } },
+  { path: '/login', name: 'Login', component: LoginView, meta: { hideLayout: true, hideFooter: true } },
+  { path: '/signup', name: 'SignUp', component: SignUpView, meta: { hideLayout: true, hideFooter: true } },
 
   // Profile (protected)
-  { path: '/profile', name: 'Profile', component: ProfileView, meta: { requiresAuth: true } },
+  { path: '/profile', name: 'Profile', component: ProfileView, meta: { requiresAuth: true, hideFooter: true } },
 
   // ---------------- ADMIN ROUTES ----------------
   {
@@ -82,7 +82,7 @@ const routes: RouteRecordRaw[] = [
   path: '/admin/login',
   name: 'AdminLogin',
   component: () => import('../views/admin/AdminLogin.vue'),
-  meta: { hideLayout: true }
+  meta: { hideLayout: true, hideFooter: true }
 }
 
 

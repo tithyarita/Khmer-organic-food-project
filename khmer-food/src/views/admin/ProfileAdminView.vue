@@ -12,7 +12,7 @@
           hidden
           @change="onImageChange"
         />
-        <span v-if="editing" class="upload-text">Change Photo</span>
+        <div v-if="editing" class="upload-text">Click to change photo</div>
       </label>
 
       <h3 class="role">Admin 🌿</h3>
@@ -122,7 +122,7 @@ const saveChanges = async () => {
   })
 
   editing.value = false
-  alert('Profile updated 💚')
+  alert('Your profile has been successfully updated! 💚')
 }
 
 const signOut = async () => {
@@ -145,7 +145,7 @@ const signOut = async () => {
 /* 🌿 LEFT CARD */
 .left-panel {
   width: 300px;
-  background: #ffffff;
+  background: #FFFCEF;
   border-radius: 22px;
   padding: 2.5rem 2rem;
   box-shadow: 0 12px 28px rgba(0,0,0,0.07);
@@ -161,8 +161,8 @@ const signOut = async () => {
 }
 
 .avatar-upload img {
-  width: 150px;
-  height: 150px;
+  width: 12rem;
+  height: 12rem;
   border-radius: 50%;
   object-fit: cover;
   background: #f4ffe9;
@@ -173,7 +173,7 @@ const signOut = async () => {
 .upload-text {
   margin-top: 10px;
   font-size: 0.85rem;
-  color: #6ec007;
+  color: black;
   text-align: center;
 }
 
@@ -226,10 +226,10 @@ const signOut = async () => {
 /* 🌿 RIGHT PANEL */
 .right-panel {
   flex: 1;
-  background: #ffffff;
+  background: #FFFCEF;
   border-radius: 22px;
   padding: 3rem;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.07);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.07); 
 }
 
 /* 🌿 TITLE */
@@ -238,11 +238,14 @@ const signOut = async () => {
   font-weight: 700;
   color: #7dbb4a;
   margin-bottom: 2rem;
+  text-align: center; 
+  margin-top: 4rem;
 }
 
 /* 🌿 FORM */
 .form {
   max-width: 460px;
+  margin-left: 6rem;
 }
 
 .field {
@@ -255,6 +258,7 @@ const signOut = async () => {
   color: #777;
   margin-bottom: 0.3rem;
   display: block;
+  
 }
 
 .field input {
@@ -265,6 +269,7 @@ const signOut = async () => {
   font-size: 0.95rem;
   background: #fbfff7;
   transition: all 0.25s ease;
+  
 }
 
 .field input:focus {
