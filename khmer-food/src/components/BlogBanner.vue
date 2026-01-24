@@ -47,6 +47,7 @@
   align-items: center;
   text-align: center;
   padding: 2rem 0;
+  font-family: 'Baloo 2', cursive;
 }
 
 .text-content {

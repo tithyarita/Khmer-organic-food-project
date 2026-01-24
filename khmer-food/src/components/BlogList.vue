@@ -95,6 +95,7 @@ function closeFull() {
 <style scoped>
 .blog-cute {
   padding: 4rem 8%;
+  font-family: 'Baloo 2', cursive;
 }
 
 /* Header */
