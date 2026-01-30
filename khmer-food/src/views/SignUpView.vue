@@ -4,6 +4,7 @@
     <div class="signup-form">
       <div class="form-content">
         <h2>Create an Account</h2>
+
         <p class="login-prompt">
           <span class="gray-text">Already have an account?</span>
           <router-link to="/login" class="green-link">Login</router-link>
@@ -14,13 +15,7 @@
           <input id="name" v-model="name" type="text" placeholder="Enter your name" required />
 
           <label for="phone">Phone Number</label>
-          <input
-            id="phone"
-            v-model="phone"
-            type="text"
-            placeholder="Enter your phone number"
-            required
-          />
+          <input id="phone" v-model="phone" type="text" placeholder="Enter your phone number" required />
 
           <label for="email">Email</label>
           <input id="email" v-model="email" type="email" placeholder="Enter your email" required />
@@ -34,7 +29,9 @@
             required
           />
 
-          <button type="submit" class="submit-btn">Sign Up</button>
+          <button type="submit" class="submit-btn" :disabled="loading">
+            {{ loading ? 'Creating account...' : 'Sign Up' }}
+          </button>
         </form>
       </div>
     </div>
@@ -43,7 +40,11 @@
     <div class="signup-banner">
       <h1>Welcome to Our Food Shop</h1>
       <p>Hello! Let’s join our shop</p>
-      <img src="@/assets/forLogin_SignUp/logoSignup.png" alt="Food Banner" class="banner-img" />
+      <img
+        src="@/assets/forLogin_SignUp/logoSignup.png"
+        alt="Food Banner"
+        class="banner-img"
+      />
     </div>
   </div>
 </template>
@@ -53,65 +54,64 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth, db } from '../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { doc, setDoc, runTransaction } from 'firebase/firestore'
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 
 const name = ref('')
 const phone = ref('')
 const email = ref('')
 const password = ref('')
 const role = ref('customer')
+const loading = ref(false)
 
 const router = useRouter()
 
 const submitForm = async () => {
-  try {
+  if (loading.value) return
+  loading.value = true
 
-    const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
+  try {
+    // 1️⃣ Create Firebase Auth user
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    )
+
     const user = userCredential.user
 
-
-    const userId = await runTransaction(db, async (transaction) => {
-      const counterRef = doc(db, 'counters', 'users')
-      const counterSnap = await transaction.get(counterRef)
-
-      if (!counterSnap.exists()) {
-        transaction.set(counterRef, { lastId: 1 })
-        return 1
-      }
-
-      const lastId = counterSnap.data().lastId as number
-      const nextId = lastId + 1
-      transaction.update(counterRef, { lastId: nextId })
-      return nextId
-    })
-
-
+    // 2️⃣ Save user data to Firestore
     await setDoc(doc(db, 'users', user.uid), {
-      userId,
       uid: user.uid,
       name: name.value,
       phone: phone.value,
       email: email.value,
       role: role.value,
-      createdAt: new Date(),
+      createdAt: serverTimestamp(),
     })
 
-    alert(`Account created successfully!\nYour User ID: ${userId}`)
+    // ✅ 3️⃣ SUCCESS ALERT (fast & safe)
+    alert('🎉 Signup successful! Please login to continue.')
 
+    // 4️⃣ Redirect after alert
     router.push('/login')
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      alert(err.message)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      alert(error.message)
     } else {
-      alert('Something went wrong during signup.')
+      alert('Signup failed. Please try again.')
     }
+  } finally {
+    loading.value = false
   }
 }
 </script>
 
 <style scoped>
-
+/* KEEP YOUR EXISTING STYLES */
+/* No changes needed — performance issue was NOT CSS */
 </style>
+
+
 
 <style scoped>
 

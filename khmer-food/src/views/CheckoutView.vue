@@ -208,6 +208,7 @@ import { createOrder } from '../services/orderService'
 import { auth, db } from '../firebase.js'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { getUserStorage, saveUserStorage } from '../loginstorage'
+import api from '../services/api'
 
 const router = useRouter()
 const cart = useCartStore()
@@ -385,6 +386,15 @@ async function placeOrder() {
       qrImage: paymentDetails.value.qrImage, // Save uploaded QR screenshot
       status: 'paid', // All successful orders start as paid
       paymentStatus: 'paid' // All successful orders are considered paid
+    })
+
+    // Update stock in backend
+    await api.post('/payment-success', {
+      items: selectedItems.value.map(item => ({
+        id: item.id,
+        category: item.category,
+        quantity: item.qty
+      }))
     })
 
     cart.clear()
